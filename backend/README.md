@@ -1,64 +1,42 @@
-Backend integration and API notes
-================================
+Backend — Question Taxonomy Analyzer
+=====================================
 
-This folder contains the MongoDB-backed FastAPI service for the Questions Clustering MVP.
+FastAPI service implementing `POST /api/analyze` per the contract in
+`PLAN_10_GIO.md` §3. No MongoDB/vector DB dependency — taxonomy is loaded
+from `data/vlearn-pack/slides/knowledge-tree-day-chapter.json`.
 
 Files
-- `backend_app.py`: FastAPI endpoints for ingesting questions, listing clusters, and generating summaries.
-- `mongo_models.py`: Pydantic request/response models.
-- `openapi.yaml`: API contract for frontend/backend integration.
+- `backend_app.py`: FastAPI app — `GET /health`, `POST /api/analyze`.
+- `schemas.py`: Pydantic request/response models, schema version `1.0`.
+- `fixtures/demo_request.json`, `fixtures/demo_response.json`: contract examples; frontend can develop against these without a running backend.
+- `services/`: taxonomy loader/matcher (owned by P3), question grouper/summarizer (owned by P4).
+- `tests/`: contract and health tests (owned by P5); service-level tests owned by P3/P4.
 
-Quick start (local, minimal)
+Quick start
 
-1. Create a virtual environment and install requirements:
-
-```bash
-python -m venv .venv
-# Windows PowerShell
-.venv\Scripts\activate
-# macOS / Linux
-source .venv/bin/activate
-pip install -r requirements.txt
+```powershell
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+Copy-Item .env.example .env
+.\.venv\Scripts\python.exe -m uvicorn backend.backend_app:app --reload --port 8000
 ```
-
-2. Start MongoDB and set environment variables:
-
-```bash
-# macOS / Linux
-export MONGO_URI="mongodb://localhost:27017"
-export MONGO_DB="hackathon"
-
-# Windows PowerShell
-set MONGO_URI="mongodb://localhost:27017"
-set MONGO_DB="hackathon"
-```
-
-3. Run the FastAPI app:
-
-```bash
-cd backend
-uvicorn backend_app:app --reload --port 8000
-```
-
-API endpoints
-- `POST /questions`: ingest a new question.
-- `GET /clusters`: list clusters.
-- `POST /clusters/{cluster_id}/summarize`: generate or refresh a summary for one cluster.
 
 Example requests
 
-```bash
-curl -X POST http://localhost:8000/questions \
-  -H "Content-Type: application/json" \
-  -d '{"student_id":"U123","raw_text":"Câu hỏi về phần 3","source_file":"transcript-02.md","source_line":120}'
+```powershell
+Invoke-RestMethod -Method Get -Uri "http://localhost:8000/health"
+
+$body = Get-Content -Raw -Encoding utf8 "backend/fixtures/demo_request.json"
+Invoke-RestMethod -Method Post -Uri "http://localhost:8000/api/analyze" -ContentType "application/json" -Body $body
 ```
 
-```bash
-curl http://localhost:8000/clusters
+Tests
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest backend/tests -q
 ```
 
 Notes
-- This backend uses MongoDB via `motor` (async driver). The collections are `questions`, `clusters`, and `cluster_examples`.
-- CORS is enabled for development so the browser-based frontend can call the API.
-- The summarization endpoint is a placeholder and should be replaced with a controlled LLM call. Keep API keys in environment variables and never commit them.
-- Do not commit raw data or personal student information; follow the hackathon data rules in the root README.
+- Until P3/P4's pipeline is wired in (`PLAN_10_GIO.md` §5 Giai đoạn 3), `POST /api/analyze` returns the fixture response for any valid request.
+- Keep API keys in `.env` only; never commit `.env`.
+- Do not commit raw student data; follow the data rules in the root README.

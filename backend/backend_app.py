@@ -1,26 +1,46 @@
+"""FastAPI app for POST /api/analyze. Contract source: PLAN_10_GIO.md §3.
+
+For the first hours this returns the fixture response so P2 can integrate
+against a real HTTP endpoint before the taxonomy/grouping pipeline (P3/P4)
+is wired in (see PLAN_10_GIO.md §5 Giai đoạn 3).
+"""
+
+from __future__ import annotations
+
+import json
 import os
-from fastapi import FastAPI, HTTPException, Path
+from pathlib import Path
+from typing import List
+
+from fastapi import FastAPI, HTTPException, Path as FastApiPath
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
-from typing import List
-from .mongo_models import QuestionIn, ClusterSummaryIn
-from pydantic import BaseModel
+
+try:
+    from backend.schemas import AnalyzeRequest, AnalyzeResponse
+except ImportError:
+    pass
+
+try:
+    from backend.mongo_models import QuestionIn, ClusterSummaryIn
+except ImportError:
+    pass
 
 
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
 DB_NAME = os.getenv("MONGO_DB", "hackathon")
 
-
 def get_db_client():
     return AsyncIOMotorClient(MONGO_URI)
 
+FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
 
-app = FastAPI(title="Questions Clustering MVP")
+app = FastAPI(title="Question Taxonomy Analyzer")
 client = get_db_client()
 db = client[DB_NAME]
 
-# Allow CORS for frontend during development. In production, restrict origins.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -37,6 +57,18 @@ class IDResponse(BaseModel):
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+
+@app.get("/health")
+def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@app.post("/api/analyze", response_model=AnalyzeResponse)
+def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
+    demo_response = json.loads((FIXTURES_DIR / "demo_response.json").read_text(encoding="utf-8"))
+    demo_response["session_id"] = request.session_id
+    return AnalyzeResponse.model_validate(demo_response)
 
 
 @app.post("/questions", response_model=IDResponse, status_code=201)
@@ -68,7 +100,7 @@ async def list_clusters(limit: int = 100):
 
 
 @app.post("/clusters/{cluster_id}/summarize")
-async def summarize_cluster(cluster_id: str = Path(...), payload: ClusterSummaryIn = None):
+async def summarize_cluster(cluster_id: str = FastApiPath(...), payload: ClusterSummaryIn = None):
     # Load cluster and member questions
     try:
         oid = ObjectId(cluster_id)
