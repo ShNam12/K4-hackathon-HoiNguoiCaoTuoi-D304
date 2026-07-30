@@ -26,6 +26,8 @@ không chắc chắn cho giảng viên duyệt hoặc sửa.
 - Đặc tả sản phẩm: [`spec.md`](spec.md)
 - Kịch bản validation:
   [`validation/test-script.md`](validation/test-script.md)
+- Trạng thái tích hợp Giai đoạn 3:
+  [`validation/phase3-integration-status.md`](validation/phase3-integration-status.md)
 
 ---
 
