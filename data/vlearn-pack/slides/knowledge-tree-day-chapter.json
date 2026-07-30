@@ -1,478 +1,1072 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "generated_at": "2026-07-30",
-  "taxonomy_levels": ["day", "chapter"],
-  "description": "Knowledge tree for 2-level matching (day -> chapter), synthesized from 4 markdown slide files.",
+  "description": "Cay tri thuc 2 cap (day -> chapter) tong hop tu 4 file slide markdown cua khoa AI IN ACTION. Dung cho he thong matching: dua mot cau hoi cua hoc vien ve dung (day_id, chapter_id).",
+  "taxonomy": {
+    "levels": ["day", "chapter"],
+    "level_1": "day — buoi hoc (DAY_01, DAY_02)",
+    "level_2": "chapter — muc noi dung trong buoi hoc"
+  },
   "sources": [
-    "data/vlearn-pack/slides/day1-ai-llm-foundation.md",
-    "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md",
-    "data/vlearn-pack/slides/day02-slide-v1.md",
-    "data/vlearn-pack/slides/day02-xac-dinh-bai-toan-cho-ai.md"
+    {
+      "file_id": "D1",
+      "path": "data/vlearn-pack/slides/day1-ai-llm-foundation.md",
+      "day_id": "DAY_01",
+      "role": "canonical",
+      "heading_convention": "## <so thu tu>. <tieu de chuong>",
+      "note": "Ban sach cua Day 1 — 27 chuong danh so lien tuc."
+    },
+    {
+      "file_id": "D2C",
+      "path": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md",
+      "day_id": "DAY_02",
+      "role": "canonical",
+      "heading_convention": "## <so thu tu>. <tieu de chuong>",
+      "note": "Ban sach cua Day 2 — 27 chuong danh so lien tuc. La xuong song cua DAY_02."
+    },
+    {
+      "file_id": "D2V1",
+      "path": "data/vlearn-pack/slides/day02-slide-v1.md",
+      "day_id": "DAY_02",
+      "role": "variant",
+      "heading_convention": "## <so section> · <ten section>  /  ### <tieu de slide>",
+      "note": "Ban slide v1 cua Day 2, to chuc theo 6 section + phan Lab. Chua mot so noi dung khong co trong ban canonical."
+    },
+    {
+      "file_id": "D2X",
+      "path": "data/vlearn-pack/slides/day02-xac-dinh-bai-toan-cho-ai.md",
+      "day_id": "DAY_02",
+      "role": "variant_detailed",
+      "heading_convention": "# SECTION <n> — <ten>  /  ## Slide <n> — <tieu de>",
+      "note": "Ban chi tiet tung slide cua Day 2 (76 slide + appendix). Nguon day du nhat cho DAY_02."
+    }
   ],
-  "normalization_hints": {
-    "case_insensitive": true,
+  "normalization": {
+    "lowercase": true,
+    "strip_diacritics": true,
     "strip_punctuation": true,
-    "collapse_spaces": true,
-    "accept_day_alias": ["day 1", "day01", "day 01", "day 2", "day02", "day 02"]
-  },
-  "matching_contract": {
-    "primary_match_level": "chapter",
-    "fallback_match_level": "day",
-    "required_output_fields": ["day_id", "chapter_id", "confidence", "matched_terms"],
-    "confidence_policy": {
-      "high": "question matches chapter aliases and at least one topic keyword",
-      "medium": "question matches either chapter title or topic keyword set",
-      "low": "question matches only day-level aliases"
+    "collapse_whitespace": true,
+    "apply_to": "ca query lan keyword/alias trong file nay — matcher phai fold dau tieng Viet o CA HAI phia truoc khi so sanh",
+    "day_aliases": {
+      "DAY_01": ["day 1", "day 01", "day1", "day01", "ngay 1", "buoi 1", "b1"],
+      "DAY_02": ["day 2", "day 02", "day2", "day02", "ngay 2", "buoi 2", "b2"]
     }
   },
-  "topic_index": [
-    {
-      "topic_id": "TOPIC_DAY02_CASE_CURSOR",
-      "topic_label": "CURSOR - Lech nang luc cot loi",
-      "keywords": ["cursor", "lech nang luc cot loi", "ai code editor", "cad", "core competency"],
-      "maps_to": {
-        "day_id": "DAY_02",
-        "chapter_id": "DAY_02_CH_03"
-      }
-    },
-    {
-      "topic_id": "TOPIC_DAY02_CASE_ARTIFACT",
-      "topic_label": "ARTIFACT - San pham tot khong dong nghia thi truong lon",
-      "keywords": ["artifact", "san pham tot thi truong lon", "dong cua 1/2024", "product market size"],
-      "maps_to": {
-        "day_id": "DAY_02",
-        "chapter_id": "DAY_02_CH_03"
-      }
-    },
-    {
-      "topic_id": "TOPIC_DAY02_CASE_NOTEBOOKLM",
-      "topic_label": "NOTEBOOKLM - Dinh vi dung diem dau",
-      "keywords": ["notebooklm", "dinh vi dung diem dau", "tom tat tai lieu", "hoi dap tren tai lieu", "trich dan nguon"],
-      "maps_to": {
-        "day_id": "DAY_02",
-        "chapter_id": "DAY_02_CH_03"
-      }
-    }
-  ],
+  "matching": {
+    "primary_level": "chapter",
+    "fallback_level": "day",
+    "output_fields": ["day_id", "chapter_id", "confidence", "matched_terms", "source_refs"],
+    "tiers": [
+      { "tier": 1, "rule": "exact match tren chapter_title hoac aliases", "confidence": "high" },
+      { "tier": 2, "rule": ">=2 keyword cua cung mot chapter xuat hien trong query", "confidence": "high" },
+      { "tier": 3, "rule": "1 keyword dac trung (entity: ten paper, ten san pham, thuat ngu rieng)", "confidence": "medium" },
+      { "tier": 4, "rule": "chi khop day alias hoac tu khoa chung chung", "confidence": "low — tra ve day_id, chapter_id = null" }
+    ],
+    "tie_breakers": [
+      "uu tien chapter co is_canonical = true",
+      "uu tien chapter co nhieu matched_terms hon",
+      "uu tien keyword dai hon (cu the hon) khi hai chapter cung so luong match"
+    ],
+    "no_match_policy": "Neu khong dat tier 4, tra ve { day_id: null, chapter_id: null, confidence: 'none' } — KHONG doan bua."
+  },
   "days": [
     {
       "day_id": "DAY_01",
-      "day_title": "DAY 01 - AI & LLM FOUNDATION",
+      "day_title": "DAY 01 — AI & LLM FOUNDATION",
+      "day_subtitle": "Tu \"nghe AI\" den \"goi AI\" trong mot ngay",
       "day_aliases": [
-        "AI IN ACTION - Day 1: AI & LLM Foundation",
-        "Day 1",
-        "Day 01",
-        "AI & LLM Foundation"
+        "AI IN ACTION — Day 1: AI & LLM Foundation",
+        "AI & LLM Foundation",
+        "LLM Foundation",
+        "nen tang AI va LLM"
       ],
-      "source_files": [
-        "data/vlearn-pack/slides/day1-ai-llm-foundation.md"
+      "day_keywords": [
+        "llm", "transformer", "token", "context", "attention", "agent",
+        "prompt", "temperature", "chi phi token", "lich su ai", "co che van hanh llm"
       ],
+      "source_files": ["D1"],
+      "chapter_count": 27,
       "chapters": [
         {
           "chapter_id": "DAY_01_CH_01",
-          "chapter_title": "AI, ML, Deep Learning, GenAI, LLM - nam o dau trong cung mot he?",
-          "chapter_title_original": "1. AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 22 },
-          "aliases": ["AI ML Deep Learning GenAI LLM"]
+          "order": 1,
+          "is_canonical": true,
+          "chapter_title": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?",
+          "summary": "Cau truc long nhau AI > ML > Deep Learning > Generative AI > LLM va dinh nghia tung tang.",
+          "aliases": ["phan tang AI", "AI ML DL GenAI LLM", "LLM nam o dau"],
+          "keywords": ["artificial intelligence", "machine learning", "deep learning", "generative ai", "genai", "llm", "cau truc long nhau", "tang nen", "hoc tu du lieu thay vi viet luat tay", "mang no-ron nhieu tang"],
+          "source_refs": [{ "file_id": "D1", "line": 22 }]
         },
         {
           "chapter_id": "DAY_01_CH_02",
-          "chapter_title": "Ba nhom AI chinh: phan loai, sinh noi dung, hanh dong",
-          "chapter_title_original": "2. Ba nhóm AI chính: phân loại · sinh nội dung · hành động",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 46 }
+          "order": 2,
+          "is_canonical": true,
+          "chapter_title": "Ba nhóm AI chính: phân loại · sinh nội dung · hành động",
+          "summary": "Discriminative AI vs Generative AI vs Agentic AI — luong xu ly va vi du cua tung nhom.",
+          "aliases": ["ba nhom AI", "discriminative generative agentic"],
+          "keywords": ["discriminative ai", "generative ai", "agentic ai", "phan loai", "sinh noi dung", "hanh dong", "loc spam", "phat hien gian lan", "goal plan action", "midjourney"],
+          "source_refs": [{ "file_id": "D1", "line": 46 }]
         },
         {
           "chapter_id": "DAY_01_CH_03",
-          "chapter_title": "Lich su AI 70 nam",
-          "chapter_title_original": "3. Lịch sử AI 70 năm",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 60 }
+          "order": 3,
+          "is_canonical": true,
+          "chapter_title": "Lịch sử AI 70 năm",
+          "summary": "Dong thoi gian 1956–2026, hai mua dong AI va ba thong diep lich su.",
+          "aliases": ["lich su AI", "dong thoi gian AI", "70 nam AI"],
+          "keywords": ["dartmouth workshop 1956", "perceptrons 1969", "bao cao lighthill", "mua dong ai", "ai winter", "sup do lisp machine", "alexnet 2012", "alphago 2016", "gpt-1", "bert", "ky nguyen agent"],
+          "source_refs": [{ "file_id": "D1", "line": 60 }]
         },
         {
           "chapter_id": "DAY_01_CH_04",
-          "chapter_title": "1980: He chuyen gia",
-          "chapter_title_original": "4. 1980: Hệ chuyên gia (expert system)",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 96 }
+          "order": 4,
+          "is_canonical": true,
+          "chapter_title": "1980: Hệ chuyên gia (expert system)",
+          "summary": "AI doi chien luoc: bo tri tue tong quat, tap trung giai that tot mot mien hep bang luat.",
+          "aliases": ["he chuyen gia", "expert system", "1980"],
+          "keywords": ["expert system", "he chuyen gia", "ma hoa tri thuc chuyen gia thanh luat", "mien hep", "tri tue tong quat"],
+          "source_refs": [{ "file_id": "D1", "line": 96 }]
         },
         {
           "chapter_id": "DAY_01_CH_05",
-          "chapter_title": "2009: Fei-Fei Li va ImageNet",
-          "chapter_title_original": "5. 2009: Fei-Fei Li và ImageNet — cuộc cách mạng của dữ liệu",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 105 }
+          "order": 5,
+          "is_canonical": true,
+          "chapter_title": "2009: Fei-Fei Li và ImageNet — cuộc cách mạng của dữ liệu",
+          "summary": "14 trieu anh gan nhan tay — bai hoc du lieu tot hon danh bai thuat toan khon hon.",
+          "aliases": ["ImageNet", "Fei-Fei Li", "cach mang du lieu"],
+          "keywords": ["imagenet", "fei-fei li", "14 trieu anh", "gan nhan tay", "alexnet", "cvpr 2009", "du lieu tot hon thuat toan khon hon", "ted 2015"],
+          "source_refs": [{ "file_id": "D1", "line": 105 }]
         },
         {
           "chapter_id": "DAY_01_CH_06",
+          "order": 6,
+          "is_canonical": true,
           "chapter_title": "2017: Transformer",
-          "chapter_title_original": "6. 2017: Transformer",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 115 }
+          "summary": "Bai bao Attention Is All You Need — nen mong ky thuat cho GPT, BERT va toan bo lan song LLM.",
+          "aliases": ["Transformer", "Attention Is All You Need", "2017"],
+          "keywords": ["transformer", "attention is all you need", "vaswani", "noam shazeer", "google brain", "nen mong llm", "buoc ngoat 2017"],
+          "source_refs": [{ "file_id": "D1", "line": 115 }]
         },
         {
           "chapter_id": "DAY_01_CH_07",
+          "order": 7,
+          "is_canonical": true,
           "chapter_title": "2022: ChatGPT",
-          "chapter_title_original": "7. 2022: ChatGPT",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 123 }
+          "summary": "ChatGPT bien LLM thanh trai nghiem dai chung qua mot giao dien don gian.",
+          "aliases": ["ChatGPT", "2022"],
+          "keywords": ["chatgpt", "trai nghiem dai chung", "giao dien don gian", "nguoi dung pho thong"],
+          "source_refs": [{ "file_id": "D1", "line": 123 }]
         },
         {
           "chapter_id": "DAY_01_CH_08",
-          "chapter_title": "LLM la gi?",
-          "chapter_title_original": "8. LLM là gì? — một bộ não nền, không phải một chatbot",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 131 }
+          "order": 8,
+          "is_canonical": true,
+          "chapter_title": "LLM là gì? — một bộ não nền, không phải một chatbot",
+          "summary": "LLM la model nen dung chung cho nhieu viec; chatbot chi la lop ao ben ngoai.",
+          "aliases": ["LLM la gi", "large language model", "bo nao nen"],
+          "keywords": ["large language model", "bo nao nen", "model nen", "foundation model", "chatbot chi la lop ao", "decoder-only", "moe", "sft", "rlhf", "dpo", "hang nghin ty token"],
+          "source_refs": [{ "file_id": "D1", "line": 131 }]
         },
         {
           "chapter_id": "DAY_01_CH_09",
-          "chapter_title": "Ben trong Transformer: dau ra la phan bo xac suat",
-          "chapter_title_original": "9. Bên trong Transformer: đầu ra luôn là một phân bố xác suất",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 152 }
+          "order": 9,
+          "is_canonical": true,
+          "chapter_title": "Bên trong Transformer: đầu ra luôn là một phân bố xác suất",
+          "summary": "Voi moi ngu canh, model cham diem MOI tu trong tu vung roi chon theo xac suat.",
+          "aliases": ["phan bo xac suat", "probability distribution", "ben trong transformer"],
+          "keywords": ["phan bo xac suat", "cham diem moi tu trong tu vung", "xac suat token", "3blue1brown", "wild pi creature"],
+          "source_refs": [{ "file_id": "D1", "line": 152 }]
         },
         {
           "chapter_id": "DAY_01_CH_10",
-          "chapter_title": "Sinh van ban = doan, noi vao cau, doan tiep",
-          "chapter_title_original": "10. Sinh văn bản = đoán → nối vào câu → đoán tiếp",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 179 }
+          "order": 10,
+          "is_canonical": true,
+          "chapter_title": "Sinh văn bản = đoán → nối vào câu → đoán tiếp",
+          "summary": "Vong lap predict → append → rerun: moi token moi duoc noi vao ngu canh roi model chay lai.",
+          "aliases": ["sinh van ban", "predict append rerun", "doan token tiep theo"],
+          "keywords": ["sinh van ban", "doan noi doan tiep", "predict append rerun", "token duoc chon", "autoregressive", "vong lap sinh chu"],
+          "source_refs": [{ "file_id": "D1", "line": 179 }]
         },
         {
           "chapter_id": "DAY_01_CH_11",
-          "chapter_title": "Token: model doc manh chu",
-          "chapter_title_original": "11. Token: model không đọc \"từ\", model đọc mảnh chữ",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 195 }
+          "order": 11,
+          "is_canonical": true,
+          "chapter_title": "Token: model không đọc \"từ\", model đọc mảnh chữ",
+          "summary": "Token la manh chu; tieng Viet/code/JSON ton token hon tieng Anh — moi token deu co gia.",
+          "aliases": ["token la gi", "tokenizer", "manh chu"],
+          "keywords": ["token", "tokenizer", "manh chu", "tieng viet ton token hon", "ti le token tren tu", "cl100k_base", "gpt-4 tokenizer", "hello world 2 token"],
+          "source_refs": [{ "file_id": "D1", "line": 195 }]
         },
         {
           "chapter_id": "DAY_01_CH_12",
-          "chapter_title": "Context: ban lam viec co han",
-          "chapter_title_original": "12. Context: bàn làm việc có hạn của model",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 218 }
+          "order": 12,
+          "is_canonical": true,
+          "chapter_title": "Context: bàn làm việc có hạn của model",
+          "summary": "Context = ban lam viec; ban day thi do o giua de bi bo sot (lost in the middle).",
+          "aliases": ["context", "context window", "ban lam viec cua model"],
+          "keywords": ["context", "cua so ngu canh", "context window", "128k token", "1m token", "lost in the middle", "quen phan giua", "context cang dai cang ton tien"],
+          "source_refs": [{ "file_id": "D1", "line": 218 }]
         },
         {
           "chapter_id": "DAY_01_CH_13",
-          "chapter_title": "Attention: moi tu nhin sang tu quan trong",
-          "chapter_title_original": "13. Attention: mỗi từ được \"nhìn sang\" những từ quan trọng khác",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 234 }
+          "order": 13,
+          "is_canonical": true,
+          "chapter_title": "Attention: mỗi từ được \"nhìn sang\" những từ quan trọng khác",
+          "summary": "Co che attention cho moi token quay dau nhin lai va cham diem lien quan — chu T trong GPT.",
+          "aliases": ["attention", "co che chu y", "chu T trong GPT"],
+          "keywords": ["attention", "co che chu y", "quay dau nhin lai", "cham diem lien quan", "khoa nghia theo ngu canh", "chu t trong gpt", "3blue1brown"],
+          "source_refs": [{ "file_id": "D1", "line": 234 }]
         },
         {
           "chapter_id": "DAY_01_CH_14",
-          "chapter_title": "Hieu attention de dung AI hieu qua",
-          "chapter_title_original": "14. Hiểu attention để dùng AI hiệu quả: quản context = quản sự chú ý",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 248 }
+          "order": 14,
+          "is_canonical": true,
+          "chapter_title": "Hiểu attention để dùng AI hiệu quả: quản context = quản sự chú ý",
+          "summary": "Ba nguyen tac bay context: dat viec quan trong dau-cuoi, giu ban sach, cho tra so (RAG) thay vi bat nho.",
+          "aliases": ["quan context", "quan su chu y", "bay context the nao"],
+          "keywords": ["dat dieu quan trong dau cuoi", "context rac attention rac", "giu ban lam viec sach", "cho tra so thay vi bat nho", "rag", "tom tat thay vi keo theo moi thu", "dua dung file lien quan"],
+          "source_refs": [{ "file_id": "D1", "line": 248 }]
         },
         {
           "chapter_id": "DAY_01_CH_15",
-          "chapter_title": "Tham so parameter",
-          "chapter_title_original": "15. Tham số (parameter): những \"khớp nối\" model học được",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 265 }
+          "order": 15,
+          "is_canonical": true,
+          "chapter_title": "Tham số (parameter): những \"khớp nối\" model học được",
+          "summary": "Tham so la thu model hoc duoc, khong chinh duoc luc dung; so sanh dense vs MoE va scaling law.",
+          "aliases": ["tham so", "parameter", "weights"],
+          "keywords": ["tham so", "parameter", "khop noi", "file weights", "gpt-3 175 ty", "kimi k3 2800 ty", "dense", "moe", "mixture of experts", "scaling law", "kaplan 2020"],
+          "source_refs": [{ "file_id": "D1", "line": 265 }]
         },
         {
           "chapter_id": "DAY_01_CH_16",
-          "chapter_title": "LLM duoc tao ra nhu the nao",
-          "chapter_title_original": "16. LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 286 }
+          "order": 16,
+          "is_canonical": true,
+          "chapter_title": "LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề",
+          "summary": "Bon buoc: Pre-training → SFT → RLHF/DPO → luyen suy luan.",
+          "aliases": ["cach tao ra LLM", "quy trinh huan luyen LLM", "bon buoc huan luyen"],
+          "keywords": ["pre-training", "sft", "supervised fine-tuning", "rlhf", "dpo", "luyen suy luan", "reasoning training", "rlvr", "instructgpt", "doc ca thu vien"],
+          "source_refs": [{ "file_id": "D1", "line": 286 }]
         },
         {
           "chapter_id": "DAY_01_CH_17",
-          "chapter_title": "RLHF: ba buoc uon model",
-          "chapter_title_original": "17. RLHF: ba bước uốn cỗ máy đoán token thành trợ lý biết nghe lời",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 301 }
+          "order": 17,
+          "is_canonical": true,
+          "chapter_title": "RLHF: ba bước uốn cỗ máy đoán token thành trợ lý biết nghe lời",
+          "summary": "Model sinh nhieu cau tra loi → nguoi xep hang → reward model → huan luyen theo diem.",
+          "aliases": ["RLHF", "reward model", "ba buoc RLHF"],
+          "keywords": ["rlhf", "reward model", "xep hang cau tra loi", "may cham diem thay nguoi", "helpful harmless honest", "instructgpt", "ouyang 2022", "dpo"],
+          "source_refs": [{ "file_id": "D1", "line": 301 }]
         },
         {
           "chapter_id": "DAY_01_CH_18",
-          "chapter_title": "Gioi han bam sinh cua LLM",
-          "chapter_title_original": "18. Giới hạn bẩm sinh: học giả trong bong bóng",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 328 }
+          "order": 18,
+          "is_canonical": true,
+          "chapter_title": "Giới hạn bẩm sinh: học giả trong bong bóng",
+          "summary": "Ba gioi han goc: knowledge cutoff, hallucination, context co tran — la ban chat cua co may doan token.",
+          "aliases": ["gioi han cua LLM", "hoc gia trong bong bong", "diem yeu LLM"],
+          "keywords": ["knowledge cutoff", "bong bong thoi gian", "hallucination", "ao giac", "noi chac nhu dung roi", "ban lam viec co han", "lukasz kaiser", "ban chat co may doan token", "biet nhieu khac lam duoc"],
+          "source_refs": [{ "file_id": "D1", "line": 328 }]
         },
         {
           "chapter_id": "DAY_01_CH_19",
-          "chapter_title": "Vi sao model van sai",
-          "chapter_title_original": "19. Vì sao model vẫn sai: nó rất giỏi học vẹt đường tắt",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 348 }
+          "order": 19,
+          "is_canonical": true,
+          "chapter_title": "Vì sao model vẫn sai: nó rất giỏi học vẹt đường tắt",
+          "summary": "Spurious cues — model hoc duong tat gia; benchmark cao khong bang test tren du lieu cua chinh minh.",
+          "aliases": ["spurious cues", "duong tat gia", "vi sao model sai"],
+          "keywords": ["spurious cues", "duong tat gia", "hoc vet", "shortcut", "dem so hyperlink", "mnli", "opend5", "benchmark cao khong dong nghia hieu dung", "zhong 2022", "test tren du lieu cua chinh minh"],
+          "source_refs": [{ "file_id": "D1", "line": 348 }]
         },
         {
           "chapter_id": "DAY_01_CH_20",
-          "chapter_title": "Chain-of-Thought",
-          "chapter_title_original": "20. Chain-of-Thought: chỉ thêm \"giấy nháp\", từ sai thành đúng",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 366 }
+          "order": 20,
+          "is_canonical": true,
+          "chapter_title": "Chain-of-Thought: chỉ thêm \"giấy nháp\", từ sai thành đúng",
+          "summary": "Bai toan bong tennis: cho model viet nhap tung buoc thi tu sai thanh dung.",
+          "aliases": ["Chain-of-Thought", "CoT", "nghi tung buoc", "giay nhap"],
+          "keywords": ["chain of thought", "cot", "hay nghi tung buoc", "let's think step by step", "giay nhap", "wei 2022", "reasoning model", "o1", "r1", "test-time compute", "bai toan bong tennis"],
+          "source_refs": [{ "file_id": "D1", "line": 366 }]
         },
         {
           "chapter_id": "DAY_01_CH_21",
-          "chapter_title": "Tu LLM den agent: bon muc do",
-          "chapter_title_original": "21. Từ LLM đến agent: bốn mức độ",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 387 }
+          "order": 21,
+          "is_canonical": true,
+          "chapter_title": "Từ LLM đến agent: bốn mức độ",
+          "summary": "Level 0 bo nao suy luan → Level 1 co tools → Level 2 biet lap ke hoach → Level 3 doi multi-agent.",
+          "aliases": ["bon muc do agent", "tu LLM den agent", "level 0 1 2 3"],
+          "keywords": ["level 0", "level 1", "level 2", "level 3", "bo nao suy luan", "co ket noi", "biet lap ke hoach", "doi agent phoi hop", "multi-agent", "muc tu chu", "agent khong phai mot loai model khac"],
+          "source_refs": [{ "file_id": "D1", "line": 387 }]
         },
         {
           "chapter_id": "DAY_01_CH_22",
-          "chapter_title": "Giai phau mot agent: 5 bo phan la mot vong lap",
-          "chapter_title_original": "22. Giải phẫu một agent: 5 bộ phận là một vòng lặp",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 402 }
+          "order": 22,
+          "is_canonical": true,
+          "chapter_title": "Giải phẫu một agent: 5 bộ phận là một vòng lặp",
+          "summary": "Goal + Reasoning + Tools + Memory + Action chay thanh vong lap cho toi khi xong viec.",
+          "aliases": ["giai phau agent", "5 bo phan cua agent", "cau tao agent"],
+          "keywords": ["goal", "reasoning", "tools", "action", "memory", "vong lap agent", "so tay ghi nho", "quan sat ket qua roi lap lai"],
+          "source_refs": [{ "file_id": "D1", "line": 402 }]
         },
         {
           "chapter_id": "DAY_01_CH_23",
-          "chapter_title": "Cung muc nang luc, gia roi 10 lan moi nam",
-          "chapter_title_original": "23. Cùng một mức năng lực, giá rơi khoảng 10 lần mỗi năm",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 418 }
+          "order": 23,
+          "is_canonical": true,
+          "chapter_title": "Cùng một mức năng lực, giá rơi khoảng 10 lần mỗi năm",
+          "summary": "Bang gia input token 2022–2026; cung nang luc GPT-3.5 re hon >280 lan trong ~2 nam.",
+          "aliases": ["gia model giam", "chi phi model theo nam", "gia roi 10 lan moi nam"],
+          "keywords": ["gia 1 trieu token input", "text-davinci-003", "gpt-4 turbo", "gpt-4o", "gemini 1.5 pro", "deepseek r1", "deepseek v3", "claude 3 haiku", "open-weight", "280 lan re hon"],
+          "source_refs": [{ "file_id": "D1", "line": 418 }]
         },
         {
           "chapter_id": "DAY_01_CH_24",
-          "chapter_title": "Chon model theo tang",
-          "chapter_title_original": "24. Chọn model theo TẦNG, không chọn theo tên",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 444 }
+          "order": 24,
+          "is_canonical": true,
+          "chapter_title": "Chọn model theo TẦNG, không chọn theo tên",
+          "summary": "Ba tang: frontier dong / re ma manh (mac dinh thu truoc) / self-host sieu re; hai loi doi xung.",
+          "aliases": ["chon model", "chon model theo tang", "tang model"],
+          "keywords": ["tang 1 frontier dong", "tang 2 re ma manh", "tang 3 self-host", "fable 5", "gpt-5.6", "opus 4.8", "sonnet 4.6", "gemini 3.1 pro", "kimi k3", "haiku", "flash", "qwen", "hai loi doi xung", "mac dinh thu tang 2 truoc"],
+          "source_refs": [{ "file_id": "D1", "line": 444 }]
         },
         {
           "chapter_id": "DAY_01_CH_25",
-          "chapter_title": "Token co gia",
-          "chapter_title_original": "25. Token có giá: vé vào rẻ, vé ra đắt gấp 3–5 lần",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 460 }
+          "order": 25,
+          "is_canonical": true,
+          "chapter_title": "Token có giá: vé vào rẻ, vé ra đắt gấp 3–5 lần",
+          "summary": "Input x1 vs output x3–5; doc muc usage trong response de kiem soat chi phi.",
+          "aliases": ["chi phi token", "gia input output", "ve vao ve ra"],
+          "keywords": ["input token", "output token", "ve vao", "ve ra", "dat gap 3-5 lan", "hoa don api", "usage trong response", "chi phi moi lan goi", "kiem soat output"],
+          "source_refs": [{ "file_id": "D1", "line": 460 }]
         },
         {
           "chapter_id": "DAY_01_CH_26",
-          "chapter_title": "Giai phau mot prompt: bon lop xep chong",
-          "chapter_title_original": "26. Giải phẫu một prompt: bốn lớp xếp chồng",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 486 }
+          "order": 26,
+          "is_canonical": true,
+          "chapter_title": "Giải phẫu một prompt: bốn lớp xếp chồng",
+          "summary": "System instruction + User input + Context bo sung + Output mong muon.",
+          "aliases": ["giai phau prompt", "bon lop cua prompt", "cau truc prompt"],
+          "keywords": ["system instruction", "user input", "context bo sung", "output mong muon", "loi dan dau ca", "prompt engineering", "bon lop xep chong"],
+          "source_refs": [{ "file_id": "D1", "line": 486 }]
         },
         {
           "chapter_id": "DAY_01_CH_27",
-          "chapter_title": "Temperature va top_p",
-          "chapter_title_original": "27. Hai núm vặn chọn từ: temperature & top_p",
-          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 499 }
+          "order": 27,
+          "is_canonical": true,
+          "chapter_title": "Hai núm vặn chọn từ: temperature & top_p",
+          "summary": "temperature doi do lieu, top_p cat duoi dai; thuong chi van mot trong hai. Mac dinh an toan T=0.",
+          "aliases": ["temperature", "top_p", "hai num van", "num van chon tu"],
+          "keywords": ["temperature", "top_p", "nucleus sampling", "t = 0", "t = 1", "t = 2", "num van do lieu", "cat duoi dai xac suat thap", "mac dinh an toan temperature 0", "khong lam model thong minh hon"],
+          "source_refs": [{ "file_id": "D1", "line": 499 }]
         }
       ]
     },
     {
       "day_id": "DAY_02",
-      "day_title": "DAY 02 - XAC DINH BAI TOAN CHO AI",
+      "day_title": "DAY 02 — XÁC ĐỊNH BÀI TOÁN CHO AI",
+      "day_subtitle": "Tu yeu cau mo ho den Problem Statement ro rang",
       "day_aliases": [
-        "AI IN ACTION - DAY 02 - Xac dinh bai toan cho AI",
+        "AI IN ACTION · DAY 02 — Xác định bài toán cho AI",
         "Xac dinh bai toan cho AI",
-        "Day 2",
-        "Day 02"
+        "Problem Statement",
+        "Problem Discovery"
       ],
-      "source_files": [
-        "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md",
-        "data/vlearn-pack/slides/day02-slide-v1.md",
-        "data/vlearn-pack/slides/day02-xac-dinh-bai-toan-cho-ai.md"
+      "day_keywords": [
+        "problem statement", "problem discovery", "double diamond", "pair",
+        "rule workflow agent", "reward function", "precision recall",
+        "go not yet no-go", "eval plan", "automate augment", "quick problem card"
       ],
-      "chapter_variants": {
-        "day02_slide_v1_major_sections": [
-          "Mở đầu",
-          "01 · Problem Discovery",
-          "02 · Problem Statement",
-          "03 · Có nên ứng dụng AI?",
-          "04 · Rule / Workflow / Agent",
-          "05 · Problem Statement hoàn chỉnh",
-          "06 · Bài tập Lab ngày 02",
-          "Recap · Năm nguyên tắc cốt lõi sau Day 02"
-        ]
+      "source_files": ["D2C", "D2V1", "D2X"],
+      "chapter_count": 56,
+      "section_map": {
+        "note": "Ban D2V1 va D2X to chuc theo section; dung de dinh vi tho truoc khi match chapter.",
+        "D2V1": ["Mở đầu", "01 · Problem Discovery", "02 · Problem Statement", "03 · Có nên ứng dụng AI?", "04 · Rule / Workflow / Agent", "05 · Problem Statement hoàn chỉnh", "06 · Bài tập Lab ngày 02", "Recap"],
+        "D2X": ["MỞ ĐẦU", "SECTION 01 — Problem Discovery", "SECTION 02 — Problem Statement", "SECTION 03 — Có nên ứng dụng AI?", "SECTION 04 — Rule / Workflow / Agent", "SECTION 05 — Problem Statement hoàn chỉnh", "RECAP", "APPENDIX · ĐỌC THÊM"]
       },
       "chapters": [
         {
           "chapter_id": "DAY_02_CH_01",
-          "chapter_title": "Tim dung van de truoc khi tim giai phap",
-          "chapter_title_original": "1. Tìm đúng vấn đề trước khi tìm giải pháp",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 34 }
+          "order": 1,
+          "is_canonical": true,
+          "chapter_title": "Tìm đúng vấn đề trước khi tìm giải pháp",
+          "summary": "Mo hinh Double Diamond — Diamond 1 tim dung VAN DE, Diamond 2 tim dung GIAI PHAP.",
+          "aliases": ["Double Diamond", "tim dung van de", "hai kim cuong"],
+          "keywords": ["double diamond", "don norman", "british design council", "discover", "define", "develop", "deliver", "giai phap xuat sac cho sai van de", "kham pha van de that"],
+          "source_refs": [{ "file_id": "D2C", "line": 34 }, { "file_id": "D2V1", "line": 143 }, { "file_id": "D2X", "line": 212 }]
         },
         {
           "chapter_id": "DAY_02_CH_02",
-          "chapter_title": "Diamond 1 - Tim dung van de",
-          "chapter_title_original": "2. Diamond 1 — Tìm đúng vấn đề",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 54 }
+          "order": 2,
+          "is_canonical": true,
+          "chapter_title": "Diamond 1 — Tìm đúng vấn đề",
+          "summary": "Bo cong cu Phan ky (Discover) vs Hoi tu (Define).",
+          "aliases": ["Diamond 1", "phan ky hoi tu", "discover define"],
+          "keywords": ["phan ky", "hoi tu", "observation", "user interview", "survey", "diary study", "stakeholder mapping", "affinity mapping", "5 whys", "impact effort", "dot voting", "how might we", "so do dong cam"],
+          "source_refs": [{ "file_id": "D2C", "line": 54 }, { "file_id": "D2V1", "line": 166 }, { "file_id": "D2X", "line": 241 }]
         },
         {
           "chapter_id": "DAY_02_CH_03",
-          "chapter_title": "Khoi nguon tu bai toan, khong bat dau tu AI",
-          "chapter_title_original": "3. Khởi nguồn từ bài toán, không bắt đầu từ AI",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 69 },
-          "aliases": [
-            "Khoi nguon tu bai toan",
-            "Khong bat dau tu AI",
-            "Problem first not AI first",
-            "Case study CURSOR ARTIFACT NOTEBOOKLM"
-          ],
-          "keywords": [
-            "cursor",
-            "artifact",
-            "notebooklm",
-            "lech nang luc cot loi",
-            "san pham tot khong dong nghia thi truong lon",
-            "dinh vi dung diem dau",
-            "bai toan truoc giai phap",
-            "problem first",
-            "solution first"
-          ],
-          "additional_sources": [
-            {
-              "file": "data/vlearn-pack/slides/day02-slide-v1.md",
-              "line": 243,
-              "heading": "### Khởi nguồn từ bài toán, không bắt đầu từ AI"
-            },
-            {
-              "file": "data/vlearn-pack/slides/day02-xac-dinh-bai-toan-cho-ai.md",
-              "line": 311,
-              "heading": "## Slide 22 — Khởi nguồn từ bài toán, không bắt đầu từ AI"
-            }
-          ]
+          "order": 3,
+          "is_canonical": true,
+          "chapter_title": "Khởi nguồn từ bài toán, không bắt đầu từ AI",
+          "summary": "Ba case that: CURSOR (lech nang luc cot loi), ARTIFACT (san pham tot khac thi truong lon), NOTEBOOKLM (dinh vi dung diem dau).",
+          "aliases": ["khoi nguon tu bai toan", "khong bat dau tu AI", "problem first not AI first", "case study Cursor Artifact NotebookLM"],
+          "keywords": ["cursor", "lech nang luc cot loi", "ai code editor", "cad", "artifact", "san pham tot khong dong nghia thi truong lon", "dong cua 1/2024", "ung dung doc tin", "notebooklm", "dinh vi dung diem dau", "trich dan nguon", "bai toan quy trinh chi so giai phap", "lenny's podcast"],
+          "source_refs": [{ "file_id": "D2C", "line": 69 }, { "file_id": "D2V1", "line": 243 }, { "file_id": "D2X", "line": 311 }]
         },
         {
           "chapter_id": "DAY_02_CH_04",
-          "chapter_title": "Tim bai toan AI o dau? - 4 Lenses",
-          "chapter_title_original": "4. Tìm bài toán AI ở đâu? — 4 Lenses",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 88 }
+          "order": 4,
+          "is_canonical": true,
+          "chapter_title": "Tìm bài toán AI ở đâu? — 4 Lenses",
+          "summary": "Bon lang kinh: Repetitive, Time-consuming, AI Advantage, User Pain Points.",
+          "aliases": ["4 Lenses", "bon lang kinh", "tim bai toan AI o dau"],
+          "keywords": ["repetitive", "tac vu lap lai", "time-consuming", "tieu ton thoi gian", "ai advantage", "loi the cua ai", "user pain points", "diem dau nguoi dung", "tong hop da nguon", "tac nghen"],
+          "source_refs": [{ "file_id": "D2C", "line": 88 }, { "file_id": "D2V1", "line": 261 }, { "file_id": "D2X", "line": 327 }]
         },
         {
           "chapter_id": "DAY_02_CH_05",
-          "chapter_title": "Sai lam thuong gap - Anti-patterns",
-          "chapter_title_original": "5. Sai lầm thường gặp — Anti-patterns",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 103 }
+          "order": 5,
+          "is_canonical": true,
+          "chapter_title": "Sai lầm thường gặp — Anti-patterns",
+          "summary": "Solution-first, No baseline, No evaluation, No boundary.",
+          "aliases": ["anti-patterns", "sai lam thuong gap", "bon anti-pattern"],
+          "keywords": ["solution-first", "uu tien giai phap", "no baseline", "mo ho hien trang", "no evaluation", "bo qua danh gia", "no boundary", "map mo ranh gioi", "human-in-the-loop", "xay chatbot truoc khi lam ro quy trinh"],
+          "source_refs": [{ "file_id": "D2C", "line": 103 }, { "file_id": "D2V1", "line": 278 }, { "file_id": "D2X", "line": 342 }]
         },
         {
           "chapter_id": "DAY_02_CH_06",
-          "chapter_title": "PAIR Chuong 1 - Reframe cau hoi",
-          "chapter_title_original": "6. PAIR · Chương 1 — Reframe câu hỏi",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 123 }
+          "order": 6,
+          "is_canonical": true,
+          "chapter_title": "PAIR · Chương 1 — Reframe câu hỏi",
+          "summary": "Thay \"Can we use AI to ___?\" bang \"How might we solve ___?\" va \"Can AI solve this in a unique way?\".",
+          "aliases": ["reframe cau hoi", "PAIR chuong 1", "how might we"],
+          "keywords": ["reframe", "can we use ai to", "how might we solve", "can ai solve this problem in a unique way", "google pair", "hoi ve bai toan truoc ve ai sau", "user needs defining success"],
+          "source_refs": [{ "file_id": "D2C", "line": 123 }, { "file_id": "D2X", "line": 369 }]
         },
         {
           "chapter_id": "DAY_02_CH_07",
-          "chapter_title": "Quick Problem Card - Khung dinh hinh bai toan",
-          "chapter_title_original": "7. Quick Problem Card — Khung định hình bài toán",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 139 }
+          "order": 7,
+          "is_canonical": true,
+          "chapter_title": "Quick Problem Card — Khung định hình bài toán",
+          "summary": "6 truong: problem, actor, workflow, bottleneck + impact, success metric, direction.",
+          "aliases": ["Quick Problem Card", "QPC", "problem card"],
+          "keywords": ["quick problem card", "problem", "actor", "workflow", "bottleneck", "impact", "success metric", "direction", "no ai rule workflow agent", "khung dinh hinh bai toan", "3-7 buoc"],
+          "source_refs": [{ "file_id": "D2C", "line": 139 }, { "file_id": "D2V1", "line": 315 }, { "file_id": "D2X", "line": 390 }]
         },
         {
           "chapter_id": "DAY_02_CH_08",
-          "chapter_title": "Cau hoi khai thac bai toan (6 cau hoi)",
-          "chapter_title_original": "8. Câu hỏi khai thác bài toán (6 câu hỏi)",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 152 }
+          "order": 8,
+          "is_canonical": true,
+          "chapter_title": "Câu hỏi khai thác bài toán (6 câu hỏi)",
+          "summary": "Quy trinh hien tai? Nut that? Hao phi? Tieu chi thanh cong? Hau qua khi sai? Co giai phap phi AI don gian hon?",
+          "aliases": ["6 cau hoi khai thac", "bo the cau hoi #3", "cau hoi cau truc PS"],
+          "keywords": ["quy trinh hien tai nhu the nao", "nut that nam o dau", "hao phi hien tai", "tieu chi thanh cong do bang gi", "hau qua khi xay ra sai sot", "co giai phap phi ai don gian hon", "sla", "co hoi bo lo"],
+          "source_refs": [{ "file_id": "D2C", "line": 152 }, { "file_id": "D2V1", "line": 347 }, { "file_id": "D2X", "line": 418 }]
         },
         {
           "chapter_id": "DAY_02_CH_09",
-          "chapter_title": "Dinh luong hoa bai toan",
-          "chapter_title_original": "9. Định lượng hóa bài toán",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 176 }
+          "order": 9,
+          "is_canonical": true,
+          "chapter_title": "Định lượng hóa bài toán",
+          "summary": "Baseline (where we are) → Target (where to go) → Measurement (how we know).",
+          "aliases": ["dinh luong hoa bai toan", "baseline target measurement"],
+          "keywords": ["baseline", "target", "measurement", "hien trang", "muc tieu", "do luong", "90 phut xuong 30 phut", "loi phan loai 20% xuong 5%", "cat giam 40% cau hoi trung lap", "diem dau chua duoc dinh luong"],
+          "source_refs": [{ "file_id": "D2C", "line": 176 }, { "file_id": "D2V1", "line": 362 }, { "file_id": "D2X", "line": 431 }]
         },
         {
           "chapter_id": "DAY_02_CH_10",
-          "chapter_title": "Thiet lap chi so: Output va Input",
-          "chapter_title_original": "10. Thiết lập chỉ số: Output & Input",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 194 }
+          "order": 10,
+          "is_canonical": true,
+          "chapter_title": "Thiết lập chỉ số: Output & Input",
+          "summary": "Output metric = what we optimize; Input metrics = what we can move. \"Nang cao hieu suat\" khong phai chi so.",
+          "aliases": ["output metric", "input metric", "thiet lap chi so"],
+          "keywords": ["output metric", "input metrics", "what we optimize", "what we can move", "north star metric", "amplitude", "lenny rachitsky", "nang cao hieu suat khong phai chi so", "ty le cau hoi duoc phan loai chinh xac"],
+          "source_refs": [{ "file_id": "D2C", "line": 194 }, { "file_id": "D2V1", "line": 376 }, { "file_id": "D2X", "line": 448 }]
         },
         {
           "chapter_id": "DAY_02_CH_11",
-          "chapter_title": "Ba buoc quyet dinh AI theo PAIR",
-          "chapter_title_original": "11. Ba bước quyết định AI theo PAIR",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 216 }
+          "order": 11,
+          "is_canonical": true,
+          "chapter_title": "Ba bước quyết định AI theo PAIR",
+          "summary": "① Giao diem nhu cau x the manh AI · ② Automate hay Augment · ③ Reward function & tieu chi thanh cong.",
+          "aliases": ["ba buoc PAIR", "PAIR 3 buoc", "quyet dinh AI theo PAIR"],
+          "keywords": ["giao diem nhu cau va the manh ai", "co thuc su can ai", "automate hay augment", "giai phap o cap do nao", "reward function", "ps da du ro de do", "google pair", "people + ai guidebook", "go not yet no-go"],
+          "source_refs": [{ "file_id": "D2C", "line": 216 }, { "file_id": "D2X", "line": 483 }]
         },
         {
           "chapter_id": "DAY_02_CH_12",
-          "chapter_title": "Khi nao AI co loi the?",
-          "chapter_title_original": "12. Khi nào AI có lợi thế? — 8 trường hợp \"AI probably better\"",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 241 }
+          "order": 12,
+          "is_canonical": true,
+          "chapter_title": "Khi nào AI có lợi thế? — 8 trường hợp \"AI probably better\"",
+          "summary": "Recommendation, prediction, personalization, natural language, nhan dien lop thuc the, phat hien cai hiem, agent chuyen mien, noi dung dong.",
+          "aliases": ["AI probably better", "8 truong hop AI co loi the", "khi nao AI co loi the"],
+          "keywords": ["recommendation", "goi y theo tung nguoi", "prediction", "du doan tuong lai", "personalization", "ca nhan hoa", "natural language", "hieu ngon ngu tu nhien", "nhan dien ca mot lop thuc the", "phat hien cai hiem", "gian lan", "noi dung dong thay giao dien tinh"],
+          "source_refs": [{ "file_id": "D2C", "line": 241 }, { "file_id": "D2X", "line": 497 }]
         },
         {
           "chapter_id": "DAY_02_CH_13",
-          "chapter_title": "Khi nao AI khong tot hon?",
-          "chapter_title_original": "13. Khi nào AI KHÔNG tốt hơn? — 6 trường hợp \"AI probably NOT better\"",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 260 }
+          "order": 13,
+          "is_canonical": true,
+          "chapter_title": "Khi nào AI KHÔNG tốt hơn? — 6 trường hợp \"AI probably NOT better\"",
+          "summary": "Can du doan duoc, thong tin tinh, loi qua ton kem, minh bach tuyet doi, toi uu toc do/chi phi, viec nguoi dung muon tu lam.",
+          "aliases": ["AI probably NOT better", "6 truong hop AI khong tot hon", "khi nao khong nen dung AI"],
+          "keywords": ["can duy tri tinh du doan duoc", "nut home cancel", "thong tin tinh it thay doi", "loi qua ton kem", "yeu cau minh bach tuyet doi", "truy vet duoc", "time-to-market", "viec gia tri cao nguoi dung muon tu lam", "rule heuristic de build de giai thich de debug"],
+          "source_refs": [{ "file_id": "D2C", "line": 260 }, { "file_id": "D2X", "line": 514 }]
         },
         {
           "chapter_id": "DAY_02_CH_14",
-          "chapter_title": "He thong AI = Model + Context + Planning + Tools",
-          "chapter_title_original": "14. Hệ thống AI = Model + Context + Planning + Tools",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 284 }
+          "order": 14,
+          "is_canonical": true,
+          "chapter_title": "Hệ thống AI = Model + Context + Planning + Tools",
+          "summary": "Giai phap AI la mot HE THONG — model chi la mot thanh phan; moi thanh phan co rui ro rieng.",
+          "aliases": ["he thong AI", "model context planning tools", "kien truc he thong AI"],
+          "keywords": ["model", "context", "planning", "tools", "orchestrator", "system logic", "rag", "memory", "wrong retrieval", "side effects", "security", "hallucination cost", "anthropic building effective agents", "chip huyen ai engineering"],
+          "source_refs": [{ "file_id": "D2C", "line": 284 }, { "file_id": "D2V1", "line": 554 }, { "file_id": "D2X", "line": 598 }]
         },
         {
           "chapter_id": "DAY_02_CH_15",
-          "chapter_title": "Automation vs Augmentation",
-          "chapter_title_original": "15. Automation vs Augmentation (PAIR bước ②)",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 312 }
+          "order": 15,
+          "is_canonical": true,
+          "chapter_title": "Automation vs Augmentation (PAIR bước ②)",
+          "summary": "Automate khi viec kho/nham chan/nguy hiem/can scale; Augment khi stakes cao, nguoi dung thich tu lam.",
+          "aliases": ["automate vs augment", "automation augmentation", "PAIR buoc 2"],
+          "keywords": ["automate", "augment", "ai lam thay", "ai ho tro con nguoi", "viec kho nham chan nguy hiem", "stakes cao", "tien bac phap ly suc khoe", "social capital", "so thich kho dien dat", "human oversight", "preview edit undo", "quyet dinh theo tung tac vu"],
+          "source_refs": [{ "file_id": "D2C", "line": 312 }, { "file_id": "D2X", "line": 632 }]
         },
         {
           "chapter_id": "DAY_02_CH_16",
-          "chapter_title": "Ba muc giai phap: Rule / Workflow / Agent",
-          "chapter_title_original": "16. Ba mức giải pháp: Rule / Workflow / Agent",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 337 }
+          "order": 16,
+          "is_canonical": true,
+          "chapter_title": "Ba mức giải pháp: Rule / Workflow / Agent",
+          "summary": "Cap 1 Rule/Script, Cap 2 LLM Feature/Workflow, Cap 3 Agent — bat dau tu ben trai.",
+          "aliases": ["rule workflow agent", "ba muc giai phap", "ba cap do giai phap"],
+          "keywords": ["rule", "script", "if else", "llm feature", "workflow", "agent", "dau vao on dinh", "dau ra can linh hoat", "nhieu buoc nhieu cong cu", "tinh thue", "chan email spam", "tom tat email", "chatbot faq", "phan loai ticket", "coding agent", "cap do ky thuat"],
+          "source_refs": [{ "file_id": "D2C", "line": 337 }, { "file_id": "D2V1", "line": 624 }, { "file_id": "D2X", "line": 679 }]
         },
         {
           "chapter_id": "DAY_02_CH_17",
-          "chapter_title": "Mot tinh huong, ba cap do giai phap",
-          "chapter_title_original": "17. Một tình huống, ba cấp độ giải pháp",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 369 }
+          "order": 17,
+          "is_canonical": true,
+          "chapter_title": "Một tình huống, ba cấp độ giải pháp",
+          "summary": "Cung case ho tro hoc vien: Rule tra loi FAQ, Workflow duyet Problem Card, Agent de xuat can thiep chu dong.",
+          "aliases": ["mot tinh huong ba cap do", "vi du ba cap do giai phap"],
+          "keywords": ["tra loi tu dong faq", "gui link thoi khoa bieu", "nhac checklist nop bai", "duyet problem card", "chuyen cho tro giang", "theo doi tien do nop bai", "phat hien nhom hoc vien bi ket", "de xuat ta duyet", "dung o cap toi gian nhat"],
+          "source_refs": [{ "file_id": "D2C", "line": 369 }, { "file_id": "D2V1", "line": 731 }, { "file_id": "D2X", "line": 777 }]
         },
         {
           "chapter_id": "DAY_02_CH_18",
-          "chapter_title": "Workflow patterns - du cho hau het bai toan",
-          "chapter_title_original": "18. Workflow patterns — đủ cho hầu hết bài toán",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 398 }
+          "order": 18,
+          "is_canonical": true,
+          "chapter_title": "Workflow patterns — đủ cho hầu hết bài toán",
+          "summary": "Prompt Chaining, Routing, Parallelization theo Anthropic — luon uu tien giai phap don gian nhat.",
+          "aliases": ["workflow patterns", "prompt chaining routing parallelization", "mau workflow"],
+          "keywords": ["prompt chaining", "routing", "parallelization", "gate", "aggregator", "sectioning", "vote", "anthropic building effective agents", "doi do tre lay do chinh xac", "cau de di model re cau kho di model manh", "guardrail", "viet outline check viet bai"],
+          "source_refs": [{ "file_id": "D2C", "line": 398 }, { "file_id": "D2V1", "line": 772 }, { "file_id": "D2V1", "line": 748 }, { "file_id": "D2X", "line": 813 }, { "file_id": "D2X", "line": 1212 }]
         },
         {
           "chapter_id": "DAY_02_CH_19",
-          "chapter_title": "Cay quyet dinh: Lua chon cap do giai phap",
-          "chapter_title_original": "19. Cây quyết định: Lựa chọn cấp độ giải pháp",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 435 }
+          "order": 19,
+          "is_canonical": true,
+          "chapter_title": "Cây quyết định: Lựa chọn cấp độ giải pháp",
+          "summary": "Volume du lon? → Logic ro rang? → Can nhieu buoc/tool/state? Moi nhanh KHONG la mot lan tranh phuc tap.",
+          "aliases": ["cay quyet dinh", "decision tree chon cap do", "lua chon cap do giai phap"],
+          "keywords": ["volume du lon", "lap du thuong xuyen", "logic ro rang input on dinh", "nhieu buoc nhieu tool state thay doi", "chua dang dau tu ai", "rule script", "llm feature human review", "agent controls", "risk cao them hitl rollback approval", "google rules of ml"],
+          "source_refs": [{ "file_id": "D2C", "line": 435 }, { "file_id": "D2V1", "line": 861 }, { "file_id": "D2X", "line": 891 }]
         },
         {
           "chapter_id": "DAY_02_CH_20",
-          "chapter_title": "Reward function: he thong hieu dung/sai",
-          "chapter_title_original": "20. Reward function: hệ thống hiểu \"đúng / sai\" thế nào? (PAIR bước ③)",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 474 }
+          "order": 20,
+          "is_canonical": true,
+          "chapter_title": "Reward function: hệ thống hiểu \"đúng / sai\" thế nào? (PAIR bước ③)",
+          "summary": "Bon ket qua TP/TN/FP/FN; chi phi cua FP va FN KHONG doi xung.",
+          "aliases": ["reward function", "TP TN FP FN", "PAIR buoc 3"],
+          "keywords": ["reward function", "true positive", "true negative", "false positive", "false negative", "bao dong gia", "bo sot", "hallucination gui thang cho hoc vien", "chi phi fp fn khong doi xung", "bao chay gia khac bo sot dam chay", "thiet ke lien chuc nang"],
+          "source_refs": [{ "file_id": "D2C", "line": 474 }, { "file_id": "D2X", "line": 924 }]
         },
         {
           "chapter_id": "DAY_02_CH_21",
-          "chapter_title": "Precision va Recall",
-          "chapter_title_original": "21. Precision ↔ Recall: đánh đổi không tránh khỏi",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 492 }
+          "order": 21,
+          "is_canonical": true,
+          "chapter_title": "Precision ↔ Recall: đánh đổi không tránh khỏi",
+          "summary": "Precision = TP/(TP+FP), Recall = TP/(TP+FN); van nut ben nay thi ben kia xau di.",
+          "aliases": ["precision recall", "danh doi precision recall"],
+          "keywords": ["precision", "recall", "tp / (tp + fp)", "tp / (tp + fn)", "it goi y nhung chac dung", "bao tron moi truong hop", "nhieu false negative", "nhieu false positive", "khong co cau hinh dung tuyet doi", "test diem can bang voi nguoi dung"],
+          "source_refs": [{ "file_id": "D2C", "line": 492 }, { "file_id": "D2X", "line": 943 }]
         },
         {
           "chapter_id": "DAY_02_CH_22",
-          "chapter_title": "Viet tieu chi thanh cong ma hanh dong duoc",
-          "chapter_title_original": "22. Viết tiêu chí thành công mà hành động được",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 505 }
+          "order": 22,
+          "is_canonical": true,
+          "chapter_title": "Viết tiêu chí thành công mà hành động được",
+          "summary": "Template PAIR: If {chi so} for {tinh nang AI} {drops below/goes above} {nguong}, we will {hanh dong}.",
+          "aliases": ["tieu chi thanh cong", "success criteria", "template PAIR metric"],
+          "keywords": ["chi so cu the", "nguong co nghia", "hanh dong cu the", "if drops below goes above we will", "ha muc tu dong ve pha 1", "metric co y nghia voi moi nguoi dung", "thanh cong ngay 1 con ngay 1000", "review metric dinh ky", "pair worksheet"],
+          "source_refs": [{ "file_id": "D2C", "line": 505 }, { "file_id": "D2X", "line": 958 }]
         },
         {
           "chapter_id": "DAY_02_CH_23",
-          "chapter_title": "Khoang cach giua Demo va Production",
-          "chapter_title_original": "23. Khoảng cách giữa Demo và Production",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 529 }
+          "order": 23,
+          "is_canonical": true,
+          "chapter_title": "Khoảng cách giữa Demo và Production",
+          "summary": "Baseline · Evaluation · Controls · Operations — bon hang muc phai tra loi truoc khi trien khai.",
+          "aliases": ["demo va production", "khoang cach demo production", "demo vs production gap"],
+          "keywords": ["baseline doi chung", "evaluation kiem thu he thong", "edge cases", "kich ban bien", "controls", "logging", "fallback", "rollback", "operations van hanh lien tuc", "ai giam sat loi", "cap nhat tri thuc nen", "tieu chi nghiem thu"],
+          "source_refs": [{ "file_id": "D2C", "line": 529 }, { "file_id": "D2V1", "line": 535 }, { "file_id": "D2X", "line": 1000 }]
         },
         {
           "chapter_id": "DAY_02_CH_24",
-          "chapter_title": "Tu Problem Statement den Eval Plan",
-          "chapter_title_original": "24. Từ Problem Statement đến Eval Plan",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 546 }
+          "order": 24,
+          "is_canonical": true,
+          "chapter_title": "Từ Problem Statement đến Eval Plan",
+          "summary": "Input PS 9 truong → Test cases → Success; ba tang cau hoi kiem thu.",
+          "aliases": ["problem statement den eval plan", "eval plan", "PS to eval"],
+          "keywords": ["eval plan", "test cases", "kich ban kiem thu", "edge cases", "pass fail hitl", "tac vu don le", "hieu nang quy trinh", "rui ro va sai so", "phan loai chinh xac cau hoi dau vao", "lab coach phe duyet"],
+          "source_refs": [{ "file_id": "D2C", "line": 546 }, { "file_id": "D2V1", "line": 966 }, { "file_id": "D2X", "line": 1015 }]
         },
         {
           "chapter_id": "DAY_02_CH_25",
-          "chapter_title": "Problem Statement cho he thong AI - 9 truong",
-          "chapter_title_original": "25. Problem Statement cho hệ thống AI — 9 trường",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 564 }
+          "order": 25,
+          "is_canonical": true,
+          "chapter_title": "Problem Statement cho hệ thống AI — 9 trường",
+          "summary": "6 yeu to bai toan (Actor, Workflow, Bottleneck, Impact, Success Metric, Boundary) + 3 yeu to quyet dinh AI (entry, level, safety).",
+          "aliases": ["problem statement 9 truong", "PS 9 truong", "9 truong cua problem statement"],
+          "keywords": ["actor", "workflow", "bottleneck", "impact", "success metric", "boundary", "diem ai can thiep", "decision entry", "muc chon", "decision level", "rui ro va hitl", "decision safety", "ai khong duoc lam gi", "khau nao bat buoc co con nguoi"],
+          "source_refs": [{ "file_id": "D2C", "line": 564 }, { "file_id": "D2V1", "line": 926 }, { "file_id": "D2X", "line": 1105 }]
         },
         {
           "chapter_id": "DAY_02_CH_26",
-          "chapter_title": "Khung ra quyet dinh: Go / Not Yet / No-Go",
-          "chapter_title_original": "26. Khung ra quyết định: Go / Not Yet / No-Go",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 587 }
+          "order": 26,
+          "is_canonical": true,
+          "chapter_title": "Khung ra quyết định: Go / Not Yet / No-Go",
+          "summary": "Go khi du dieu kien; Not Yet khi con trien vong nhung thieu du lieu/chi so; No-Go khi AI khong mang gia tri vuot troi.",
+          "aliases": ["go not yet no-go", "khung ra quyet dinh", "quyet dinh cuoi cung"],
+          "keywords": ["go", "not yet", "no-go", "bai toan ro rang", "chi so do luong kha thi", "diem can thiep ai phu hop", "kiem soat duoc rui ro", "can bo sung du lieu thuc te", "chuan hoa quy trinh", "ai khong mang gia tri vuot troi", "rui ro van hanh qua cao", "not yet the hien su chin chan"],
+          "source_refs": [{ "file_id": "D2C", "line": 587 }, { "file_id": "D2V1", "line": 1007 }, { "file_id": "D2X", "line": 1162 }]
         },
         {
           "chapter_id": "DAY_02_CH_27",
-          "chapter_title": "Sau nguyen tac cot loi sau Day 02",
-          "chapter_title_original": "27. Sáu nguyên tắc cốt lõi sau Day 02",
-          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 612 }
+          "order": 27,
+          "is_canonical": true,
+          "chapter_title": "Sáu nguyên tắc cốt lõi sau Day 02",
+          "summary": "Brief mo ho khong thay PS · mo hinh hoa workflow truoc · pain point phai luong hoa · phuc tap khong bang hieu qua · quyet dinh dua tren lap luan · do reward function bang trai nghiem nguoi dung.",
+          "aliases": ["sau nguyen tac cot loi", "recap day 02", "nam nguyen tac cot loi"],
+          "keywords": ["brief mo ho khong thay the problem statement", "mo hinh hoa workflow truoc khi tich hop ai", "pain point phai duoc luong hoa", "phuc tap khong dong nghia voi hieu qua", "quyet dinh dua tren lap luan thuc te", "do reward function bang trai nghiem nguoi dung khong chi accuracy", "kim chi nam"],
+          "source_refs": [{ "file_id": "D2C", "line": 612 }, { "file_id": "D2V1", "line": 1176 }, { "file_id": "D2X", "line": 1173 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_28",
+          "order": 28,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Bốn câu hỏi trọng tâm của Day 02",
+          "summary": "① Co can AI? ② Cap do nao? ③ Du ro de do? ④ Go / Not Yet / No-Go.",
+          "aliases": ["bon cau hoi trong tam", "4 cau hoi cua ngay"],
+          "keywords": ["bon cau hoi trong tam", "co can ai khong", "cap do nao", "du ro de do", "go not yet no-go", "khung dan dat ca ngay"],
+          "source_refs": [{ "file_id": "D2V1", "line": 11 }, { "file_id": "D2X", "line": 40 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_29",
+          "order": 29,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Phát triển Sản phẩm AI (AI Product)",
+          "summary": "Khai niem san pham AI va khac biet so voi phat trien phan mem thong thuong.",
+          "aliases": ["AI Product", "phat trien san pham AI"],
+          "keywords": ["ai product", "phat trien san pham ai", "san pham ai la gi", "khac biet so voi phan mem truyen thong"],
+          "source_refs": [{ "file_id": "D2V1", "line": 41 }, { "file_id": "D2X", "line": 88 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_30",
+          "order": 30,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Ba trụ cột nền tảng của AI Product",
+          "summary": "Ba tru cot lam nen mot san pham AI.",
+          "aliases": ["ba tru cot AI Product", "3 tru cot san pham AI"],
+          "keywords": ["ba tru cot", "tru cot nen tang", "ai product foundation"],
+          "source_refs": [{ "file_id": "D2V1", "line": 59 }, { "file_id": "D2X", "line": 109 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_31",
+          "order": 31,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "\"AI chatbot\" chưa phải là một bài toán",
+          "summary": "Vi du phuc vu khach hang / ho tro noi bo: yeu cau \"lam chatbot\" chua phai mot bai toan.",
+          "aliases": ["ai chatbot chua phai la mot bai toan", "chatbot khong phai bai toan"],
+          "keywords": ["ai chatbot chua phai la mot bai toan", "phuc vu khach hang", "ho tro noi bo", "yeu cau mo ho", "counter-intuitive rule"],
+          "source_refs": [{ "file_id": "D2V1", "line": 85 }, { "file_id": "D2X", "line": 151 }, { "file_id": "D2X", "line": 201 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_32",
+          "order": 32,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Khoan đã, bạn có hỏi không?",
+          "summary": "Nhac nho hoi nguoi dung truoc khi gia dinh bai toan.",
+          "aliases": ["khoan da ban co hoi khong", "co hoi nguoi dung chua"],
+          "keywords": ["khoan da ban co hoi khong", "hoi nguoi dung truoc", "gia dinh bai toan", "tinh huong thuc te"],
+          "source_refs": [{ "file_id": "D2V1", "line": 102 }, { "file_id": "D2X", "line": 180 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_33",
+          "order": 33,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Quy trình thiết kế lấy con người làm trung tâm (HCD)",
+          "summary": "Human-Centered Design — quy trinh thiet ke dat nguoi dung o trung tam.",
+          "aliases": ["HCD", "human centered design", "thiet ke lay con nguoi lam trung tam"],
+          "keywords": ["hcd", "human-centered design", "quy trinh thiet ke", "lay con nguoi lam trung tam"],
+          "source_refs": [{ "file_id": "D2V1", "line": 183 }, { "file_id": "D2X", "line": 256 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_34",
+          "order": 34,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Những câu hỏi nguyên bản",
+          "summary": "Bo cau hoi goc de dao sau van de truoc khi dinh hinh giai phap.",
+          "aliases": ["nhung cau hoi nguyen ban", "cau hoi goc"],
+          "keywords": ["cau hoi nguyen ban", "dao sau van de", "cau hoi goc"],
+          "source_refs": [{ "file_id": "D2V1", "line": 208 }, { "file_id": "D2X", "line": 272 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_35",
+          "order": 35,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Câu hỏi gợi mở — Bộ thẻ câu hỏi #1 (phân kỳ)",
+          "summary": "Bo the cau hoi dung trong pha phan ky de mo rong goc nhin.",
+          "aliases": ["bo the cau hoi #1", "cau hoi goi mo", "the phan ky"],
+          "keywords": ["bo the cau hoi 1", "cau hoi goi mo", "phan ky", "mo rong goc nhin"],
+          "source_refs": [{ "file_id": "D2V1", "line": 226 }, { "file_id": "D2X", "line": 296 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_36",
+          "order": 36,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Discovery interview: 5 câu hỏi nên hỏi stakeholder",
+          "summary": "Bo cau hoi phong van stakeholder trong pha discovery.",
+          "aliases": ["discovery interview", "5 cau hoi stakeholder"],
+          "keywords": ["discovery interview", "phong van stakeholder", "5 cau hoi nen hoi", "kham pha nhu cau"],
+          "source_refs": [{ "file_id": "D2V1", "line": 293 }, { "file_id": "D2X", "line": 355 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_37",
+          "order": 37,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Khi nào AI đáng để làm?",
+          "summary": "Dieu kien AI hop va ly do doanh nghiep dau tu vao AI.",
+          "aliases": ["khi nao AI dang de lam", "ai hop khi nao"],
+          "keywords": ["ai hop khi nao", "vi sao doanh nghiep dau tu", "ai dang de lam", "gia tri kinh doanh cua ai"],
+          "source_refs": [{ "file_id": "D2V1", "line": 418 }, { "file_id": "D2X", "line": 529 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_38",
+          "order": 38,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Tự xây dựng hay mua giải pháp? (build vs buy)",
+          "summary": "Hai goc nhin: Chip Huyen (AI Engineering, 2025) va MIT CISR.",
+          "aliases": ["build vs buy", "tu xay hay mua", "tu xay dung hay mua giai phap"],
+          "keywords": ["build vs buy", "tu xay dung hay mua", "chip huyen ai engineering", "mit cisr", "quyet dinh mua hay lam"],
+          "source_refs": [{ "file_id": "D2V1", "line": 437 }, { "file_id": "D2X", "line": 547 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_39",
+          "order": 39,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Thiết lập kỳ vọng",
+          "summary": "Dat ky vong dung cho nguoi dung ve nang luc va gioi han cua he thong AI.",
+          "aliases": ["thiet lap ky vong", "setting expectations"],
+          "keywords": ["thiet lap ky vong", "ky vong nguoi dung", "gioi han he thong", "setting expectations"],
+          "source_refs": [{ "file_id": "D2V1", "line": 461 }, { "file_id": "D2X", "line": 979 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_40",
+          "order": 40,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Đánh giá mức độ phù hợp của AI — Bộ thẻ câu hỏi #4 (gate quyết định)",
+          "summary": "Bo the gate dung de tham dinh mot de xuat AI truoc khi chot.",
+          "aliases": ["bo the cau hoi #4", "gate quyet dinh", "danh gia muc do phu hop cua AI"],
+          "keywords": ["bo the cau hoi 4", "gate quyet dinh", "danh gia muc do phu hop", "tham dinh de xuat ai"],
+          "source_refs": [{ "file_id": "D2V1", "line": 484 }, { "file_id": "D2X", "line": 1146 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_41",
+          "order": 41,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Vòng đời Sản phẩm AI (AI Product Lifecycle)",
+          "summary": "Cac giai doan trong vong doi mot san pham AI.",
+          "aliases": ["vong doi san pham AI", "AI product lifecycle"],
+          "keywords": ["vong doi san pham ai", "ai product lifecycle", "cac giai doan san pham ai"],
+          "source_refs": [{ "file_id": "D2V1", "line": 502 }, { "file_id": "D2X", "line": 567 }, { "file_id": "D2X", "line": 1226 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_42",
+          "order": 42,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Tổng quan về Hệ thống AI",
+          "summary": "Buc tranh tong the cac thanh phan cua mot he thong AI trong thuc te.",
+          "aliases": ["tong quan he thong AI", "AI system overview"],
+          "keywords": ["tong quan he thong ai", "thanh phan he thong ai", "buc tranh tong the"],
+          "source_refs": [{ "file_id": "D2V1", "line": 578 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_43",
+          "order": 43,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Vai trò của UX trong Sản phẩm AI + Human-in-the-loop",
+          "summary": "UX quyet dinh trai nghiem khi AI sai; thiet ke diem con nguoi can thiep (HITL).",
+          "aliases": ["vai tro cua UX", "human-in-the-loop", "HITL", "thiet ke UX va HITL"],
+          "keywords": ["ux trong san pham ai", "human-in-the-loop", "hitl", "diem con nguoi phe duyet", "thiet ke ux khi ai sai", "preview edit undo"],
+          "source_refs": [{ "file_id": "D2V1", "line": 597 }, { "file_id": "D2V1", "line": 903 }, { "file_id": "D2X", "line": 1074 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_44",
+          "order": 44,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Tăng mức tự động hóa theo pha",
+          "summary": "Lo trinh nang dan muc tu dong hoa theo do tin cay do duoc, thay vi automate ngay tu dau.",
+          "aliases": ["tang muc tu dong hoa theo pha", "pha tu dong hoa"],
+          "keywords": ["tang muc tu dong hoa theo pha", "pha 1 pha 2", "nang dan tu dong hoa", "do tin cay tang dan", "ha muc tu dong khi loi tang"],
+          "source_refs": [{ "file_id": "D2X", "line": 659 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_45",
+          "order": 45,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Tình huống: Tối ưu nguồn lực Trợ giảng",
+          "summary": "Case xuyen suot Day 02 — bai toan tai cua Tro giang (TA) trong khoa hoc.",
+          "aliases": ["toi uu nguon luc tro giang", "case tro giang", "TA workload"],
+          "keywords": ["toi uu nguon luc tro giang", "tro giang", "ta", "tai cua ta", "cau hoi trung lap", "case xuyen suot"],
+          "source_refs": [{ "file_id": "D2V1", "line": 640 }, { "file_id": "D2X", "line": 693 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_46",
+          "order": 46,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Khi nào cần phức tạp hơn?",
+          "summary": "Cac pattern nang cao vuot ngoai ba workflow co ban va dieu kien dung den chung.",
+          "aliases": ["khi nao can phuc tap hon", "pattern nang cao"],
+          "keywords": ["khi nao can phuc tap hon", "pattern nang cao", "orchestrator workers", "evaluator optimizer", "vuot ngoai ba pattern co ban"],
+          "source_refs": [{ "file_id": "D2V1", "line": 808 }, { "file_id": "D2X", "line": 845 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_47",
+          "order": 47,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Đọc workflow patterns như người làm product",
+          "summary": "Moi pattern la mot quyet dinh san pham (do tre vs chinh xac, chi phi vs chat luong), khong chi la so do ky thuat.",
+          "aliases": ["doc workflow patterns nhu nguoi lam product", "y nghia san pham cua workflow pattern"],
+          "keywords": ["doc workflow patterns nhu nguoi lam product", "y nghia quyet dinh", "danh doi san pham", "khong chi la so do ky thuat"],
+          "source_refs": [{ "file_id": "D2X", "line": 789 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_48",
+          "order": 48,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Thang câu hỏi lựa chọn cấp độ giải pháp",
+          "summary": "Bo cau hoi thang do de xac dinh nen dung Rule, Workflow hay Agent.",
+          "aliases": ["thang cau hoi lua chon cap do", "thang do chon giai phap"],
+          "keywords": ["thang cau hoi lua chon cap do giai phap", "thang do", "chon rule workflow agent"],
+          "source_refs": [{ "file_id": "D2V1", "line": 845 }, { "file_id": "D2X", "line": 877 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_49",
+          "order": 49,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Ví dụ thực tế ngoài lớp học",
+          "summary": "Cac vi du ap dung Rule/Workflow/Agent ngoai boi canh khoa hoc.",
+          "aliases": ["vi du thuc te ngoai lop hoc", "vi du ngoai lop"],
+          "keywords": ["vi du thuc te ngoai lop hoc", "ap dung thuc te", "case ngoai khoa hoc"],
+          "source_refs": [{ "file_id": "D2V1", "line": 889 }, { "file_id": "D2X", "line": 914 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_50",
+          "order": 50,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Ví dụ mẫu Problem Statement: Hỗ trợ Lab Coach / TA",
+          "summary": "Ban PS 9 truong da dien san cho case ho tro Lab Coach / Tro giang.",
+          "aliases": ["vi du mau problem statement", "PS mau Lab Coach", "ho tro Lab Coach TA"],
+          "keywords": ["vi du mau problem statement", "lab coach", "tro giang", "ps da dien san", "9 truong vi du"],
+          "source_refs": [{ "file_id": "D2V1", "line": 946 }, { "file_id": "D2X", "line": 1128 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_51",
+          "order": 51,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Chuyển dịch từ Problem Statement sang Eval Plan",
+          "summary": "Cach anh xa tung truong cua PS thanh muc kiem thu trong Eval Plan.",
+          "aliases": ["chuyen dich PS sang eval plan", "anh xa PS sang eval"],
+          "keywords": ["chuyen dich problem statement sang eval plan", "anh xa tung truong", "tu ps ra test case"],
+          "source_refs": [{ "file_id": "D2V1", "line": 980 }, { "file_id": "D2X", "line": 1030 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_52",
+          "order": 52,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Lỗi AI được định nghĩa bởi kỳ vọng người dùng",
+          "summary": "Cai goi la \"loi\" phu thuoc vao ky vong nguoi dung, khong chi vao accuracy ky thuat.",
+          "aliases": ["loi AI dinh nghia boi ky vong nguoi dung", "the nao la loi AI"],
+          "keywords": ["loi ai duoc dinh nghia boi ky vong nguoi dung", "the nao la loi", "khong chi accuracy", "pair chuong 6"],
+          "source_refs": [{ "file_id": "D2X", "line": 1056 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_53",
+          "order": 53,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Bốn nguồn gốc của lỗi AI (PAIR Ch.6)",
+          "summary": "Phan loai nguon goc loi cua he thong AI theo PAIR chuong 6.",
+          "aliases": ["bon nguon goc cua loi AI", "nguon goc loi AI", "PAIR chuong 6"],
+          "keywords": ["bon nguon goc cua loi ai", "pair ch.6", "phan loai loi", "nguyen nhan loi ai"],
+          "source_refs": [{ "file_id": "D2X", "line": 1190 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_54",
+          "order": 54,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Paths forward from failure (PAIR Ch.6)",
+          "summary": "Cac huong xu ly sau khi he thong AI that bai.",
+          "aliases": ["paths forward from failure", "huong xu ly khi AI that bai"],
+          "keywords": ["paths forward from failure", "xu ly khi that bai", "phuc hoi sau loi", "pair ch.6"],
+          "source_refs": [{ "file_id": "D2X", "line": 1201 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_55",
+          "order": 55,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Bài tập Lab ngày 02 — Deliverables",
+          "summary": "Tong quan bai Lab buoi chieu, cac giai doan phan ky/hoi tu va san pham ban giao.",
+          "aliases": ["bai tap lab ngay 02", "lab day 02", "deliverables lab"],
+          "keywords": ["bai tap lab ngay 02", "deliverables", "giai doan phan ky hoi tu ca nhan", "san pham ban giao sau buoi lab", "nhat ky tim va loc bai toan", "nhat ky phan tu", "reflection log", "3 problem cards"],
+          "source_refs": [{ "file_id": "D2V1", "line": 1024 }, { "file_id": "D2V1", "line": 1035 }, { "file_id": "D2V1", "line": 1074 }, { "file_id": "D2V1", "line": 1155 }]
+        },
+        {
+          "chapter_id": "DAY_02_CH_56",
+          "order": 56,
+          "is_canonical": false,
+          "supplementary": true,
+          "chapter_title": "Hướng dẫn xây dựng Workflow Diagram + Worked Example",
+          "summary": "Cach ve so do quy trinh va vi du da lam: bao cao tuan truoc va sau khi co AI.",
+          "aliases": ["workflow diagram", "so do quy trinh", "worked example bao cao tuan"],
+          "keywords": ["huong dan xay dung workflow diagram", "so do quy trinh", "worked example", "bao cao tuan truoc va sau ai", "ve quy trinh hien tai"],
+          "source_refs": [{ "file_id": "D2V1", "line": 1095 }, { "file_id": "D2V1", "line": 1117 }]
         }
       ]
     }
   ],
-  "examples": [
+  "topic_index": [
     {
-      "query": "AI, ML, Deep Learning, GenAI, LLM",
-      "match": {
-        "day_id": "DAY_01",
-        "day_title": "DAY 01 - AI & LLM FOUNDATION",
-        "chapter_id": "DAY_01_CH_01",
-        "chapter_title_original": "1. AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?"
-      }
+      "topic_id": "TOPIC_CURSOR",
+      "topic_label": "CURSOR — lệch năng lực cốt lõi",
+      "keywords": ["cursor", "lech nang luc cot loi", "ai code editor", "cad", "core competency"],
+      "maps_to": { "day_id": "DAY_02", "chapter_id": "DAY_02_CH_03" }
     },
     {
-      "query": "CURSOR - Lech nang luc cot loi la gi?",
-      "match": {
-        "day_id": "DAY_02",
-        "day_title": "DAY 02 - XAC DINH BAI TOAN CHO AI",
-        "chapter_id": "DAY_02_CH_03",
-        "chapter_title_original": "3. Khởi nguồn từ bài toán, không bắt đầu từ AI",
-        "matched_by": ["topic_index.TOPIC_DAY02_CASE_CURSOR", "chapter.keywords"]
-      }
+      "topic_id": "TOPIC_ARTIFACT",
+      "topic_label": "ARTIFACT — sản phẩm tốt ≠ thị trường lớn",
+      "keywords": ["artifact", "san pham tot khac thi truong lon", "dong cua 1/2024", "ung dung doc tin", "quy mo thi truong"],
+      "maps_to": { "day_id": "DAY_02", "chapter_id": "DAY_02_CH_03" }
+    },
+    {
+      "topic_id": "TOPIC_NOTEBOOKLM",
+      "topic_label": "NOTEBOOKLM — định vị đúng điểm đau",
+      "keywords": ["notebooklm", "dinh vi dung diem dau", "tom tat tai lieu", "hoi dap tren tai lieu", "trich dan nguon"],
+      "maps_to": { "day_id": "DAY_02", "chapter_id": "DAY_02_CH_03" }
+    },
+    {
+      "topic_id": "TOPIC_PAIR",
+      "topic_label": "Google PAIR — People + AI Guidebook",
+      "keywords": ["pair", "people + ai guidebook", "google pair", "user needs defining success"],
+      "maps_to": { "day_id": "DAY_02", "chapter_id": "DAY_02_CH_11" },
+      "also_see": ["DAY_02_CH_06", "DAY_02_CH_15", "DAY_02_CH_20", "DAY_02_CH_22", "DAY_02_CH_53"]
+    },
+    {
+      "topic_id": "TOPIC_ANTHROPIC_AGENTS",
+      "topic_label": "Anthropic — Building Effective Agents",
+      "keywords": ["anthropic", "building effective agents", "workflow patterns"],
+      "maps_to": { "day_id": "DAY_02", "chapter_id": "DAY_02_CH_18" },
+      "also_see": ["DAY_02_CH_14", "DAY_02_CH_19", "DAY_02_CH_46"]
+    },
+    {
+      "topic_id": "TOPIC_HALLUCINATION",
+      "topic_label": "Hallucination — AI bịa",
+      "keywords": ["hallucination", "ao giac", "ai bia", "noi chac nhu dung roi"],
+      "maps_to": { "day_id": "DAY_01", "chapter_id": "DAY_01_CH_18" },
+      "also_see": ["DAY_01_CH_19", "DAY_02_CH_20", "DAY_02_CH_52"]
+    },
+    {
+      "topic_id": "TOPIC_RAG",
+      "topic_label": "RAG — tra sổ thay vì bắt nhớ",
+      "keywords": ["rag", "retrieval", "tra so", "lay doan lien quan nhet vao context"],
+      "maps_to": { "day_id": "DAY_01", "chapter_id": "DAY_01_CH_14" },
+      "also_see": ["DAY_02_CH_14"]
+    },
+    {
+      "topic_id": "TOPIC_AGENT",
+      "topic_label": "Agent — định nghĩa & cấu tạo",
+      "keywords": ["agent", "agentic", "tac nhan tu chu", "multi-agent"],
+      "maps_to": { "day_id": "DAY_01", "chapter_id": "DAY_01_CH_22" },
+      "also_see": ["DAY_01_CH_21", "DAY_02_CH_16", "DAY_02_CH_17"]
+    },
+    {
+      "topic_id": "TOPIC_CHI_PHI",
+      "topic_label": "Chi phí / giá token",
+      "keywords": ["chi phi", "gia token", "bao nhieu tien", "ton kem", "pricing"],
+      "maps_to": { "day_id": "DAY_01", "chapter_id": "DAY_01_CH_25" },
+      "also_see": ["DAY_01_CH_23", "DAY_01_CH_24"]
+    },
+    {
+      "topic_id": "TOPIC_METRIC",
+      "topic_label": "Chỉ số & tiêu chí thành công",
+      "keywords": ["metric", "chi so", "tieu chi thanh cong", "do luong", "kpi"],
+      "maps_to": { "day_id": "DAY_02", "chapter_id": "DAY_02_CH_10" },
+      "also_see": ["DAY_02_CH_09", "DAY_02_CH_22", "DAY_02_CH_21"]
+    }
+  ],
+  "examples": [
+    {
+      "query": "AI, ML, Deep Learning, GenAI, LLM nằm ở đâu trong cùng một hệ?",
+      "expected": { "day_id": "DAY_01", "chapter_id": "DAY_01_CH_01", "confidence": "high", "matched_by": "tier 1 — exact chapter_title" }
+    },
+    {
+      "query": "temperature với top_p khác nhau thế nào?",
+      "expected": { "day_id": "DAY_01", "chapter_id": "DAY_01_CH_27", "confidence": "high", "matched_by": "tier 2 — 2 keywords" }
+    },
+    {
+      "query": "vì sao Artifact đóng cửa?",
+      "expected": { "day_id": "DAY_02", "chapter_id": "DAY_02_CH_03", "confidence": "medium", "matched_by": "tier 3 — topic_index.TOPIC_ARTIFACT" }
+    },
+    {
+      "query": "khi nào thì nên dùng Rule thay vì Agent?",
+      "expected": { "day_id": "DAY_02", "chapter_id": "DAY_02_CH_16", "confidence": "high", "matched_by": "tier 2 — rule + agent", "also_consider": ["DAY_02_CH_19", "DAY_02_CH_48"] }
+    },
+    {
+      "query": "hôm day 2 học gì vậy?",
+      "expected": { "day_id": "DAY_02", "chapter_id": null, "confidence": "low", "matched_by": "tier 4 — chỉ khớp day alias" }
+    },
+    {
+      "query": "cách nấu phở bò",
+      "expected": { "day_id": null, "chapter_id": null, "confidence": "none", "matched_by": "no_match_policy" }
     }
   ]
 }
