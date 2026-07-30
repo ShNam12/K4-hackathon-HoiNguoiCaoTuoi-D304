@@ -2,11 +2,6 @@
 
 Usage:
     python eval/evaluate.py --golden-set eval/golden_set.jsonl --output eval/results/run-001.json
-
-Before P3's real classify_batch exists, this runs with a stub classifier
-that always returns needs_review, so P5 can validate the eval harness itself
-independently of P3/P4 (PLAN_10_GIO.md §8.2 — no module should block on another
-for its own tests).
 """
 
 from __future__ import annotations
@@ -17,14 +12,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from dotenv import load_dotenv
 
-def stub_classify(question: dict[str, Any], session_id: str) -> dict[str, Any]:
-    return {
-        "question_id": question["question_id"],
-        "topic_id": None,
-        "status": "needs_review",
-        "confidence": "low",
-    }
+from backend.services.taxonomy_loader import load_session_taxonomy
+from backend.services.taxonomy_matcher import classify_batch
+
+load_dotenv()
 
 
 def load_golden_set(path: Path) -> list[dict[str, Any]]:
@@ -35,30 +28,6 @@ def load_golden_set(path: Path) -> list[dict[str, Any]]:
             if line:
                 cases.append(json.loads(line))
     return cases
-
-
-def evaluate_case(case: dict[str, Any], classify_fn) -> dict[str, Any]:
-    result = classify_fn(case["question"], case["session_id"])
-    expected_topics = case["expected_topic_ids"]
-    expected_status = case["expected_status"]
-
-    topic_correct_or_abstain = (
-        result["topic_id"] in expected_topics
-        if expected_topics
-        else result["status"] in ("needs_review", "unmatched")
-    )
-    status_correct = result["status"] == expected_status
-    high_confidence_wrong = result["confidence"] == "high" and not topic_correct_or_abstain
-
-    return {
-        "case_id": case["case_id"],
-        "risk_class": case["risk_class"],
-        "expected_status": expected_status,
-        "actual_status": result["status"],
-        "topic_correct_or_abstain": topic_correct_or_abstain,
-        "status_correct": status_correct,
-        "high_confidence_wrong": high_confidence_wrong,
-    }
 
 
 def summarize(case_results: list[dict[str, Any]]) -> dict[str, Any]:
@@ -78,13 +47,60 @@ def main() -> None:
     args = parser.parse_args()
 
     cases = load_golden_set(args.golden_set)
-    case_results = [evaluate_case(case, stub_classify) for case in cases]
+
+    cases_by_session = {}
+    for case in cases:
+        cases_by_session.setdefault(case["session_id"], []).append(case)
+
+    case_results = []
+
+    for session_id, session_cases in cases_by_session.items():
+        taxonomy = load_session_taxonomy(session_id)
+        questions = [c["question"] for c in session_cases]
+
+        # Use the real classify_batch
+        results = classify_batch(questions, session_id, taxonomy)
+        results_by_qid = {r["question_id"]: r for r in results}
+
+        for case in session_cases:
+            q_id = case["question"]["question_id"]
+            result = results_by_qid.get(q_id, {})
+
+            expected_topics = case["expected_topic_ids"]
+            expected_status = case["expected_status"]
+
+            # Safety fallback for result fields
+            topic_id = result.get("topic_id")
+            status = result.get("status", "needs_review")
+            confidence = result.get("confidence", "low")
+
+            topic_correct_or_abstain = (
+                topic_id in expected_topics
+                if expected_topics
+                else status in ("needs_review", "unmatched")
+            )
+            status_correct = status == expected_status
+            high_confidence_wrong = confidence == "high" and not topic_correct_or_abstain
+
+            case_results.append({
+                "case_id": case["case_id"],
+                "risk_class": case["risk_class"],
+                "expected_status": expected_status,
+                "actual_status": status,
+                "topic_correct_or_abstain": topic_correct_or_abstain,
+                "status_correct": status_correct,
+                "high_confidence_wrong": high_confidence_wrong,
+                "result_topic_id": topic_id,
+                "result_confidence": confidence,
+                "result_rationale": result.get("rationale"),
+            })
+
     summary = summarize(case_results)
 
     output = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "golden_set": str(args.golden_set),
-        "classifier": "stub_classify (needs_review always)",
+        "classifier": "classify_batch (real)",
         "summary": summary,
         "cases": case_results,
     }

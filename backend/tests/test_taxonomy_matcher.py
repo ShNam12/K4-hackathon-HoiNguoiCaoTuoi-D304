@@ -110,6 +110,24 @@ def test_paraphrase_is_retrieved_in_top_k():
     assert candidates[0]["topic_id"] == "DAY_01_CH_RAG"
 
 
+def test_stop_words_are_ignored_in_overlap():
+    taxonomy = [
+        {
+            "chapter_id": "DAY_01_CH_01",
+            "is_canonical": True,
+            "chapter_title": "Như thế nào là một con AI tốt?",
+            "keywords": ["ai", "tot"],
+        }
+    ]
+    # Câu hỏi chỉ chứa toàn stop word và từ không quan trọng, trùng nhiều với title
+    candidates = retrieve_candidates("như thế nào là một", taxonomy)
+    
+    # Nếu filter stop words hoạt động, thì overlap sẽ rỗng, score bằng 0 (hoặc rất thấp), 
+    # và candidate không được trả về (score > 0 mới được vào ranked list).
+    # Vì "như", "thế", "nào", "là", "một" đều là stop words.
+    assert len(candidates) == 0
+
+
 def test_retrieve_candidates_respects_requested_session():
     candidates = retrieve_candidates(
         "Agent hoạt động ra sao?",

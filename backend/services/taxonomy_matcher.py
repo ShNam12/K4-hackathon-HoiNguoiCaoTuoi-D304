@@ -26,6 +26,14 @@ INTENTS = {
 CONFIDENCES = {"high", "medium", "low"}
 STATUSES = {"auto_grouped", "needs_review", "unmatched", "error"}
 
+STOP_WORDS = {
+    "la", "gi", "nhu", "the", "nao", "co", "khong", "va", "cho", "cua", 
+    "mot", "nhung", "cung", "dau", "nhieu", "tang", "thay", "trong", 
+    "vay", "ad", "sao", "lai", "hay", "hon", "de", "do", "tu", "ra", 
+    "lam", "ai", "su", "thu", "toi", "ta", "minh", "cac"
+}
+
+
 LOGISTICS_TERMS = {
     "deadline",
     "han nop",
@@ -96,6 +104,17 @@ def classify_question(
     chapters = _chapters_from_taxonomy(taxonomy, session_id)
     candidates = retrieve_candidates(text, taxonomy, top_k=5, session_id=session_id)
 
+    if candidates and candidates[0]["match_type"] == "exact_alias":
+        intent = _infer_intent(normalized_text)
+        return _auto_result(question_id, candidates[0], intent, "high")
+
+    if _is_vague(normalized_text):
+        return _review_result(
+            question_id=question_id,
+            intent="unknown",
+            rationale="Question is too vague to assign confidently.",
+        )
+
     if not candidates:
         return _unmatched_result(
             question_id=question_id,
@@ -105,16 +124,6 @@ def classify_question(
 
     top_candidate = candidates[0]
     intent = _infer_intent(normalized_text)
-
-    if top_candidate["match_type"] == "exact_alias":
-        return _auto_result(question_id, top_candidate, intent, "high")
-
-    if _is_vague(normalized_text):
-        return _review_result(
-            question_id=question_id,
-            intent="unknown",
-            rationale="Question is too vague to assign confidently.",
-        )
 
     if _should_use_llm(candidates) and llm_client is not None:
         return _classify_with_llm(
@@ -299,14 +308,13 @@ def _score_chapter(
             score += 3.0 + min(len(normalized_term) / 25.0, 2.0)
 
     if not matched_terms:
-        question_tokens = set(normalized_question.split())
-        title_tokens = set(normalize_text(title).split())
+        question_tokens = set(normalized_question.split()) - STOP_WORDS
+        title_tokens = set(normalize_text(title).split()) - STOP_WORDS
         keyword_tokens = set(
             token
             for keyword in keywords
             for token in normalize_text(keyword).split()
-            if len(token) >= 4
-        )
+        ) - STOP_WORDS
         overlap = question_tokens & (title_tokens | keyword_tokens)
         if overlap:
             matched_terms.extend(sorted(overlap))
