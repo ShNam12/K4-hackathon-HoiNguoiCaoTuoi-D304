@@ -83,6 +83,7 @@
     .icon { width: 18px; height: 18px; stroke-width: 2; }
     .icon-sm { width: 16px; height: 16px; }
     .icon-lg { width: 22px; height: 22px; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
 
     .sidebar {
       position: fixed;
@@ -803,9 +804,9 @@
       <button class="nav-item active" data-section="Tổng quan"><i data-lucide="layout-dashboard" class="icon"></i><span>Tổng quan</span></button>
       <button class="nav-item" data-section="Câu hỏi sinh viên"><i data-lucide="circle-help" class="icon"></i><span>Câu hỏi sinh viên</span><b class="badge">24</b></button>
       <button class="nav-item" data-section="Chủ đề thảo luận"><i data-lucide="messages-square" class="icon"></i><span>Chủ đề thảo luận</span></button>
-      <button class="nav-item" data-section="Tin nhắn"><i data-lucide="message-circle-more" class="icon"></i><span>Tin nhắn</span><b class="badge">5</b></button>
-      <button class="nav-item" data-section="Phản hồi sinh viên"><i data-lucide="lightbulb" class="icon"></i><span>Phản hồi sinh viên</span></button>
-      <button class="nav-item" data-section="Báo cáo"><i data-lucide="chart-no-axes-combined" class="icon"></i><span>Báo cáo</span></button>
+      <button class="nav-item hidden" data-section="Tin nhắn"><i data-lucide="message-circle-more" class="icon"></i><span>Tin nhắn</span><b class="badge">5</b></button>
+      <button class="nav-item hidden" data-section="Phản hồi sinh viên"><i data-lucide="lightbulb" class="icon"></i><span>Phản hồi sinh viên</span></button>
+      <button class="nav-item hidden" data-section="Báo cáo"><i data-lucide="chart-no-axes-combined" class="icon"></i><span>Báo cáo</span></button>
       <button class="nav-item" data-section="Cài đặt"><i data-lucide="settings" class="icon"></i><span>Cài đặt</span></button>
     </nav>
     <div class="nav-spacer"></div>
@@ -843,9 +844,14 @@
         <div class="eyebrow"><i data-lucide="sparkles" class="icon-sm"></i> Không gian giảng dạy hỗ trợ bởi AI</div>
         <h2 id="heroTitle">Trung tâm hỗ trợ giảng dạy thông minh</h2>
         <p>AI tự động tổng hợp, phân loại và đề xuất các câu hỏi cần ưu tiên phản hồi.</p>
-        <div class="hero-actions">
-          <button class="btn hero-primary" id="viewUrgent"><i data-lucide="message-square-warning" class="icon-sm"></i>Xem câu hỏi cần trả lời</button>
-          <button class="btn hero-secondary" id="createAnnouncement"><i data-lucide="megaphone" class="icon-sm"></i>Tạo thông báo cho sinh viên</button>
+        <div class="hero-actions" style="display: flex; gap: 10px; align-items: center;">
+          <select id="sessionSelector" class="select" style="padding: 10px; border-radius: 8px; color: black; background: white;">
+            <option value="DAY_01">Buổi học DAY_01</option>
+            <option value="DAY_02">Buổi học DAY_02</option>
+          </select>
+          <button class="btn hero-primary" id="analyzeBtn"><i data-lucide="sparkles" class="icon-sm"></i> Phân tích</button>
+          <span id="loadingState" class="hidden"><i data-lucide="loader" class="icon-sm" style="animation: spin 1s linear infinite;"></i> Đang tải...</span>
+          <span id="demoDataNotice" class="hidden" style="color: #ffb44a; font-size: 12px; margin-left: 10px;">(Demo data)</span>
         </div>
       </div>
       <div class="ai-float"><span class="ai-dot"></span>AI đang phân tích 128 câu hỏi</div>
@@ -917,43 +923,15 @@
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Sinh viên</th><th>Câu hỏi</th><th>Chủ đề</th><th>Thời gian gửi</th><th>Ưu tiên</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+          <thead><tr><th>Sinh viên ID</th><th>Câu hỏi</th><th>Độ tin cậy</th><th>Lý do</th><th>Phân loại lại</th></tr></thead>
           <tbody id="priorityTable">
-            <tr>
-              <td><div class="student-cell"><div class="avatar sm" style="background:linear-gradient(145deg,#8f73e8,#5f50bd)">TL</div><div><strong>Trần Gia Linh</strong><span>SE170421</span></div></div></td>
-              <td class="question-cell" data-label="Câu hỏi">Phạm vi chức năng bắt buộc của bài tập React cuối kỳ gồm những gì ạ?</td>
-              <td data-label="Chủ đề"><span class="topic-chip">Bài tập lớn</span></td><td data-label="Thời gian">8 phút trước</td>
-              <td data-label="Ưu tiên"><span class="priority urgent">Khẩn cấp</span></td><td data-label="Trạng thái"><span class="status-chip wait">Chờ phản hồi</span></td>
-              <td><div class="row-actions"><button class="btn compact table-view">Xem</button><button class="btn compact primary table-reply">Trả lời</button><button class="btn compact table-done">Hoàn tất</button></div></td>
-            </tr>
-            <tr>
-              <td><div class="student-cell"><div class="avatar sm" style="background:linear-gradient(145deg,#f6a54e,#e76947)">HK</div><div><strong>Lê Hoàng Khang</strong><span>CS170089</span></div></div></td>
-              <td class="question-cell" data-label="Câu hỏi">Khi merge nhánh feature vào main bị conflict thì nên xử lý theo quy trình nào?</td>
-              <td data-label="Chủ đề"><span class="topic-chip">Git & GitHub</span></td><td data-label="Thời gian">21 phút trước</td>
-              <td data-label="Ưu tiên"><span class="priority high">Cao</span></td><td data-label="Trạng thái"><span class="status-chip processing">Đang xử lý</span></td>
-              <td><div class="row-actions"><button class="btn compact table-view">Xem</button><button class="btn compact primary table-reply">Trả lời</button><button class="btn compact table-done">Hoàn tất</button></div></td>
-            </tr>
-            <tr>
-              <td><div class="student-cell"><div class="avatar sm" style="background:linear-gradient(145deg,#30c89b,#148b72)">AN</div><div><strong>Phạm Thùy An</strong><span>AI170116</span></div></div></td>
-              <td class="question-cell" data-label="Câu hỏi">Bài kiểm tra giữa kỳ có bao gồm phần cây tìm kiếm nhị phân không Thầy?</td>
-              <td data-label="Chủ đề"><span class="topic-chip">Lịch giữa kỳ</span></td><td data-label="Thời gian">35 phút trước</td>
-              <td data-label="Ưu tiên"><span class="priority high">Cao</span></td><td data-label="Trạng thái"><span class="status-chip wait">Chờ phản hồi</span></td>
-              <td><div class="row-actions"><button class="btn compact table-view">Xem</button><button class="btn compact primary table-reply">Trả lời</button><button class="btn compact table-done">Hoàn tất</button></div></td>
-            </tr>
-            <tr>
-              <td><div class="student-cell"><div class="avatar sm" style="background:linear-gradient(145deg,#2bb9e8,#246dd0)">MN</div><div><strong>Vũ Minh Nhật</strong><span>SE170307</span></div></div></td>
-              <td class="question-cell" data-label="Câu hỏi">Thầy có thể chia sẻ thêm bộ câu hỏi luyện tập về thuật toán tham lam không ạ?</td>
-              <td data-label="Chủ đề"><span class="topic-chip">Tài liệu ôn tập</span></td><td data-label="Thời gian">1 giờ trước</td>
-              <td data-label="Ưu tiên"><span class="priority medium">Trung bình</span></td><td data-label="Trạng thái"><span class="status-chip processing">Đang xử lý</span></td>
-              <td><div class="row-actions"><button class="btn compact table-view">Xem</button><button class="btn compact primary table-reply">Trả lời</button><button class="btn compact table-done">Hoàn tất</button></div></td>
-            </tr>
           </tbody>
         </table>
       </div>
     </section>
   </main>
 
-  <div class="floating-actions">
+  <div class="floating-actions hidden">
     <button class="float-btn feedback-float" id="feedbackFloat" aria-label="Mở ý kiến từ học viên"><i data-lucide="lightbulb" class="icon-lg"></i><span class="count-badge">3</span><span class="tooltip">Ý kiến từ học viên</span></button>
     <button class="float-btn chat-float" id="chatFloat" aria-label="Mở trao đổi với sinh viên"><i data-lucide="messages-square" class="icon-lg"></i><span class="count-badge">5</span><span class="tooltip">Trao đổi với sinh viên</span></button>
   </div>
@@ -1023,8 +1001,12 @@
       <div class="detail-block"><div class="detail-label"><i data-lucide="messages-square" class="icon-sm"></i>Câu hỏi tương tự</div><div class="similar-list"><div class="similar-item"><div class="avatar sm">TL</div><span>Nhóm em cần hoàn thành tối thiểu bao nhiêu màn hình cho bài tập lớn ạ?</span></div><div class="similar-item"><div class="avatar sm" style="background:linear-gradient(145deg,#f6a54e,#e76947)">HK</div><span>JWT có phải là yêu cầu bắt buộc trong phần đăng nhập không Thầy?</span></div><div class="similar-item"><div class="avatar sm" style="background:linear-gradient(145deg,#30c89b,#148b72)">AN</div><span>Điểm triển khai cloud chiếm bao nhiêu phần trăm tổng điểm ạ?</span></div></div></div>
       <div class="detail-block"><div class="detail-label"><i data-lucide="tags" class="icon-sm"></i>Từ khóa nổi bật</div><div class="keywords" id="drawerKeywords"><span class="keyword">phạm vi dự án</span><span class="keyword">JWT</span><span class="keyword">REST API</span><span class="keyword">rubric</span><span class="keyword">cloud</span></div></div>
       <div class="detail-block"><div class="detail-label"><i data-lucide="users" class="icon-sm"></i>Sinh viên quan tâm</div><div style="display:flex;align-items:center;justify-content:space-between"><div class="avatar-stack"><div class="avatar sm">TL</div><div class="avatar sm" style="background:linear-gradient(145deg,#f6a54e,#e76947)">HK</div><div class="avatar sm" style="background:linear-gradient(145deg,#30c89b,#148b72)">AN</div><div class="avatar sm" style="background:linear-gradient(145deg,#8f73e8,#5f50bd)">VN</div><span class="avatar-more">+28</span></div><span style="color:var(--muted);font-size:9px">32 sinh viên</span></div></div>
-      <div class="detail-block"><div class="detail-label"><i data-lucide="brain-circuit" class="icon-sm"></i>Độ tin cậy của AI</div><div class="confidence"><div class="confidence-track"><div class="confidence-fill"></div></div><strong style="color:var(--mint)">94%</strong></div></div>
-      <div class="detail-block"><div class="detail-label"><i data-lucide="wand-sparkles" class="icon-sm"></i>Phản hồi đề xuất</div><div class="suggestion-box" id="drawerSuggestion">Chào các em, bài tập lớn yêu cầu tối thiểu 4 màn hình chính, có xác thực bằng JWT và sử dụng REST API. Mỗi nhóm nộp mã nguồn qua GitHub kèm README hướng dẫn. Triển khai cloud được cộng điểm khuyến khích nhưng không bắt buộc.</div></div>
+      <div class="detail-block"><div class="detail-label"><i data-lucide="brain-circuit" class="icon-sm"></i>Độ tin cậy của AI</div><div class="confidence"><strong id="drawerConfidence" style="color:var(--mint)">high</strong> <span id="drawerRationale" style="margin-left: 10px; font-size: 12px; color: var(--muted)"></span></div></div>
+      <div class="detail-block"><div class="detail-label"><i data-lucide="wand-sparkles" class="icon-sm"></i>Tóm tắt Nhóm</div><div class="suggestion-box" id="drawerSummaryContent"></div></div>
+      <div class="detail-block">
+        <div class="detail-label"><i data-lucide="file-text" class="icon-sm"></i>Evidence (Nguồn tham khảo)</div>
+        <div class="similar-list" id="drawerEvidence"></div>
+      </div>
     </div>
     <footer class="drawer-footer"><button class="btn" id="editResponse"><i data-lucide="pencil" class="icon-sm"></i>Chỉnh sửa phản hồi</button><button class="btn primary" id="sendAll"><i data-lucide="send" class="icon-sm"></i>Gửi tới tất cả</button><button class="btn" id="publishAnnouncement"><i data-lucide="megaphone" class="icon-sm"></i>Đăng thông báo</button><button class="btn success" id="resolveTopic"><i data-lucide="circle-check" class="icon-sm"></i>Đánh dấu đã xử lý</button></footer>
   </aside>
@@ -1037,6 +1019,7 @@
   </div>
   <div class="toast-stack" id="toastStack" aria-live="polite"></div>
 
+  <script src="api.js"></script>
   <script>
     (() => {
       "use strict";
@@ -1045,16 +1028,92 @@
       const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
       const escapeHTML = (value) => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
 
-      const topics = [
-        { id: 1, title: "Yêu cầu và phạm vi bài tập lớn", questions: 32, summary: "Sinh viên chưa rõ phạm vi dự án, định dạng nộp bài và tiêu chí chấm điểm.", priority: "urgent", priorityLabel: "Khẩn cấp", answered: 35, updated: "5 phút trước", recent: 1, color: "var(--red)", keywords: ["phạm vi dự án","JWT","REST API","rubric","cloud"] },
-        { id: 2, title: "Lịch kiểm tra giữa kỳ", questions: 21, summary: "Nhiều sinh viên hỏi về thời gian, hình thức kiểm tra và nội dung được phép ôn tập.", priority: "high", priorityLabel: "Cao", answered: 60, updated: "18 phút trước", recent: 2, color: "var(--amber)", keywords: ["giữa kỳ","lịch thi","cấu trúc đề","phòng thi"] },
-        { id: 3, title: "Cách sử dụng Git và GitHub", questions: 18, summary: "Các câu hỏi tập trung vào quy trình nhánh, pull request và xử lý xung đột mã nguồn.", priority: "medium", priorityLabel: "Trung bình", answered: 72, updated: "42 phút trước", recent: 3, color: "var(--primary)", keywords: ["Git","GitHub","merge conflict","pull request"] },
-        { id: 4, title: "Tài liệu ôn tập", questions: 14, summary: "Sinh viên mong muốn có thêm bộ bài tập mẫu và hướng dẫn ôn tập theo từng chương.", priority: "low", priorityLabel: "Thấp", answered: 85, updated: "2 giờ trước", recent: 4, color: "var(--mint)", keywords: ["ôn tập","thuật toán","bài tập mẫu","tài liệu"] }
-      ];
+      let topics = [];
+      let reviewQueue = [];
+      let unmatched = [];
       const priorityRank = { urgent: 4, high: 3, medium: 2, low: 1 };
       let currentFilter = "all";
-      let selectedTopic = topics[0];
+      let selectedTopic = null;
       let charts = [];
+      
+      const sessionSelector = $("#sessionSelector");
+      const analyzeBtn = $("#analyzeBtn");
+      const loadingState = $("#loadingState");
+      const demoDataNotice = $("#demoDataNotice");
+
+      analyzeBtn.addEventListener("click", async () => {
+        analyzeBtn.disabled = true;
+        loadingState.classList.remove("hidden");
+        demoDataNotice.classList.add("hidden");
+        $("#topicsGrid").innerHTML = '<div class="empty-state"><i data-lucide="loader" class="icon" style="animation: spin 1s linear infinite;"></i><strong>Đang phân tích...</strong></div>';
+        
+        let data = await window.api.analyzeQuestions({ session_id: sessionSelector.value, questions: [] });
+        
+        analyzeBtn.disabled = false;
+        loadingState.classList.add("hidden");
+        
+        if (data && data.groups) {
+           if (data._isDemo) {
+             demoDataNotice.classList.remove("hidden");
+           }
+           topics = data.groups.map((g, index) => {
+             return {
+               id: g.topic_id || index,
+               title: g.topic_title,
+               questions: g.question_count,
+               unique_students: g.unique_student_count,
+               summary: g.summary,
+               priority: g.confidence_breakdown && g.confidence_breakdown.high > 0 ? "high" : "medium",
+               priorityLabel: "Cao",
+               answered: 0,
+               updated: "Vừa xong",
+               recent: index,
+               color: "var(--primary)",
+               keywords: [],
+               evidence_refs: g.questions ? g.questions.flatMap(q => q.evidence_refs || []) : [],
+               confidence_breakdown: g.confidence_breakdown,
+               questionsList: g.questions || []
+             };
+           });
+           reviewQueue = data.review_queue || [];
+           unmatched = data.unmatched || [];
+           
+           renderTopics();
+           renderReviewQueue();
+           
+           const totalQuestions = (data.groups ? data.groups.reduce((sum, g) => sum + g.question_count, 0) : 0) + reviewQueue.length + unmatched.length;
+           $$(".stat-card h3")[0].textContent = totalQuestions;
+           $$(".stat-card h3")[1].textContent = reviewQueue.length + unmatched.length;
+           $$(".stat-card h3")[2].textContent = topics.length;
+           $$(".stat-card h3")[3].textContent = data.groups ? data.groups.reduce((sum, g) => sum + (g.unique_student_count || 0), 0) : 0;
+           $(".ai-float").innerHTML = `<span class="ai-dot"></span>Đã phân tích ${totalQuestions} câu hỏi`;
+        }
+      });
+
+      function renderReviewQueue() {
+         const allReview = [...reviewQueue, ...unmatched];
+         const tbody = $("#priorityTable");
+         if (!allReview.length) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--muted);">Không có câu hỏi cần duyệt</td></tr>`;
+            return;
+         }
+         tbody.innerHTML = allReview.map(q => `
+            <tr>
+              <td><strong>${escapeHTML(q.student_id)}</strong></td>
+              <td class="question-cell">${escapeHTML(q.text)}</td>
+              <td><span class="status-chip wait">${escapeHTML(q.confidence || "low")}</span></td>
+              <td>${escapeHTML(q.rationale || q.reason || "")}</td>
+              <td>
+                <select class="select" style="padding: 5px; font-size: 12px; border-radius: 4px;">
+                  <option>-- Chọn --</option>
+                  ${topics.map(t => `<option value="${t.id}">${escapeHTML(t.title)}</option>`).join("")}
+                  <option value="ignore">Bỏ qua</option>
+                </select>
+                <button class="btn compact primary">Lưu</button>
+              </td>
+            </tr>
+         `).join("");
+      }
 
       function refreshIcons() {
         if (window.lucide) window.lucide.createIcons({ attrs: { "aria-hidden": "true" } });
@@ -1114,11 +1173,24 @@
       function closeFeedback() { $("#feedbackPanel").classList.remove("open"); $("#feedbackPanel").setAttribute("aria-hidden", "true"); }
 
       function openDrawer(topic = topics[0]) {
+        if (!topic) return;
         selectedTopic = topic;
         $("#drawerTitle").textContent = topic.title;
-        $("#drawerMeta").textContent = `${topic.questions} câu hỏi · Cập nhật ${topic.updated}`;
-        $("#drawerSummary").textContent = topic.summary + " AI đã nhận diện các mẫu câu hỏi có cùng ý định và mức độ ưu tiên.";
-        $("#drawerKeywords").innerHTML = topic.keywords.map(k => `<span class="keyword">${escapeHTML(k)}</span>`).join("");
+        $("#drawerMeta").textContent = `${topic.questions} câu hỏi · Sinh viên: ${topic.unique_students || 0}`;
+        $("#drawerSummaryContent").textContent = topic.summary;
+        
+        let confidenceStr = "high";
+        if (topic.confidence_breakdown) {
+           if (topic.confidence_breakdown.low > 0) confidenceStr = "low";
+           else if (topic.confidence_breakdown.medium > 0) confidenceStr = "medium";
+        }
+        $("#drawerConfidence").textContent = confidenceStr;
+        $("#drawerConfidence").style.color = confidenceStr === "high" ? "var(--mint)" : (confidenceStr === "medium" ? "var(--amber)" : "var(--red)");
+        $("#drawerRationale").textContent = "Dựa trên " + (topic.evidence_refs ? topic.evidence_refs.length : 0) + " nguồn.";
+        
+        const evidenceHtml = (topic.evidence_refs || []).map(ref => `<div class="similar-item"><i data-lucide="file-text" class="icon-sm"></i><span>File: ${escapeHTML(ref.file_id)} - Dòng: ${ref.line}</span></div>`).join("");
+        $("#drawerEvidence").innerHTML = evidenceHtml || `<span class="text-muted">Không có nguồn</span>`;
+        
         $("#topicDrawer").classList.add("open");
         $("#overlay").classList.add("open");
         $("#topicDrawer").setAttribute("aria-hidden", "false");
@@ -1255,8 +1327,7 @@
       $("#publishAnnouncement").addEventListener("click", () => { closeDrawer(); toast("Đã đăng thông báo", "Thông báo đã xuất hiện trên bảng tin môn học."); });
       $("#resolveTopic").addEventListener("click", () => { selectedTopic.answered = 100; closeDrawer(); renderTopics(); toast("Chủ đề đã hoàn tất", "Tất cả câu hỏi trong chủ đề đã được xử lý."); });
 
-      $("#viewUrgent").addEventListener("click", () => { currentFilter = "urgent"; $$("#topicFilters .filter-btn").forEach(b => b.classList.toggle("active", b.dataset.filter === "urgent")); renderTopics(); $("#topicsSection").scrollIntoView({behavior:"smooth"}); });
-      $("#createAnnouncement").addEventListener("click", () => openDrawer(topics[0]));
+      // Removed viewUrgent and createAnnouncement
       $("#viewAllQuestions").addEventListener("click", () => toast("Danh sách câu hỏi", "Đang hiển thị 24 câu hỏi cần ưu tiên."));
       $("#chartMenu").addEventListener("click", () => toast("Biểu đồ trạng thái", "Dữ liệu được cập nhật lúc 10:24 hôm nay."));
 
