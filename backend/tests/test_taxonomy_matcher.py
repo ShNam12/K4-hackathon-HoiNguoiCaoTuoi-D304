@@ -1,4 +1,5 @@
 import json
+import time
 
 from backend.services.taxonomy_matcher import (
     classify_batch,
@@ -94,7 +95,10 @@ def test_logistics_question_becomes_unmatched():
 
 def test_bad_llm_json_does_not_crash():
     result = classify_question(
-        {"question_id": "Q004", "text": "Agent dùng tools và memory khác gì RAG?"},
+        {
+            "question_id": "Q004",
+            "text": "Truy xuất tài liệu và chi phí token liên quan đến nhau thế nào?",
+        },
         "DAY_01",
         _taxonomy(),
         llm_client=lambda payload: "not-json",
@@ -106,7 +110,10 @@ def test_bad_llm_json_does_not_crash():
 
 def test_llm_topic_outside_candidates_is_rejected_to_review():
     result = classify_question(
-        {"question_id": "Q005", "text": "Agent dùng tools và memory khác gì RAG?"},
+        {
+            "question_id": "Q005",
+            "text": "Truy xuất tài liệu và chi phí token liên quan đến nhau thế nào?",
+        },
         "DAY_01",
         _taxonomy(),
         llm_client=lambda payload: json.dumps(
@@ -120,6 +127,33 @@ def test_llm_topic_outside_candidates_is_rejected_to_review():
     )
 
     assert result["status"] == "needs_review"
+
+
+def test_llm_timeout_falls_back_to_review():
+    def slow_llm(payload):
+        time.sleep(0.05)
+        return json.dumps(
+            {
+                "topic_id": "DAY_01_CH_RAG",
+                "intent": "clarify_concept",
+                "confidence": "high",
+                "status": "auto_grouped",
+            }
+        )
+
+    result = classify_question(
+        {
+            "question_id": "Q010",
+            "text": "Truy xuất tài liệu và chi phí token liên quan đến nhau thế nào?",
+        },
+        "DAY_01",
+        _taxonomy(),
+        llm_client=slow_llm,
+        timeout_seconds=0.001,
+    )
+
+    assert result["status"] == "needs_review"
+    assert result["confidence"] == "low"
 
 
 def test_source_reference_comes_from_taxonomy_candidate():

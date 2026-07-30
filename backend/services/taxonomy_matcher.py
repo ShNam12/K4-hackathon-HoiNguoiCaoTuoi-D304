@@ -92,12 +92,6 @@ def classify_question(
             intent="off_topic",
             rationale="Question appears unrelated to the selected session taxonomy.",
         )
-    if _is_vague(normalized_text):
-        return _review_result(
-            question_id=question_id,
-            intent="unknown",
-            rationale="Question is too vague to assign confidently.",
-        )
 
     chapters = _chapters_from_taxonomy(taxonomy, session_id)
     candidates = retrieve_candidates(text, taxonomy, top_k=5)
@@ -114,6 +108,13 @@ def classify_question(
 
     if top_candidate["match_type"] == "exact_alias":
         return _auto_result(question_id, top_candidate, intent, "high")
+
+    if _is_vague(normalized_text):
+        return _review_result(
+            question_id=question_id,
+            intent="unknown",
+            rationale="Question is too vague to assign confidently.",
+        )
 
     if _should_use_llm(candidates) and llm_client is not None:
         return _classify_with_llm(
