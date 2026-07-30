@@ -1,0 +1,108 @@
+openapi: 3.0.3
+info:
+  title: Questions Clustering MVP API
+  version: '0.1.0'
+  description: Minimal API for ingesting student questions, listing clusters, and generating summaries.
+servers:
+  - url: http://localhost:8000
+
+paths:
+  /questions:
+    post:
+      summary: Ingest a student question
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                student_id:
+                  type: string
+                raw_text:
+                  type: string
+                source_file:
+                  type: string
+                source_line:
+                  type: integer
+              required: [raw_text]
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+
+  /clusters:
+    get:
+      summary: List clusters
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cluster'
+
+  /clusters/{cluster_id}/summarize:
+    post:
+      summary: Generate or update summary for a cluster
+      parameters:
+        - name: cluster_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prompt_context:
+                  type: string
+      responses:
+        '200':
+          description: Summary updated
+
+components:
+  schemas:
+    Question:
+      type: object
+      properties:
+        id:
+          type: integer
+        student_id:
+          type: string
+        raw_text:
+          type: string
+        cleaned_text:
+          type: string
+        subject:
+          type: string
+        intent:
+          type: string
+        priority:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    Cluster:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        summary:
+          type: string
+        confidence:
+          type: number
+        topic:
+          type: string
+        priority:
+          type: integer
