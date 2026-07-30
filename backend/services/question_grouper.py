@@ -16,11 +16,11 @@ def group_classifications(
         if status == "auto_grouped":
             auto_grouped.append(c)
         elif status == "needs_review":
-            review_queue.append(c)
+            review_queue.append(_enrich_item(c, questions_by_id))
         elif status == "unmatched":
-            unmatched.append(c)
+            unmatched.append(_enrich_item(c, questions_by_id))
         elif status == "error":
-            error_items.append(c)
+            error_items.append(_enrich_item(c, questions_by_id))
 
     topic_groups: dict[str, list[dict]] = {}
     for c in auto_grouped:
@@ -79,6 +79,13 @@ def group_classifications(
     review_queue.extend(error_items)
 
     return groups, review_queue, unmatched
+
+
+def _enrich_item(item: dict, questions_by_id: dict[str, dict]) -> dict:
+    orig = questions_by_id.get(item["question_id"], {})
+    item.setdefault("student_id", orig.get("student_id", "unknown"))
+    item.setdefault("text", orig.get("text", ""))
+    return item
 
 
 def _resolve_dominant_intent(intent_counts: Counter) -> str:
