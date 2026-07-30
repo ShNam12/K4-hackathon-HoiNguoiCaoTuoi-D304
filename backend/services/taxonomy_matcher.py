@@ -94,7 +94,7 @@ def classify_question(
         )
 
     chapters = _chapters_from_taxonomy(taxonomy, session_id)
-    candidates = retrieve_candidates(text, taxonomy, top_k=5)
+    candidates = retrieve_candidates(text, taxonomy, top_k=5, session_id=session_id)
 
     if not candidates:
         return _unmatched_result(
@@ -174,10 +174,11 @@ def retrieve_candidates(
     question_text: str,
     taxonomy: Mapping[str, Any] | Sequence[Mapping[str, Any]],
     top_k: int = 5,
+    session_id: str | None = None,
 ) -> list[dict[str, Any]]:
     """Return top-k taxonomy chapter candidates by normalized term matching."""
 
-    chapters = _chapters_from_taxonomy(taxonomy)
+    chapters = _chapters_from_taxonomy(taxonomy, session_id)
     normalized_question = normalize_text(question_text)
     ranked: list[dict[str, Any]] = []
 

@@ -52,6 +52,41 @@ def _taxonomy():
     }
 
 
+def _multi_day_taxonomy():
+    return {
+        "days": [
+            {
+                "day_id": "DAY_02",
+                "chapters": [
+                    {
+                        "chapter_id": "DAY_02_CH_AGENT",
+                        "chapter_title": "Từ LLM đến agent: bốn mức độ",
+                        "is_canonical": True,
+                        "summary": "Wrong-day chapter that should not be selected for DAY_01.",
+                        "aliases": ["tu llm den agent"],
+                        "keywords": ["agent"],
+                        "source_refs": [{"file_id": "D2", "line": 1}],
+                    }
+                ],
+            },
+            {
+                "day_id": "DAY_01",
+                "chapters": [
+                    {
+                        "chapter_id": "DAY_01_CH_RAG",
+                        "chapter_title": "RAG — tra sổ thay vì bắt nhớ",
+                        "is_canonical": True,
+                        "summary": "Use retrieval to ground model answers in source material.",
+                        "aliases": ["RAG", "retrieval augmented generation", "tra so"],
+                        "keywords": ["rag", "retrieval", "trich dan nguon", "context", "tai lieu"],
+                        "source_refs": [{"file_id": "D1", "line": 225}],
+                    }
+                ],
+            },
+        ]
+    }
+
+
 def test_normalize_text_folds_vietnamese_diacritics():
     assert normalize_text("Từ LLM đến Agent: bốn mức độ!") == "tu llm den agent bon muc do"
 
@@ -73,6 +108,27 @@ def test_paraphrase_is_retrieved_in_top_k():
     candidates = retrieve_candidates("Lam sao truy xuat tai lieu de co context?", _taxonomy())
 
     assert candidates[0]["topic_id"] == "DAY_01_CH_RAG"
+
+
+def test_retrieve_candidates_respects_requested_session():
+    candidates = retrieve_candidates(
+        "Agent hoạt động ra sao?",
+        _multi_day_taxonomy(),
+        session_id="DAY_01",
+    )
+
+    assert candidates == []
+
+
+def test_classify_question_respects_requested_session():
+    result = classify_question(
+        {"question_id": "Q011", "text": "Agent hoạt động ra sao?"},
+        "DAY_01",
+        _multi_day_taxonomy(),
+    )
+
+    assert result["status"] == "unmatched"
+    assert result["topic_id"] is None
 
 
 def test_vague_question_becomes_needs_review():
