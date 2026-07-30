@@ -1,0 +1,13 @@
+# Live model provider SDKs (install the one you use):
+openai>=1.0.0
+anthropic>=0.34.0
+google-genai>=0.8.0
+# Research tools:
+requests>=2.31.0
+PyYAML>=6.0
+# Data pipeline (clean_chatlog.py, classify_turns.py, daily_digest.py):
+pandas>=2.0.0
+# Optional arXiv PDF extraction (`paper_text`):
+pypdf>=4.0.0
+# UI (Streamlit) — bat buoc de chay app.py:
+streamlit>=1.30.0

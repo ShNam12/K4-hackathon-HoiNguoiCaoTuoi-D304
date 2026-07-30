@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "ANL_001",
+  "session_id": "DAY_01",
+  "generated_at": "2026-07-30T10:05:00Z",
+  "groups": [
+    {
+      "topic_id": "DAY_01_CH_14",
+      "topic_title": "RAG",
+      "question_count": 4,
+      "unique_student_count": 3,
+      "dominant_intent": "compare",
+      "summary": "Sinh viên chủ yếu chưa rõ khi nào dùng RAG thay cho fine-tuning.",
+      "supported_question_ids": ["Q001", "Q004", "Q006"],
+      "confidence_breakdown": {
+        "high": 3,
+        "medium": 1,
+        "low": 0
+      },
+      "questions": [
+        {
+          "question_id": "Q001",
+          "student_id": "U001",
+          "text": "RAG khác fine-tuning như thế nào?",
+          "intent": "compare",
+          "confidence": "high",
+          "evidence_refs": [
+            {
+              "file_id": "D1",
+              "line": 120
+            }
+          ]
+        },
+        {
+          "question_id": "Q004",
+          "student_id": "U002",
+          "text": "Nên ưu tiên RAG hay fine-tuning cho dữ liệu nội bộ?",
+          "intent": "compare",
+          "confidence": "high",
+          "evidence_refs": [
+            {
+              "file_id": "D1",
+              "line": 122
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "topic_id": "DAY_01_CH_10",
+      "topic_title": "Vector Embeddings",
+      "question_count": 2,
+      "unique_student_count": 2,
+      "dominant_intent": "clarify_concept",
+      "summary": "Cách thức chuyển đổi từ văn bản sang vector còn khá mơ hồ.",
+      "supported_question_ids": ["Q010", "Q011"],
+      "confidence_breakdown": {
+        "high": 2,
+        "medium": 0,
+        "low": 0
+      },
+      "questions": [
+        {
+          "question_id": "Q010",
+          "student_id": "U003",
+          "text": "Embeddings hoạt động như thế nào ở mức toán học ạ?",
+          "intent": "clarify_concept",
+          "confidence": "high",
+          "evidence_refs": [
+            {
+              "file_id": "D1",
+              "line": 45
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "review_queue": [
+    {
+      "question_id": "Q020",
+      "student_id": "U004",
+      "text": "Thầy giảng lại phần này được không?",
+      "confidence": "low",
+      "rationale": "Câu hỏi quá mơ hồ, không xác định rõ khái niệm nào."
+    }
+  ],
+  "unmatched": [
+    {
+      "question_id": "Q021",
+      "student_id": "U005",
+      "text": "Cuối tuần này có hạn nộp bài tập lớn không ạ?",
+      "confidence": "high",
+      "rationale": "Đây là câu hỏi liên quan đến lịch trình/hành chính, không thuộc taxonomy kiến thức bài giảng."
+    }
+  ],
+  "trace": {
+    "matcher_type": "hybrid_llm",
+    "matcher_prompt_version": "matcher-v1",
+    "summary_prompt_version": "summary-v1",
+    "model": "configured-by-env"
+  }
+}

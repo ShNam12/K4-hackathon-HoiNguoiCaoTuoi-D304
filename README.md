@@ -1,15 +1,31 @@
 # Mini Hackathon AI — Batch 03
 
 ## Thông tin nhóm
-- Tên nhóm: [Tên nhóm]
-- Hướng: [A/B/C]
+- Tên nhóm: **HoiNguoiCaoTuoi**
+- Zone: Chưa cung cấp
+- Hướng: **A — VLearn**
+- Loại: **Tối ưu tính năng có sẵn**
 
 ### Thành viên và phân công
-- [Mã HV] [Họ và tên] - [Phân công (VD: spec / evidence / prompt / code / demo)]
-- [Mã HV] [Họ và tên] - [Phân công]
-- [Mã HV] [Họ và tên] - [Phân công]
-- [Mã HV] [Họ và tên] - [Phân công]
-- [Mã HV] [Họ và tên] - [Phân công]
+- P1 — Chưa cung cấp mã HV/họ tên — Product Lead, spec, evidence,
+  validation và nội dung demo
+- P2 — Chưa cung cấp mã HV/họ tên — Frontend và trải nghiệm giảng viên
+- P3 — `2A202601460` — Nguyễn Hoàng Đạt — Taxonomy retrieval và AI matching
+- P4 — Chưa cung cấp mã HV/họ tên — Grouping, intent và grounded summary
+- P5 — Chưa cung cấp mã HV/họ tên — API, schema, eval và packaging
+
+---
+
+## Lát cắt sản phẩm
+
+Sau buổi học, giảng viên dùng hệ thống để nhận biết phần kiến thức nào
+nhiều sinh viên chưa rõ. Hệ thống phân loại câu hỏi theo taxonomy của
+buổi học, gom câu tương tự, tạo summary có căn cứ và chuyển trường hợp
+không chắc chắn cho giảng viên duyệt hoặc sửa.
+
+- Đặc tả sản phẩm: [`spec.md`](spec.md)
+- Kịch bản validation:
+  [`validation/test-script.md`](validation/test-script.md)
 
 ---
 

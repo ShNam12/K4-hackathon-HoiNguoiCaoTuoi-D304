@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "ANL_DEMO_001",
+  "session_id": "DAY_01",
+  "generated_at": "2026-07-30T10:10:00Z",
+  "groups": [
+    {
+      "topic_id": "DAY_01_CH_14",
+      "topic_title": "RAG",
+      "question_count": 4,
+      "unique_student_count": 4,
+      "dominant_intent": "compare",
+      "summary": "Sinh vien chu yeu chua ro khi nao dung RAG thay cho fine-tuning va chi phi trien khai giua hai cach.",
+      "supported_question_ids": ["Q001", "Q004", "Q006", "Q002"],
+      "confidence_breakdown": {
+        "high": 3,
+        "medium": 1,
+        "low": 0
+      },
+      "questions": [
+        {
+          "question_id": "Q001",
+          "student_id": "U001",
+          "text": "RAG khac fine-tuning nhu the nao?",
+          "intent": "compare",
+          "confidence": "high",
+          "evidence_refs": [{ "file_id": "D1", "line": 210 }]
+        },
+        {
+          "question_id": "Q002",
+          "student_id": "U002",
+          "text": "Cho vi du cu the ve RAG duoc khong a?",
+          "intent": "need_example",
+          "confidence": "medium",
+          "evidence_refs": [{ "file_id": "D1", "line": 210 }]
+        },
+        {
+          "question_id": "Q004",
+          "student_id": "U003",
+          "text": "Khi nao nen dung RAG thay vi fine-tuning cho du an thuc te?",
+          "intent": "apply_practice",
+          "confidence": "high",
+          "evidence_refs": [{ "file_id": "D1", "line": 215 }]
+        },
+        {
+          "question_id": "Q006",
+          "student_id": "U005",
+          "text": "RAG va fine-tuning cai nao re hon khi trien khai?",
+          "intent": "compare",
+          "confidence": "high",
+          "evidence_refs": [{ "file_id": "D1", "line": 215 }]
+        }
+      ]
+    },
+    {
+      "topic_id": "DAY_01_CH_06",
+      "topic_title": "2017: Transformer",
+      "question_count": 1,
+      "unique_student_count": 1,
+      "dominant_intent": "clarify_concept",
+      "summary": "Mot sinh vien can lam ro Transformer khac gi cac kien truc model truoc do.",
+      "supported_question_ids": ["Q003"],
+      "confidence_breakdown": {
+        "high": 1,
+        "medium": 0,
+        "low": 0
+      },
+      "questions": [
+        {
+          "question_id": "Q003",
+          "student_id": "U001",
+          "text": "The nao la Transformer, no khac gi cac model truoc do?",
+          "intent": "clarify_concept",
+          "confidence": "high",
+          "evidence_refs": [{ "file_id": "D1", "line": 141 }]
+        }
+      ]
+    }
+  ],
+  "review_queue": [
+    {
+      "question_id": "Q007",
+      "student_id": "U006",
+      "text": "Phan nay la sao a, em chua hieu lam?",
+      "status": "needs_review",
+      "confidence": "low",
+      "alternatives": [
+        { "topic_id": "DAY_01_CH_14", "topic_title": "RAG" },
+        { "topic_id": "DAY_01_CH_06", "topic_title": "2017: Transformer" }
+      ],
+      "rationale": "Cau hoi qua mo ho, khong xac dinh duoc chapter cu the neu khong co ngu canh truoc do."
+    }
+  ],
+  "unmatched": [
+    {
+      "question_id": "Q005",
+      "student_id": "U004",
+      "text": "Bai tap hom nay nop o dau vay thay?",
+      "status": "unmatched",
+      "confidence": "low",
+      "alternatives": [],
+      "rationale": "Cau hoi logistics, khong thuoc noi dung taxonomy cua buoi hoc."
+    },
+    {
+      "question_id": "Q008",
+      "student_id": "U007",
+      "text": "May tinh cua em bi treo khi chay code vi du, co ai bi giong em khong?",
+      "status": "unmatched",
+      "confidence": "low",
+      "alternatives": [],
+      "rationale": "Cau hoi off-topic ve loi ky thuat may tinh ca nhan, khong thuoc noi dung buoi hoc."
+    }
+  ],
+  "trace": {
+    "matcher_type": "hybrid_llm",
+    "matcher_prompt_version": "matcher-v1",
+    "summary_prompt_version": "summary-v1",
+    "model": "configured-by-env"
+  }
+}
