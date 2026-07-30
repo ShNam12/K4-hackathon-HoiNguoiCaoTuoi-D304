@@ -1,5 +1,7 @@
 window.api = {
-  API_BASE_URL: "http://localhost:8000/api",
+  get API_BASE_URL() {
+    return window.APP_CONFIG?.API_BASE_URL || "http://localhost:8000/api";
+  },
 
   analyzeQuestions: async function(payload) {
     try {

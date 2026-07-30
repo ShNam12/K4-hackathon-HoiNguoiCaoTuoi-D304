@@ -1019,6 +1019,7 @@
   </div>
   <div class="toast-stack" id="toastStack" aria-live="polite"></div>
 
+  <script src="config.js"></script>
   <script src="api.js"></script>
   <script>
     (() => {
@@ -1056,23 +1057,23 @@
            if (data._isDemo) {
              demoDataNotice.classList.remove("hidden");
            }
-           topics = data.groups.map((g, index) => {
+           topics = (data.groups || []).map((g, index) => {
              return {
-               id: g.topic_id || index,
-               title: g.topic_title,
-               questions: g.question_count,
-               unique_students: g.unique_student_count,
-               summary: g.summary,
-               priority: g.confidence_breakdown && g.confidence_breakdown.high > 0 ? "high" : "medium",
+               id: g?.topic_id || index,
+               title: g?.topic_title || "Không xác định",
+               questions: g?.question_count || 0,
+               unique_students: g?.unique_student_count || 0,
+               summary: g?.summary || "",
+               priority: g?.confidence_breakdown?.high > 0 ? "high" : "medium",
                priorityLabel: "Cao",
                answered: 0,
                updated: "Vừa xong",
                recent: index,
                color: "var(--primary)",
                keywords: [],
-               evidence_refs: g.questions ? g.questions.flatMap(q => q.evidence_refs || []) : [],
-               confidence_breakdown: g.confidence_breakdown,
-               questionsList: g.questions || []
+               evidence_refs: g?.questions ? g.questions.flatMap(q => q?.evidence_refs || []) : [],
+               confidence_breakdown: g?.confidence_breakdown || { high: 0, medium: 0, low: 0 },
+               questionsList: g?.questions || []
              };
            });
            reviewQueue = data.review_queue || [];
@@ -1081,11 +1082,11 @@
            renderTopics();
            renderReviewQueue();
            
-           const totalQuestions = (data.groups ? data.groups.reduce((sum, g) => sum + g.question_count, 0) : 0) + reviewQueue.length + unmatched.length;
+           const totalQuestions = (data.groups || []).reduce((sum, g) => sum + (g?.question_count || 0), 0) + reviewQueue.length + unmatched.length;
            $$(".stat-card h3")[0].textContent = totalQuestions;
            $$(".stat-card h3")[1].textContent = reviewQueue.length + unmatched.length;
            $$(".stat-card h3")[2].textContent = topics.length;
-           $$(".stat-card h3")[3].textContent = data.groups ? data.groups.reduce((sum, g) => sum + (g.unique_student_count || 0), 0) : 0;
+           $$(".stat-card h3")[3].textContent = (data.groups || []).reduce((sum, g) => sum + (g?.unique_student_count || 0), 0);
            $(".ai-float").innerHTML = `<span class="ai-dot"></span>Đã phân tích ${totalQuestions} câu hỏi`;
         }
       });
