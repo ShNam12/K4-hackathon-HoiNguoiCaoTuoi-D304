@@ -261,15 +261,24 @@ Các chiều chất lượng cần đo:
 - Summary support-ID validity.
 - Số case timeout/error làm ảnh hưởng toàn batch.
 
-Golden set phải có ít nhất 20 case trong `eval/golden_set.jsonl`.
+Golden set phải có ít nhất 20 case trong `eval/golden_set.jsonl`. P1 bàn
+giao 20 case đã review tại
+`validation/golden-case-proposals.jsonl`; P5 là owner duy nhất chuyển các
+case được duyệt vào `eval/golden_set.jsonl`.
 
-Quality bar ban đầu:
+### Quality bar đã khóa trước Run-001
 
-- 100% output hợp lệ theo schema.
-- Ít nhất 80% case đúng topic hoặc abstain đúng.
-- 0 case high-confidence nhưng sai topic.
-- 100% `supported_question_ids` thuộc đúng group.
+Quality bar được khóa ngày 2026-07-30, trước khi có kết quả Run-001:
+
+- Ít nhất 80% case được gán đúng taxonomy hoặc abstain đúng.
+- 100% output hợp lệ theo schema version `1.0`.
+- Không có case ngoài phạm vi nào bị gán sai với confidence `high`.
+- 100% summary có `supported_question_ids` hợp lệ và mọi ID đều thuộc
+  đúng group.
 - Một case timeout hoặc parse lỗi không làm crash toàn batch.
+
+Quality bar này không được thay đổi sau lần chạy toàn bộ golden set đầu
+tiên.
 
 Kết quả các lượt chạy sẽ được P5 lưu tại `eval/results/`.
 
@@ -290,3 +299,4 @@ Kết quả các lượt chạy sẽ được P5 lưu tại `eval/results/`.
 | Thời điểm | Đổi gì | Vì sao |
 |---|---|---|
 | 2026-07-30 — Giai đoạn 1 | Hoàn thiện §1–§6, evidence, impact, benchmark, failure scenarios và test script | Thực hiện phạm vi P1 trong `PLAN_10_GIO.md`; evidence lấy từ chatlog đã ẩn danh |
+| 2026-07-30 — Giai đoạn 2 | Khóa quality bar; review prompt P3/P4; chuẩn bị 20 golden-case proposal | Khóa tiêu chí trước Run-001 và sửa các label/source ref chưa đúng trong golden-set skeleton mà không sửa file thuộc P3–P5 |
