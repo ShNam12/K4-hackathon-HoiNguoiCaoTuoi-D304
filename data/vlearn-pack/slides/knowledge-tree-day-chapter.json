@@ -1,0 +1,478 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-07-30",
+  "taxonomy_levels": ["day", "chapter"],
+  "description": "Knowledge tree for 2-level matching (day -> chapter), synthesized from 4 markdown slide files.",
+  "sources": [
+    "data/vlearn-pack/slides/day1-ai-llm-foundation.md",
+    "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md",
+    "data/vlearn-pack/slides/day02-slide-v1.md",
+    "data/vlearn-pack/slides/day02-xac-dinh-bai-toan-cho-ai.md"
+  ],
+  "normalization_hints": {
+    "case_insensitive": true,
+    "strip_punctuation": true,
+    "collapse_spaces": true,
+    "accept_day_alias": ["day 1", "day01", "day 01", "day 2", "day02", "day 02"]
+  },
+  "matching_contract": {
+    "primary_match_level": "chapter",
+    "fallback_match_level": "day",
+    "required_output_fields": ["day_id", "chapter_id", "confidence", "matched_terms"],
+    "confidence_policy": {
+      "high": "question matches chapter aliases and at least one topic keyword",
+      "medium": "question matches either chapter title or topic keyword set",
+      "low": "question matches only day-level aliases"
+    }
+  },
+  "topic_index": [
+    {
+      "topic_id": "TOPIC_DAY02_CASE_CURSOR",
+      "topic_label": "CURSOR - Lech nang luc cot loi",
+      "keywords": ["cursor", "lech nang luc cot loi", "ai code editor", "cad", "core competency"],
+      "maps_to": {
+        "day_id": "DAY_02",
+        "chapter_id": "DAY_02_CH_03"
+      }
+    },
+    {
+      "topic_id": "TOPIC_DAY02_CASE_ARTIFACT",
+      "topic_label": "ARTIFACT - San pham tot khong dong nghia thi truong lon",
+      "keywords": ["artifact", "san pham tot thi truong lon", "dong cua 1/2024", "product market size"],
+      "maps_to": {
+        "day_id": "DAY_02",
+        "chapter_id": "DAY_02_CH_03"
+      }
+    },
+    {
+      "topic_id": "TOPIC_DAY02_CASE_NOTEBOOKLM",
+      "topic_label": "NOTEBOOKLM - Dinh vi dung diem dau",
+      "keywords": ["notebooklm", "dinh vi dung diem dau", "tom tat tai lieu", "hoi dap tren tai lieu", "trich dan nguon"],
+      "maps_to": {
+        "day_id": "DAY_02",
+        "chapter_id": "DAY_02_CH_03"
+      }
+    }
+  ],
+  "days": [
+    {
+      "day_id": "DAY_01",
+      "day_title": "DAY 01 - AI & LLM FOUNDATION",
+      "day_aliases": [
+        "AI IN ACTION - Day 1: AI & LLM Foundation",
+        "Day 1",
+        "Day 01",
+        "AI & LLM Foundation"
+      ],
+      "source_files": [
+        "data/vlearn-pack/slides/day1-ai-llm-foundation.md"
+      ],
+      "chapters": [
+        {
+          "chapter_id": "DAY_01_CH_01",
+          "chapter_title": "AI, ML, Deep Learning, GenAI, LLM - nam o dau trong cung mot he?",
+          "chapter_title_original": "1. AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 22 },
+          "aliases": ["AI ML Deep Learning GenAI LLM"]
+        },
+        {
+          "chapter_id": "DAY_01_CH_02",
+          "chapter_title": "Ba nhom AI chinh: phan loai, sinh noi dung, hanh dong",
+          "chapter_title_original": "2. Ba nhóm AI chính: phân loại · sinh nội dung · hành động",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 46 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_03",
+          "chapter_title": "Lich su AI 70 nam",
+          "chapter_title_original": "3. Lịch sử AI 70 năm",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 60 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_04",
+          "chapter_title": "1980: He chuyen gia",
+          "chapter_title_original": "4. 1980: Hệ chuyên gia (expert system)",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 96 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_05",
+          "chapter_title": "2009: Fei-Fei Li va ImageNet",
+          "chapter_title_original": "5. 2009: Fei-Fei Li và ImageNet — cuộc cách mạng của dữ liệu",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 105 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_06",
+          "chapter_title": "2017: Transformer",
+          "chapter_title_original": "6. 2017: Transformer",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 115 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_07",
+          "chapter_title": "2022: ChatGPT",
+          "chapter_title_original": "7. 2022: ChatGPT",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 123 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_08",
+          "chapter_title": "LLM la gi?",
+          "chapter_title_original": "8. LLM là gì? — một bộ não nền, không phải một chatbot",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 131 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_09",
+          "chapter_title": "Ben trong Transformer: dau ra la phan bo xac suat",
+          "chapter_title_original": "9. Bên trong Transformer: đầu ra luôn là một phân bố xác suất",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 152 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_10",
+          "chapter_title": "Sinh van ban = doan, noi vao cau, doan tiep",
+          "chapter_title_original": "10. Sinh văn bản = đoán → nối vào câu → đoán tiếp",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 179 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_11",
+          "chapter_title": "Token: model doc manh chu",
+          "chapter_title_original": "11. Token: model không đọc \"từ\", model đọc mảnh chữ",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 195 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_12",
+          "chapter_title": "Context: ban lam viec co han",
+          "chapter_title_original": "12. Context: bàn làm việc có hạn của model",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 218 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_13",
+          "chapter_title": "Attention: moi tu nhin sang tu quan trong",
+          "chapter_title_original": "13. Attention: mỗi từ được \"nhìn sang\" những từ quan trọng khác",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 234 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_14",
+          "chapter_title": "Hieu attention de dung AI hieu qua",
+          "chapter_title_original": "14. Hiểu attention để dùng AI hiệu quả: quản context = quản sự chú ý",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 248 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_15",
+          "chapter_title": "Tham so parameter",
+          "chapter_title_original": "15. Tham số (parameter): những \"khớp nối\" model học được",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 265 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_16",
+          "chapter_title": "LLM duoc tao ra nhu the nao",
+          "chapter_title_original": "16. LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 286 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_17",
+          "chapter_title": "RLHF: ba buoc uon model",
+          "chapter_title_original": "17. RLHF: ba bước uốn cỗ máy đoán token thành trợ lý biết nghe lời",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 301 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_18",
+          "chapter_title": "Gioi han bam sinh cua LLM",
+          "chapter_title_original": "18. Giới hạn bẩm sinh: học giả trong bong bóng",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 328 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_19",
+          "chapter_title": "Vi sao model van sai",
+          "chapter_title_original": "19. Vì sao model vẫn sai: nó rất giỏi học vẹt đường tắt",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 348 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_20",
+          "chapter_title": "Chain-of-Thought",
+          "chapter_title_original": "20. Chain-of-Thought: chỉ thêm \"giấy nháp\", từ sai thành đúng",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 366 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_21",
+          "chapter_title": "Tu LLM den agent: bon muc do",
+          "chapter_title_original": "21. Từ LLM đến agent: bốn mức độ",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 387 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_22",
+          "chapter_title": "Giai phau mot agent: 5 bo phan la mot vong lap",
+          "chapter_title_original": "22. Giải phẫu một agent: 5 bộ phận là một vòng lặp",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 402 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_23",
+          "chapter_title": "Cung muc nang luc, gia roi 10 lan moi nam",
+          "chapter_title_original": "23. Cùng một mức năng lực, giá rơi khoảng 10 lần mỗi năm",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 418 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_24",
+          "chapter_title": "Chon model theo tang",
+          "chapter_title_original": "24. Chọn model theo TẦNG, không chọn theo tên",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 444 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_25",
+          "chapter_title": "Token co gia",
+          "chapter_title_original": "25. Token có giá: vé vào rẻ, vé ra đắt gấp 3–5 lần",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 460 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_26",
+          "chapter_title": "Giai phau mot prompt: bon lop xep chong",
+          "chapter_title_original": "26. Giải phẫu một prompt: bốn lớp xếp chồng",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 486 }
+        },
+        {
+          "chapter_id": "DAY_01_CH_27",
+          "chapter_title": "Temperature va top_p",
+          "chapter_title_original": "27. Hai núm vặn chọn từ: temperature & top_p",
+          "source": { "file": "data/vlearn-pack/slides/day1-ai-llm-foundation.md", "line": 499 }
+        }
+      ]
+    },
+    {
+      "day_id": "DAY_02",
+      "day_title": "DAY 02 - XAC DINH BAI TOAN CHO AI",
+      "day_aliases": [
+        "AI IN ACTION - DAY 02 - Xac dinh bai toan cho AI",
+        "Xac dinh bai toan cho AI",
+        "Day 2",
+        "Day 02"
+      ],
+      "source_files": [
+        "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md",
+        "data/vlearn-pack/slides/day02-slide-v1.md",
+        "data/vlearn-pack/slides/day02-xac-dinh-bai-toan-cho-ai.md"
+      ],
+      "chapter_variants": {
+        "day02_slide_v1_major_sections": [
+          "Mở đầu",
+          "01 · Problem Discovery",
+          "02 · Problem Statement",
+          "03 · Có nên ứng dụng AI?",
+          "04 · Rule / Workflow / Agent",
+          "05 · Problem Statement hoàn chỉnh",
+          "06 · Bài tập Lab ngày 02",
+          "Recap · Năm nguyên tắc cốt lõi sau Day 02"
+        ]
+      },
+      "chapters": [
+        {
+          "chapter_id": "DAY_02_CH_01",
+          "chapter_title": "Tim dung van de truoc khi tim giai phap",
+          "chapter_title_original": "1. Tìm đúng vấn đề trước khi tìm giải pháp",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 34 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_02",
+          "chapter_title": "Diamond 1 - Tim dung van de",
+          "chapter_title_original": "2. Diamond 1 — Tìm đúng vấn đề",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 54 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_03",
+          "chapter_title": "Khoi nguon tu bai toan, khong bat dau tu AI",
+          "chapter_title_original": "3. Khởi nguồn từ bài toán, không bắt đầu từ AI",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 69 },
+          "aliases": [
+            "Khoi nguon tu bai toan",
+            "Khong bat dau tu AI",
+            "Problem first not AI first",
+            "Case study CURSOR ARTIFACT NOTEBOOKLM"
+          ],
+          "keywords": [
+            "cursor",
+            "artifact",
+            "notebooklm",
+            "lech nang luc cot loi",
+            "san pham tot khong dong nghia thi truong lon",
+            "dinh vi dung diem dau",
+            "bai toan truoc giai phap",
+            "problem first",
+            "solution first"
+          ],
+          "additional_sources": [
+            {
+              "file": "data/vlearn-pack/slides/day02-slide-v1.md",
+              "line": 243,
+              "heading": "### Khởi nguồn từ bài toán, không bắt đầu từ AI"
+            },
+            {
+              "file": "data/vlearn-pack/slides/day02-xac-dinh-bai-toan-cho-ai.md",
+              "line": 311,
+              "heading": "## Slide 22 — Khởi nguồn từ bài toán, không bắt đầu từ AI"
+            }
+          ]
+        },
+        {
+          "chapter_id": "DAY_02_CH_04",
+          "chapter_title": "Tim bai toan AI o dau? - 4 Lenses",
+          "chapter_title_original": "4. Tìm bài toán AI ở đâu? — 4 Lenses",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 88 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_05",
+          "chapter_title": "Sai lam thuong gap - Anti-patterns",
+          "chapter_title_original": "5. Sai lầm thường gặp — Anti-patterns",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 103 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_06",
+          "chapter_title": "PAIR Chuong 1 - Reframe cau hoi",
+          "chapter_title_original": "6. PAIR · Chương 1 — Reframe câu hỏi",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 123 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_07",
+          "chapter_title": "Quick Problem Card - Khung dinh hinh bai toan",
+          "chapter_title_original": "7. Quick Problem Card — Khung định hình bài toán",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 139 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_08",
+          "chapter_title": "Cau hoi khai thac bai toan (6 cau hoi)",
+          "chapter_title_original": "8. Câu hỏi khai thác bài toán (6 câu hỏi)",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 152 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_09",
+          "chapter_title": "Dinh luong hoa bai toan",
+          "chapter_title_original": "9. Định lượng hóa bài toán",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 176 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_10",
+          "chapter_title": "Thiet lap chi so: Output va Input",
+          "chapter_title_original": "10. Thiết lập chỉ số: Output & Input",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 194 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_11",
+          "chapter_title": "Ba buoc quyet dinh AI theo PAIR",
+          "chapter_title_original": "11. Ba bước quyết định AI theo PAIR",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 216 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_12",
+          "chapter_title": "Khi nao AI co loi the?",
+          "chapter_title_original": "12. Khi nào AI có lợi thế? — 8 trường hợp \"AI probably better\"",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 241 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_13",
+          "chapter_title": "Khi nao AI khong tot hon?",
+          "chapter_title_original": "13. Khi nào AI KHÔNG tốt hơn? — 6 trường hợp \"AI probably NOT better\"",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 260 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_14",
+          "chapter_title": "He thong AI = Model + Context + Planning + Tools",
+          "chapter_title_original": "14. Hệ thống AI = Model + Context + Planning + Tools",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 284 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_15",
+          "chapter_title": "Automation vs Augmentation",
+          "chapter_title_original": "15. Automation vs Augmentation (PAIR bước ②)",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 312 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_16",
+          "chapter_title": "Ba muc giai phap: Rule / Workflow / Agent",
+          "chapter_title_original": "16. Ba mức giải pháp: Rule / Workflow / Agent",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 337 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_17",
+          "chapter_title": "Mot tinh huong, ba cap do giai phap",
+          "chapter_title_original": "17. Một tình huống, ba cấp độ giải pháp",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 369 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_18",
+          "chapter_title": "Workflow patterns - du cho hau het bai toan",
+          "chapter_title_original": "18. Workflow patterns — đủ cho hầu hết bài toán",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 398 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_19",
+          "chapter_title": "Cay quyet dinh: Lua chon cap do giai phap",
+          "chapter_title_original": "19. Cây quyết định: Lựa chọn cấp độ giải pháp",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 435 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_20",
+          "chapter_title": "Reward function: he thong hieu dung/sai",
+          "chapter_title_original": "20. Reward function: hệ thống hiểu \"đúng / sai\" thế nào? (PAIR bước ③)",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 474 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_21",
+          "chapter_title": "Precision va Recall",
+          "chapter_title_original": "21. Precision ↔ Recall: đánh đổi không tránh khỏi",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 492 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_22",
+          "chapter_title": "Viet tieu chi thanh cong ma hanh dong duoc",
+          "chapter_title_original": "22. Viết tiêu chí thành công mà hành động được",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 505 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_23",
+          "chapter_title": "Khoang cach giua Demo va Production",
+          "chapter_title_original": "23. Khoảng cách giữa Demo và Production",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 529 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_24",
+          "chapter_title": "Tu Problem Statement den Eval Plan",
+          "chapter_title_original": "24. Từ Problem Statement đến Eval Plan",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 546 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_25",
+          "chapter_title": "Problem Statement cho he thong AI - 9 truong",
+          "chapter_title_original": "25. Problem Statement cho hệ thống AI — 9 trường",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 564 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_26",
+          "chapter_title": "Khung ra quyet dinh: Go / Not Yet / No-Go",
+          "chapter_title_original": "26. Khung ra quyết định: Go / Not Yet / No-Go",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 587 }
+        },
+        {
+          "chapter_id": "DAY_02_CH_27",
+          "chapter_title": "Sau nguyen tac cot loi sau Day 02",
+          "chapter_title_original": "27. Sáu nguyên tắc cốt lõi sau Day 02",
+          "source": { "file": "data/vlearn-pack/slides/day2-xac-dinh-bai-toan-cho-ai.md", "line": 612 }
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "query": "AI, ML, Deep Learning, GenAI, LLM",
+      "match": {
+        "day_id": "DAY_01",
+        "day_title": "DAY 01 - AI & LLM FOUNDATION",
+        "chapter_id": "DAY_01_CH_01",
+        "chapter_title_original": "1. AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?"
+      }
+    },
+    {
+      "query": "CURSOR - Lech nang luc cot loi la gi?",
+      "match": {
+        "day_id": "DAY_02",
+        "day_title": "DAY 02 - XAC DINH BAI TOAN CHO AI",
+        "chapter_id": "DAY_02_CH_03",
+        "chapter_title_original": "3. Khởi nguồn từ bài toán, không bắt đầu từ AI",
+        "matched_by": ["topic_index.TOPIC_DAY02_CASE_CURSOR", "chapter.keywords"]
+      }
+    }
+  ]
+}
