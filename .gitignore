@@ -1,5 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+
+# Secrets — never commit real keys
+.env
+.env.*
+!.env.example
+
+# Data pack — không commit theo quy định bảo mật (xem README.md)
+codebase/out/
+codebase/transcripts/
+
+# OS / editor
 .DS_Store
 node_modules/
-*.env
-.venv
-./claude
+.idea/
+.vscode/
+.claude/

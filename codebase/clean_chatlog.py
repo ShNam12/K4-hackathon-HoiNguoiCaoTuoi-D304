@@ -111,7 +111,7 @@ def chuan_hoa(text: str) -> str:
 
 def la_cau_hoi_lap_lai_doan_trich(cau_hoi: str, doan_trich: str, threshold: float = 0.9) -> bool:
     """True nếu câu hỏi tự do gần như chỉ lặp lại nguyên văn đoạn trích đã chọn."""
-    if not cau_hoi or not doan_trich:
+    if not isinstance(cau_hoi, str) or not isinstance(doan_trich, str) or not cau_hoi or not doan_trich:
         return False
     q, s = chuan_hoa(cau_hoi), chuan_hoa(doan_trich)
     if q == s:

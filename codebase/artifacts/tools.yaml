@@ -1,0 +1,44 @@
+# Khai báo tool cho agent (giảng viên hỏi tự do bằng tiếng Việt, agent tự chọn tool).
+# Đổi tên tool phải sync đồng bộ: file này -> tools/__init__.py (TOOL_FUNCTIONS)
+# -> thư mục tools/<tool_name>/ -> README.md.
+tools:
+  - name: get_topic_digest
+    description: >-
+      Lấy top-N chủ đề (chương bài giảng) mà học viên hỏi nhiều/chưa hiểu nhất trong MỘT
+      ngày cụ thể, kèm số lượng câu hỏi, tỉ lệ tutor không tìm được nội dung để trả lời
+      (tutor_bo_tay_rate), và ví dụ câu hỏi thật đã cắt ngắn.
+      Dùng khi: giảng viên hỏi tổng quan "hôm nay/hôm qua/ngày X học viên vướng chủ đề gì",
+      "top N chủ đề tuần này".
+      KHÔNG dùng khi: giảng viên hỏi đào sâu một chủ đề cụ thể đã biết chapter_id (dùng
+      get_topic_examples), hoặc hỏi ngày nào có dữ liệu (dùng list_available_dates trước).
+    parameters:
+      type: object
+      properties:
+        date: {type: string, default: "", description: "Ngày dạng YYYY-MM-DD. Rỗng = ngày mới nhất có dữ liệu."}
+        top_n: {type: integer, default: 5, description: "Số chủ đề muốn lấy"}
+      required: []
+
+  - name: get_topic_examples
+    description: >-
+      Lấy thêm ví dụ câu hỏi thật của học viên cho MỘT chương cụ thể.
+      Dùng khi: giảng viên đã thấy digest và muốn đào sâu vào 1 chủ đề, ví dụ "cho ví dụ
+      chủ đề số 2", "chương đó học viên hỏi cụ thể gì".
+      KHÔNG dùng khi: chưa có chapter_id từ một lần gọi get_topic_digest trước đó — không
+      được tự đoán chapter_id.
+    parameters:
+      type: object
+      properties:
+        chapter_id: {type: string, default: "", description: "chapter_id lấy từ kết quả get_topic_digest, ví dụ DAY_02_CH_07"}
+        date: {type: string, default: "", description: "Ngày dạng YYYY-MM-DD. Rỗng = ngày mới nhất có dữ liệu."}
+        limit: {type: integer, default: 5, description: "Số ví dụ tối đa"}
+      required: [chapter_id]
+
+  - name: list_available_dates
+    description: >-
+      Liệt kê các ngày đã có dữ liệu chatlog đã được xử lý, kèm tổng số turn mỗi ngày.
+      Dùng khi: cần kiểm tra trước khi trả lời về một ngày cụ thể, tránh bịa ra ngày
+      không có dữ liệu; hoặc giảng viên hỏi thẳng "dữ liệu có đến ngày nào".
+    parameters:
+      type: object
+      properties: {}
+      required: []
