@@ -22,12 +22,12 @@ def _default_llm_client() -> callable:
     except ImportError:
         raise LLMError("Missing 'openai' package — run: pip install openai")
 
-    api_key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPENAI_API_KEY")
+    api_key = os.environ.get("LLM_API_KEY") or os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPENAI_API_KEY")
     if not api_key:
-        raise LLMError("Missing API key — set OPENROUTER_API_KEY or OPENAI_API_KEY in .env")
+        raise LLMError("Missing API key — set LLM_API_KEY, OPENROUTER_API_KEY or OPENAI_API_KEY in .env")
 
     base_url = os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-    model = os.environ.get("SUMMARY_MODEL", "openai/gpt-4o-mini")
+    model = os.environ.get("SUMMARY_MODEL") or os.environ.get("LLM_MODEL") or "openai/gpt-4o-mini"
     client = OpenAI(api_key=api_key, base_url=base_url)
 
     def call_llm(system: str, user: str) -> dict:

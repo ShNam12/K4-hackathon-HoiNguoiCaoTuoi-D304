@@ -18,7 +18,7 @@ from backend.schemas import SCHEMA_VERSION, AnalyzeRequest, AnalyzeResponse
 from backend.services.group_summarizer import summarize_groups
 from backend.services.question_grouper import group_classifications
 from backend.services.taxonomy_loader import TaxonomyError, load_session_taxonomy
-from backend.services.taxonomy_matcher import classify_batch
+from backend.services.taxonomy_matcher import classify_batch, make_openai_llm_client
 
 FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
 
@@ -85,9 +85,14 @@ def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
         demo_response["trace"]["model"] = f"fixture-fallback: {exc}"
         return AnalyzeResponse.model_validate(demo_response)
 
-    classifications = classify_batch(questions, request.session_id, taxonomy)
+    try:
+        llm_client = make_openai_llm_client()
+    except Exception:
+        llm_client = None
+
+    classifications = classify_batch(questions, request.session_id, taxonomy, llm_client=llm_client)
     groups, review_queue, unmatched = group_classifications(questions, classifications)
-    groups = summarize_groups(groups)
+    groups = summarize_groups(groups, llm_client=llm_client)
 
     questions_by_id = {q["question_id"]: q for q in questions}
     review_queue = [_to_review_item(c, questions_by_id) for c in review_queue]

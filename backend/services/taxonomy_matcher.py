@@ -104,7 +104,7 @@ def classify_question(
     chapters = _chapters_from_taxonomy(taxonomy, session_id)
     candidates = retrieve_candidates(text, taxonomy, top_k=5, session_id=session_id)
 
-    if candidates and candidates[0]["match_type"] == "exact_alias":
+    if candidates and candidates[0]["match_type"] == "exact_alias" and llm_client is None:
         intent = _infer_intent(normalized_text)
         return _auto_result(question_id, candidates[0], intent, "high")
 
@@ -125,7 +125,7 @@ def classify_question(
     top_candidate = candidates[0]
     intent = _infer_intent(normalized_text)
 
-    if _should_use_llm(candidates) and llm_client is not None:
+    if llm_client is not None:
         return _classify_with_llm(
             question_id=question_id,
             text=text,
@@ -223,17 +223,18 @@ def normalize_text(value: str) -> str:
 def make_openai_llm_client(model: str | None = None) -> LLMClient:
     """Create an OpenAI chat client lazily so imports stay side-effect free."""
 
-    api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("LLM_API_KEY") or os.getenv("OPENROUTER_API_KEY") or os.getenv("OPENAI_API_KEY")
     if not api_key:
-        raise RuntimeError("OPENAI_API_KEY is not configured.")
+        raise RuntimeError("LLM_API_KEY, OPENROUTER_API_KEY, or OPENAI_API_KEY is not configured.")
 
     try:
         from openai import OpenAI
     except ImportError as exc:  # pragma: no cover - optional runtime dependency
         raise RuntimeError("The 'openai' package is required for real LLM calls.") from exc
 
-    selected_model = model or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-    client = OpenAI(api_key=api_key)
+    base_url = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+    selected_model = model or os.getenv("LLM_MODEL") or os.getenv("OPENAI_MODEL") or "openai/gpt-4o-mini"
+    client = OpenAI(api_key=api_key, base_url=base_url)
 
     def _client(payload: Mapping[str, Any]) -> str:
         response = client.chat.completions.create(

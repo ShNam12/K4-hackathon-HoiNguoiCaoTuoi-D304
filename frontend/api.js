@@ -36,5 +36,24 @@ window.api = {
       console.error("Failed to load demo response:", error);
       return null;
     }
+  },
+
+  chatWithAI: async function(payload) {
+    try {
+      const response = await fetch(`${this.API_BASE_URL}/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        throw new Error(`API returned ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Chat API error:", error);
+      return { reply: "Xin lỗi, chức năng Chat AI hiện không khả dụng do lỗi kết nối." };
+    }
   }
 };
