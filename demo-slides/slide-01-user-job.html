@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Slide 01 — User & Job | Trợ lý Giảng viên AI</title>
+  <style>
+    :root {
+      --red: #c72127;
+      --red-deep: #9f171c;
+      --red-soft: #fff0f0;
+      --blue: #134d8b;
+      --ink: #162235;
+      --muted: #607086;
+      --line: #dfe6ee;
+      --paper: #ffffff;
+      --canvas: #edf1f5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+    }
+
+    .slide {
+      position: relative;
+      width: min(100vw, calc(100vh * 16 / 9));
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 92% 8%, rgba(199, 33, 39, .12), transparent 25%),
+        linear-gradient(135deg, #fff 0%, #fff 60%, #f7f9fb 100%);
+      box-shadow: 0 22px 70px rgba(20, 36, 54, .18);
+    }
+
+    .slide::before {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: .72%;
+      background: var(--red);
+      content: "";
+    }
+
+    .slide::after {
+      position: absolute;
+      top: -17%;
+      right: -8%;
+      width: 31%;
+      aspect-ratio: 1;
+      border: 1px solid rgba(199, 33, 39, .13);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 4.5vw rgba(199, 33, 39, .035),
+        0 0 0 9vw rgba(19, 77, 139, .025);
+      content: "";
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 13%;
+      padding: 0 5.2% 0 5.8%;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1.05vw;
+    }
+
+    .brand-mark {
+      width: 3.1vw;
+      height: 3.1vw;
+      padding: .28vw;
+      border-radius: .72vw;
+      background: #fff;
+      box-shadow: 0 .28vw .95vw rgba(17, 45, 75, .12);
+    }
+
+    .brand-copy strong {
+      display: block;
+      color: var(--blue);
+      font-size: 1.16vw;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .brand-copy span {
+      display: block;
+      margin-top: .18vw;
+      color: var(--muted);
+      font-size: .64vw;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      gap: .55vw;
+    }
+
+    .pill {
+      padding: .46vw .82vw;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .86);
+      color: var(--muted);
+      font-size: .68vw;
+      font-weight: 800;
+      letter-spacing: .06em;
+    }
+
+    .pill.primary {
+      border-color: transparent;
+      background: var(--red);
+      color: #fff;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.17fr .83fr;
+      gap: 4.2%;
+      height: 75%;
+      padding: 4.45% 5.2% 2.6% 5.8%;
+    }
+
+    .story {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: .72vw;
+      margin-bottom: 1.15vw;
+      color: var(--red);
+      font-size: .73vw;
+      font-weight: 900;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 2.2vw;
+      height: .23vw;
+      border-radius: 99px;
+      background: var(--red);
+      content: "";
+    }
+
+    h1 {
+      max-width: 43vw;
+      margin: 0;
+      color: var(--ink);
+      font-size: 3.38vw;
+      font-weight: 850;
+      letter-spacing: -.052em;
+      line-height: 1.04;
+    }
+
+    h1 .accent {
+      color: var(--red);
+    }
+
+    .problem {
+      max-width: 42vw;
+      margin: 1.35vw 0 0;
+      color: var(--muted);
+      font-size: 1.05vw;
+      line-height: 1.52;
+    }
+
+    .job {
+      position: relative;
+      max-width: 43vw;
+      margin-top: 1.55vw;
+      padding: 1.08vw 1.35vw 1.08vw 1.45vw;
+      border: 1px solid #efc9cb;
+      border-left: .34vw solid var(--red);
+      border-radius: .82vw;
+      background: linear-gradient(90deg, var(--red-soft), rgba(255, 255, 255, .72));
+      color: #3f4d60;
+      font-size: .84vw;
+      font-weight: 650;
+      line-height: 1.48;
+    }
+
+    .job strong {
+      color: var(--red-deep);
+      font-weight: 900;
+    }
+
+    .evidence {
+      align-self: center;
+      width: 100%;
+      padding: 1.45vw;
+      border: 1px solid rgba(19, 77, 139, .12);
+      border-radius: 1.35vw;
+      background: rgba(255, 255, 255, .86);
+      box-shadow: 0 1.2vw 3vw rgba(20, 50, 82, .11);
+      backdrop-filter: blur(8px);
+    }
+
+    .evidence-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: .65vw;
+      font-weight: 850;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .verified {
+      display: inline-flex;
+      align-items: center;
+      gap: .32vw;
+      color: #167153;
+      letter-spacing: .04em;
+    }
+
+    .verified::before {
+      display: inline-grid;
+      width: .92vw;
+      height: .92vw;
+      place-items: center;
+      border-radius: 50%;
+      background: #dcf6ea;
+      content: "✓";
+      font-size: .58vw;
+    }
+
+    .hero-stat {
+      display: flex;
+      align-items: baseline;
+      gap: .72vw;
+      margin-top: 1.05vw;
+    }
+
+    .hero-stat strong {
+      color: var(--red);
+      font-size: 4.55vw;
+      font-weight: 900;
+      letter-spacing: -.07em;
+      line-height: .94;
+    }
+
+    .hero-stat span {
+      color: var(--ink);
+      font-size: 1.07vw;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .substats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .75vw;
+      margin-top: 1.25vw;
+    }
+
+    .stat {
+      padding: .9vw 1vw;
+      border: 1px solid var(--line);
+      border-radius: .78vw;
+      background: #fff;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--blue);
+      font-size: 1.72vw;
+      font-weight: 900;
+      letter-spacing: -.04em;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: .18vw;
+      color: var(--muted);
+      font-size: .68vw;
+      font-weight: 700;
+    }
+
+    .mini-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: .38vw;
+      margin-top: 1.25vw;
+      padding-top: 1.08vw;
+      border-top: 1px solid var(--line);
+    }
+
+    .flow-item {
+      display: grid;
+      min-height: 3vw;
+      place-items: center;
+      padding: .45vw;
+      border-radius: .62vw;
+      background: #f6f8fa;
+      color: var(--ink);
+      font-size: .64vw;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .arrow {
+      color: var(--red);
+      font-size: 1.05vw;
+      font-weight: 900;
+    }
+
+    .footer {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 12%;
+      margin: 0 5.2% 0 5.8%;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .62vw;
+      line-height: 1.45;
+    }
+
+    .source strong {
+      color: var(--ink);
+    }
+
+    .slide-number {
+      display: flex;
+      align-items: center;
+      gap: .65vw;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .slide-number::before {
+      width: 2.5vw;
+      height: 1px;
+      background: var(--red);
+      content: "";
+    }
+
+    @media print {
+      @page {
+        size: 13.333in 7.5in;
+        margin: 0;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .slide {
+        width: 100vw;
+        height: 100vh;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="slide" role="img" aria-label="Slide mở đầu trình bày vấn đề của giảng viên sau buổi học">
+    <header class="topbar">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 613 613" aria-label="VLearn">
+          <polygon fill="#c72127" points="126,115 213.5,202.5 126,290"></polygon>
+          <polygon fill="#134d8b" points="486,113 486,296 306,476 133.5,303.5 225,212 306,293 387,212"></polygon>
+        </svg>
+        <div class="brand-copy">
+          <strong>Trợ lý Giảng viên AI</strong>
+          <span>VLearn · AI Product Hackathon</span>
+        </div>
+      </div>
+
+      <div class="meta" aria-label="Thông tin nhóm">
+        <span class="pill">HoiNguoiCaoTuoi</span>
+        <span class="pill">K4 · D304</span>
+        <span class="pill primary">User &amp; Job</span>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="story">
+        <div class="eyebrow">Bài toán chúng tôi chọn</div>
+        <h1><span class="accent">1.261 câu hỏi</span> sau giờ học — giảng viên nên đọc từ đâu?</h1>
+
+        <p class="problem">
+          Các câu hỏi được diễn đạt khác nhau nhưng có thể cùng phản ánh một
+          lỗ hổng kiến thức. Giảng viên đang phải đọc, gom nhóm và ưu tiên
+          chúng bằng tay.
+        </p>
+
+        <div class="job">
+          <strong>Core JTBD</strong> — Khi kết thúc một buổi học có nhiều câu
+          hỏi, tôi muốn nhanh chóng nhận ra chủ đề nào khiến nhiều học viên
+          gặp khó khăn để quyết định nội dung cần giải thích lại ở buổi tiếp theo.
+        </div>
+      </div>
+
+      <aside class="evidence" aria-label="Bằng chứng từ dữ liệu VLearn">
+        <div class="evidence-label">
+          <span>Bằng chứng từ dữ liệu</span>
+          <span class="verified">Đã kiểm chứng</span>
+        </div>
+
+        <div class="hero-stat">
+          <strong>1.261</strong>
+          <span>câu hỏi<br>của học viên</span>
+        </div>
+
+        <div class="substats">
+          <div class="stat">
+            <strong>369</strong>
+            <span>học viên khác nhau</span>
+          </div>
+          <div class="stat">
+            <strong>8 ngày</strong>
+            <span>22/07–29/07/2026</span>
+          </div>
+        </div>
+
+        <div class="mini-flow" aria-label="Luồng công việc hiện tại">
+          <span class="flow-item">Câu hỏi<br>rời rạc</span>
+          <span class="arrow">→</span>
+          <span class="flow-item">Đọc &amp; gom<br>thủ công</span>
+          <span class="arrow">→</span>
+          <span class="flow-item">Quyết định<br>giảng lại</span>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="footer">
+      <div class="source">
+        <strong>Nguồn:</strong> 2.522 message VLearn · Lọc
+        <code>role=student</code> và <code>content</code> không rỗng
+      </div>
+      <div class="slide-number">01 / 06</div>
+    </footer>
+  </main>
+</body>
+</html>

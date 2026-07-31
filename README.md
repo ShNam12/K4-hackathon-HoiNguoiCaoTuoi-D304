@@ -2,17 +2,19 @@
 
 ## Thông tin nhóm
 - Tên nhóm: **HoiNguoiCaoTuoi**
+- Khóa: **K4**
+- Lớp lab: **D304**
 - Zone: Chưa cung cấp
 - Hướng: **A — VLearn**
 - Loại: **Tối ưu tính năng có sẵn**
 
 ### Thành viên và phân công
-- P1 — Chưa cung cấp mã HV/họ tên — Product Lead, spec, evidence,
+- P1 — `2A202601993` — Sái Hoài Nam (nhóm trưởng) — Product Lead, spec, evidence,
   validation và nội dung demo
-- P2 — Chưa cung cấp mã HV/họ tên — Frontend và trải nghiệm giảng viên
+- P2 — `2A202601748` — Dương Ngọc Hải — Frontend và trải nghiệm giảng viên
 - P3 — `2A202601460` — Nguyễn Hoàng Đạt — Taxonomy retrieval và AI matching
-- P4 — Chưa cung cấp mã HV/họ tên — Grouping, intent và grounded summary
-- P5 — Chưa cung cấp mã HV/họ tên — API, schema, eval và packaging
+- P4 — `2A202601792` — Trần Duy Sơn — Grouping, intent và grounded summary
+- P5 — `2A202601442` — Phạm Hoàng Nam — API, schema, eval và packaging
 
 ---
 

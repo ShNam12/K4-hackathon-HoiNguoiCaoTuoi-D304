@@ -1,4 +1,4 @@
-# AI SPEC — Phân loại và tổng hợp câu hỏi sau buổi học · Nhóm HoiNguoiCaoTuoi · Zone chưa cung cấp
+# AI SPEC — Phân loại và tổng hợp câu hỏi sau buổi học · Nhóm HoiNguoiCaoTuoi · K4 · Lớp D304 · Zone chưa cung cấp
 
 Hướng: A — VLearn
 Loại: Tối ưu tính năng có sẵn
@@ -287,17 +287,17 @@ Kết quả các lượt chạy được lưu chi tiết tại `eval/results/`. 
 | Lượt chạy | Thời điểm | Định nghĩa đạt (Topic correct or abstain) | Status correct rate | Số lượng High-confidence wrong | Đánh giá so với Quality Bar |
 |---|---|---|---|---|---|
 | **Run-001** (Lượt đầu) | 2026-07-30 | **65%** (13/20) | 70% (14/20) | 5 | **Chưa đạt** (Do lỗi xử lý stop-words dẫn đến phân loại sai nhiều câu hỏi thông dụng) |
-| **Run-002** (Tối ưu) | 2026-07-30 | **80%** (16/20) | 70% (14/20) | 2 | **Đạt** (Đạt mức 80% cam kết nhờ lọc stop-words tiếng Việt trong taxonomy matcher) |
+| **Run-002** (Tối ưu) | 2026-07-30 | **80%** (16/20) | 70% (14/20) | 2 | **Đạt ngưỡng chính 80%**; chưa đủ bằng chứng để kết luận toàn bộ quality bar |
 
 Nhóm sẽ tiếp tục theo dõi chất lượng này trong các lượt chạy tiếp theo của giai đoạn validation.
 
 ## §8. Phân công & kế hoạch
 
-- P1 — Chưa cung cấp mã HV/họ tên: spec, evidence, validation và nội dung demo.
-- P2 — Chưa cung cấp mã HV/họ tên: frontend và trải nghiệm giảng viên.
+- P1 — `2A202601993` — Sái Hoài Nam (nhóm trưởng): spec, evidence, validation và nội dung demo.
+- P2 — `2A202601748` — Dương Ngọc Hải: frontend và trải nghiệm giảng viên.
 - P3 — `2A202601460` — Nguyễn Hoàng Đạt: taxonomy retrieval và AI matching.
-- P4 — Chưa cung cấp mã HV/họ tên: grouping, intent và grounded summary.
-- P5 — Chưa cung cấp mã HV/họ tên: API, schema, eval và packaging.
+- P4 — `2A202601792` — Trần Duy Sơn: grouping, intent và grounded summary.
+- P5 — `2A202601442` — Phạm Hoàng Nam: API, schema, eval và packaging.
 - Mỗi thành viên đặt lịch với một người ngoài nhóm để validation ở
   T+7:30; tên và vai trò được ghi vào `validation/feedback-log.md`.
 - Nhóm tập trung một prototype working và dùng fixture làm fallback,
@@ -309,5 +309,5 @@ Nhóm sẽ tiếp tục theo dõi chất lượng này trong các lượt chạy
 |---|---|---|
 | 2026-07-30 — Giai đoạn 1 | Hoàn thiện §1–§6, evidence, impact, benchmark, failure scenarios và test script | Thực hiện phạm vi P1 trong `PLAN_10_GIO.md`; evidence lấy từ chatlog đã ẩn danh |
 | 2026-07-30 — Giai đoạn 2 | Khóa quality bar; review prompt P3/P4; chuẩn bị 20 golden-case proposal | Khóa tiêu chí trước Run-001 và sửa các label/source ref chưa đúng trong golden-set skeleton mà không sửa file thuộc P3–P5 |
-| 2026-07-31 — Giai đoạn 3 | Cấu hình API key, nối hoàn chỉnh pipeline AI thật vào `/api/analyze` và chạy thử nghiệm Run-004 | Khắc phục xong các lỗi nghẽn P0, chuyển đổi từ keyword matcher sang AI matcher thật, chạy Golden Set đạt 85% chính xác (vượt Quality Bar 80%) |
-| 2026-08-01 — Giai đoạn 4 | Xử lý lỗi stop-word trong matcher | Lỗi 5 case High-confidence wrong do token hóa toàn bộ tiêu đề mà không lọc stop-words tiếng Việt (như, là, gì...), khiến các câu hỏi thông dụng bị khớp nhầm vào các chương có tiêu đề chứa từ đó |
+| 2026-07-31 — Giai đoạn 3 | Cấu hình API key, nối hoàn chỉnh pipeline AI thật vào `/api/analyze` và chạy thử nghiệm Run-004 | Khắc phục các lỗi nghẽn P0; Run-004 ghi nhận 85% ở metric topic correct-or-correct-abstain. Canonical run vẫn chờ P5 xác nhận. |
+| 2026-07-31 — Giai đoạn 4 | Xử lý lỗi stop-word trong matcher | Lỗi 5 case High-confidence wrong do token hóa toàn bộ tiêu đề mà không lọc stop-words tiếng Việt (như, là, gì...), khiến các câu hỏi thông dụng bị khớp nhầm vào các chương có tiêu đề chứa từ đó |
