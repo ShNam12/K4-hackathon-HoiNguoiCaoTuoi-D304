@@ -11,14 +11,25 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.schemas import SCHEMA_VERSION, AnalyzeRequest, AnalyzeResponse
+from backend.schemas import (
+    SCHEMA_VERSION,
+    AnalyzeRequest,
+    AnalyzeResponse,
+    ReplySuggestionRequest,
+    ReplySuggestionResponse,
+)
 from backend.services.group_summarizer import summarize_groups
 from backend.services.question_grouper import group_classifications
+from backend.services.reply_suggester import suggest_reply
 from backend.services.taxonomy_loader import TaxonomyError, load_session_taxonomy
 from backend.services.taxonomy_matcher import classify_batch
+from backend.services.llm_client import get_taxonomy_matcher_client
+
+load_dotenv()
 
 FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
 
@@ -79,7 +90,12 @@ def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
         demo_response["trace"]["model"] = f"fixture-fallback: {exc}"
         return AnalyzeResponse.model_validate(demo_response)
 
-    classifications = classify_batch(questions, request.session_id, taxonomy)
+    classifications = classify_batch(
+        questions,
+        request.session_id,
+        taxonomy,
+        llm_client=get_taxonomy_matcher_client(),
+    )
     groups, review_queue, unmatched = group_classifications(questions, classifications)
     groups = summarize_groups(groups)
 
@@ -102,3 +118,10 @@ def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
             "model": "configured-by-env",
         },
     )
+
+
+@app.post("/api/reply-suggestion", response_model=ReplySuggestionResponse)
+def reply_suggestion(request: ReplySuggestionRequest) -> ReplySuggestionResponse:
+    questions = [q.model_dump(mode="json") for q in request.questions]
+    reply = suggest_reply(request.topic_title, questions)
+    return ReplySuggestionResponse(reply=reply)

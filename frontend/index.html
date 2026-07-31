@@ -1048,7 +1048,8 @@
         demoDataNotice.classList.add("hidden");
         $("#topicsGrid").innerHTML = '<div class="empty-state"><i data-lucide="loader" class="icon" style="animation: spin 1s linear infinite;"></i><strong>Đang phân tích...</strong></div>';
         
-        let data = await window.api.analyzeQuestions({ session_id: sessionSelector.value, questions: [] });
+        const demoQuestions = await window.api.loadDemoQuestions();
+        let data = await window.api.analyzeQuestions({ session_id: sessionSelector.value, questions: demoQuestions });
         
         analyzeBtn.disabled = false;
         loadingState.classList.add("hidden");
@@ -1156,6 +1157,15 @@
         $("#toastStack").appendChild(item);
         refreshIcons();
         setTimeout(() => { item.style.animation = "toastOut .25s ease forwards"; setTimeout(() => item.remove(), 260); }, 3400);
+      }
+
+      function renderAiSuggestion(reply) {
+        const block = document.createElement("div");
+        block.className = "ai-message";
+        block.innerHTML = `<div class="ai-message-title"><i data-lucide="sparkles" class="icon-sm"></i>Gợi ý phản hồi từ AI</div><p>${escapeHTML(reply)}</p><div class="ai-actions"><button class="btn primary use-suggestion">Sử dụng gợi ý</button></div>`;
+        $("#chatHistory").appendChild(block);
+        $("#chatHistory").scrollTop = $("#chatHistory").scrollHeight;
+        refreshIcons();
       }
 
       function openChat() {
@@ -1279,13 +1289,20 @@
       $("#topicsGrid").addEventListener("click", event => {
         const view = event.target.closest(".view-topic");
         const generate = event.target.closest(".generate-topic");
-        if (view) openDrawer(topics.find(t => t.id === Number(view.dataset.id)));
+        if (view) openDrawer(topics.find(t => String(t.id) === view.dataset.id));
         if (generate) {
-          const topic = topics.find(t => t.id === Number(generate.dataset.id));
+          const topic = topics.find(t => String(t.id) === generate.dataset.id);
+          if (!topic) return;
           $("#chatInfo strong").textContent = topic.title;
-          $("#messageInput").value = `Chào các em, Thầy đã ghi nhận các câu hỏi về “${topic.title}” và sẽ phản hồi chi tiết ngay sau đây.`;
           openChat();
-          toast("AI đã tạo bản nháp", "Thầy có thể chỉnh sửa trước khi gửi.");
+          renderAiSuggestion("Đang tạo gợi ý từ AI...");
+          const pendingBlock = $("#chatHistory .ai-message:last-child");
+          window.api.suggestReply(topic.title, topic.questionsList || []).then(reply => {
+            const finalReply = reply || `Chào các em, Thầy đã ghi nhận các câu hỏi về “${topic.title}” và sẽ phản hồi chi tiết ngay sau đây.`;
+            if (pendingBlock) pendingBlock.remove();
+            renderAiSuggestion(finalReply);
+            toast(reply ? "AI đã tạo bản nháp" : "Không tạo được gợi ý AI", reply ? "Thầy có thể chỉnh sửa trước khi gửi." : "Đã dùng nội dung mặc định, Thầy vui lòng chỉnh sửa.", reply ? "success" : "error");
+          });
         }
       });
 
@@ -1305,8 +1322,16 @@
       $("#collapseInfo").addEventListener("click", () => $("#chatInfo").classList.toggle("collapsed"));
       $("#sendMessage").addEventListener("click", sendMessage);
       $("#messageInput").addEventListener("keydown", event => { if (event.ctrlKey && event.key === "Enter") { event.preventDefault(); sendMessage(); } });
-      $("#useSuggestion").addEventListener("click", () => { $("#messageInput").value = $(".ai-message p").textContent; $("#messageInput").focus(); toast("Đã áp dụng gợi ý AI", "Nội dung đã được đưa vào ô soạn thảo."); });
-      $("#editSuggestion").addEventListener("click", () => { $("#messageInput").value = $(".ai-message p").textContent; $("#messageInput").focus(); });
+      $("#chatHistory").addEventListener("click", event => {
+        const useBtn = event.target.closest("#useSuggestion, .use-suggestion");
+        const editBtn = event.target.closest("#editSuggestion");
+        const btn = useBtn || editBtn;
+        if (!btn) return;
+        const text = btn.closest(".ai-message").querySelector("p").textContent;
+        $("#messageInput").value = text;
+        $("#messageInput").focus();
+        if (useBtn) toast("Đã áp dụng gợi ý AI", "Nội dung đã được đưa vào ô soạn thảo.");
+      });
       $("#attachBtn").addEventListener("click", () => toast("Đính kèm tệp", "Trình chọn tệp sẽ khả dụng khi kết nối hệ thống lưu trữ."));
       $("#emojiBtn").addEventListener("click", () => { $("#messageInput").value += " 😊"; $("#messageInput").focus(); });
       $("#quickReply").addEventListener("click", () => { $("#messageInput").value = "Thầy đã nhận được câu hỏi. Thầy sẽ kiểm tra và phản hồi các em trong hôm nay nhé."; $("#messageInput").focus(); });

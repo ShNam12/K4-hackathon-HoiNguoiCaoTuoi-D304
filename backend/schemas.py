@@ -122,3 +122,17 @@ class AnalyzeResponse(BaseModel):
     review_queue: list[ReviewItem] = Field(default_factory=list)
     unmatched: list[ReviewItem] = Field(default_factory=list)
     trace: Trace
+
+
+class ReplySuggestionQuestion(BaseModel):
+    question_id: str
+    text: str
+
+
+class ReplySuggestionRequest(BaseModel):
+    topic_title: str
+    questions: list[ReplySuggestionQuestion] = Field(default_factory=list)
+
+
+class ReplySuggestionResponse(BaseModel):
+    reply: str

@@ -1,56 +1,14 @@
 from __future__ import annotations
 
-import json
-import os
 from pathlib import Path
-from typing import Callable
 
-
-class LLMError(RuntimeError):
-    pass
+from backend.services.llm_client import LLMError, get_llm_client
 
 
 def _load_prompt(path: str | None = None) -> str:
     if path is None:
         path = Path(__file__).resolve().parent.parent / "prompts" / "group_summary.md"
     return Path(path).read_text(encoding="utf-8")
-
-
-def _default_llm_client() -> callable:
-    try:
-        from openai import OpenAI
-    except ImportError:
-        raise LLMError("Missing 'openai' package — run: pip install openai")
-
-    api_key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPENAI_API_KEY")
-    if not api_key:
-        raise LLMError("Missing API key — set OPENROUTER_API_KEY or OPENAI_API_KEY in .env")
-
-    base_url = os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-    model = os.environ.get("SUMMARY_MODEL", "openai/gpt-4o-mini")
-    client = OpenAI(api_key=api_key, base_url=base_url)
-
-    def call_llm(system: str, user: str) -> dict:
-        try:
-            resp = client.chat.completions.create(
-                model=model,
-                temperature=0.0,
-                response_format={"type": "json_object"},
-                messages=[
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": user},
-                ],
-            )
-        except Exception as exc:
-            raise LLMError(f"LLM call failed: {exc}") from exc
-
-        content = resp.choices[0].message.content
-        try:
-            return json.loads(content)
-        except (json.JSONDecodeError, TypeError) as exc:
-            raise LLMError(f"LLM returned invalid JSON: {content!r:.300}") from exc
-
-    return call_llm
 
 
 def summarize_group(
@@ -78,8 +36,10 @@ def summarize_group(
 
     if llm_client is None:
         try:
-            llm_client = _default_llm_client()
+            llm_client = get_llm_client()
         except LLMError:
+            return _fallback_summary(group)
+        if llm_client is None:
             return _fallback_summary(group)
 
     try:

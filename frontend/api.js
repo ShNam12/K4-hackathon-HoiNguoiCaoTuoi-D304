@@ -36,5 +36,39 @@ window.api = {
       console.error("Failed to load demo response:", error);
       return null;
     }
+  },
+
+  loadDemoQuestions: async function() {
+    try {
+      const response = await fetch("demo_request.json");
+      if (!response.ok) {
+        throw new Error("Failed to load demo_request.json");
+      }
+      const data = await response.json();
+      return data.questions || [];
+    } catch (error) {
+      console.error("Failed to load demo questions:", error);
+      return [];
+    }
+  },
+
+  suggestReply: async function(topicTitle, questions) {
+    try {
+      const response = await fetch(`${this.API_BASE_URL}/reply-suggestion`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ topic_title: topicTitle, questions })
+      });
+      if (!response.ok) {
+        throw new Error(`API returned ${response.status}`);
+      }
+      const data = await response.json();
+      return data.reply;
+    } catch (error) {
+      console.warn("Reply suggestion API error:", error);
+      return null;
+    }
   }
 };
