@@ -14,7 +14,8 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.schemas import SCHEMA_VERSION, AnalyzeRequest, AnalyzeResponse
+from backend.schemas import SCHEMA_VERSION, AnalyzeRequest, AnalyzeResponse, ChatRequest, ChatResponse
+from backend.services.chat_service import get_chat_response
 from backend.services.group_summarizer import summarize_groups
 from backend.services.question_grouper import group_classifications
 from backend.services.taxonomy_loader import TaxonomyError, load_session_taxonomy
@@ -113,3 +114,13 @@ def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
             "model": "configured-by-env",
         },
     )
+
+
+@app.post("/api/chat", response_model=ChatResponse)
+def chat(request: ChatRequest) -> ChatResponse:
+    reply_text = get_chat_response(
+        message=request.message,
+        context=request.context,
+        topic_title=request.topic_title,
+    )
+    return ChatResponse(reply=reply_text)

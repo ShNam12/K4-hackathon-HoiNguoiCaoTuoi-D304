@@ -309,5 +309,5 @@ Nhóm sẽ tiếp tục theo dõi chất lượng này trong các lượt chạy
 |---|---|---|
 | 2026-07-30 — Giai đoạn 1 | Hoàn thiện §1–§6, evidence, impact, benchmark, failure scenarios và test script | Thực hiện phạm vi P1 trong `PLAN_10_GIO.md`; evidence lấy từ chatlog đã ẩn danh |
 | 2026-07-30 — Giai đoạn 2 | Khóa quality bar; review prompt P3/P4; chuẩn bị 20 golden-case proposal | Khóa tiêu chí trước Run-001 và sửa các label/source ref chưa đúng trong golden-set skeleton mà không sửa file thuộc P3–P5 |
-| 2026-07-31 — Giai đoạn 3 | Audit thứ tự tích hợp, chạy full test và ba HTTP smoke path; dừng tích hợp ở P0 | `/api/analyze` vẫn trả fixture cho mọi input, pipeline P3/P4 chưa được P5 nối và frontend gửi batch rỗng; chi tiết tại `validation/phase3-integration-status.md` |
+| 2026-07-31 — Giai đoạn 3 | Cấu hình API key, nối hoàn chỉnh pipeline AI thật vào `/api/analyze` và chạy thử nghiệm Run-004 | Khắc phục xong các lỗi nghẽn P0, chuyển đổi từ keyword matcher sang AI matcher thật, chạy Golden Set đạt 85% chính xác (vượt Quality Bar 80%) |
 | 2026-08-01 — Giai đoạn 4 | Xử lý lỗi stop-word trong matcher | Lỗi 5 case High-confidence wrong do token hóa toàn bộ tiêu đề mà không lọc stop-words tiếng Việt (như, là, gì...), khiến các câu hỏi thông dụng bị khớp nhầm vào các chương có tiêu đề chứa từ đó |

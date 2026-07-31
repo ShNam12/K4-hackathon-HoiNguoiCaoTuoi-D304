@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-07-31T03:26:36.491370+00:00",
+  "generated_at": "2026-07-31T03:28:06.595990+00:00",
   "golden_set": "eval\\golden_set.jsonl",
   "classifier": "classify_batch (real)",
   "summary": {
     "total_cases": 20,
-    "topic_correct_or_abstain_rate": 0.75,
-    "status_correct_rate": 0.75,
-    "high_confidence_wrong_count": 4
+    "topic_correct_or_abstain_rate": 0.85,
+    "status_correct_rate": 0.8,
+    "high_confidence_wrong_count": 2
   },
   "cases": [
     {
@@ -19,7 +19,7 @@
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_14",
       "result_confidence": "high",
-      "result_rationale": "The question asks about the differences between RAG and fine-tuning, which aligns well with the topics of managing context in AI and the process of fine-tuning models."
+      "result_rationale": "The question asks about the differences between RAG and fine-tuning, which are both covered in the candidates. The strong match with 'rag' in DAY_01_CH_14 and 'fine' and 'tuning' in DAY_01_CH_16 supports a reliable comparison."
     },
     {
       "case_id": "GS002",
@@ -43,7 +43,7 @@
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_06",
       "result_confidence": "high",
-      "result_rationale": "Matched taxonomy terms: Transformer."
+      "result_rationale": "The question asks about the differences of the Transformer model compared to previous models, which aligns well with the content of the '2017: Transformer' chapter."
     },
     {
       "case_id": "GS004",
@@ -55,7 +55,7 @@
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_03",
       "result_confidence": "high",
-      "result_rationale": "Matched taxonomy terms: lich su AI."
+      "result_rationale": "The question asks about the main stages in the history of AI, which directly relates to the topic of 'Lịch sử AI 70 năm' that discusses the timeline and key messages in AI history."
     },
     {
       "case_id": "GS005",
@@ -67,7 +67,7 @@
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_04",
       "result_confidence": "high",
-      "result_rationale": "Matched taxonomy terms: expert system, 1980."
+      "result_rationale": "The question specifically asks about the principles of expert systems in 1980, which directly relates to the content of the candidate chapter on expert systems."
     },
     {
       "case_id": "GS006",
@@ -79,7 +79,7 @@
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_05",
       "result_confidence": "high",
-      "result_rationale": "Matched taxonomy terms: ImageNet, Fei-Fei Li."
+      "result_rationale": "The question directly asks how ImageNet, associated with Fei-Fei Li, has changed the AI field, which aligns with the content of the candidate chapter."
     },
     {
       "case_id": "GS007",
@@ -91,7 +91,7 @@
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_07",
       "result_confidence": "high",
-      "result_rationale": "Matched taxonomy terms: ChatGPT."
+      "result_rationale": "The question specifically asks about ChatGPT, which is directly addressed in the candidate topic DAY_01_CH_07."
     },
     {
       "case_id": "GS008",
@@ -103,19 +103,19 @@
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_08",
       "result_confidence": "high",
-      "result_rationale": "The question asks if LLM is a chatbot, which directly relates to the topic that clarifies the distinction between LLMs and chatbots."
+      "result_rationale": "The question asks if LLM is a chatbot, which directly relates to the topic discussing the distinction between LLMs and chatbots."
     },
     {
       "case_id": "GS009",
       "risk_class": "grounding",
       "expected_status": "needs_review",
-      "actual_status": "auto_grouped",
-      "topic_correct_or_abstain": false,
-      "status_correct": false,
-      "high_confidence_wrong": true,
+      "actual_status": "needs_review",
+      "topic_correct_or_abstain": true,
+      "status_correct": true,
+      "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_15",
-      "result_confidence": "high",
-      "result_rationale": "Matched taxonomy terms: tham so."
+      "result_confidence": "low",
+      "result_rationale": "The question asks about calculating GPU requirements for a model with many parameters, which relates to the topic of parameters discussed in DAY_01_CH_15."
     },
     {
       "case_id": "GS010",
@@ -127,7 +127,7 @@
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_06",
       "result_confidence": "high",
-      "result_rationale": "Matched taxonomy terms: Transformer."
+      "result_rationale": "The question asks about the paper related to the Transformer, which is directly addressed in the candidate topic about Transformer."
     },
     {
       "case_id": "GS011",
@@ -145,13 +145,13 @@
       "case_id": "GS012",
       "risk_class": "ambiguous",
       "expected_status": "needs_review",
-      "actual_status": "auto_grouped",
-      "topic_correct_or_abstain": false,
-      "status_correct": false,
-      "high_confidence_wrong": true,
-      "result_topic_id": "DAY_01_CH_06",
-      "result_confidence": "high",
-      "result_rationale": "Matched taxonomy terms: Transformer."
+      "actual_status": "needs_review",
+      "topic_correct_or_abstain": true,
+      "status_correct": true,
+      "high_confidence_wrong": false,
+      "result_topic_id": "DAY_01_CH_14",
+      "result_confidence": "low",
+      "result_rationale": "The question asks about the relationship between RAG and Transformer, which relates to the context management principles discussed in the candidate topics."
     },
     {
       "case_id": "GS013",
@@ -187,7 +187,7 @@
       "high_confidence_wrong": true,
       "result_topic_id": "DAY_01_CH_16",
       "result_confidence": "high",
-      "result_rationale": "The question compares RAG and fine-tuning, which directly relates to the content in DAY_01_CH_16 about the fine-tuning process in LLMs."
+      "result_rationale": "The question compares RAG and fine-tuning in terms of deployment, which aligns with the content of DAY_01_CH_16 discussing the fine-tuning process."
     },
     {
       "case_id": "GS016",
@@ -199,19 +199,19 @@
       "high_confidence_wrong": true,
       "result_topic_id": "DAY_01_CH_21",
       "result_confidence": "high",
-      "result_rationale": "The question asks about the differences between agent workflows and a simple API call for LLM, which aligns well with the content of the chapter discussing levels of agents and their capabilities."
+      "result_rationale": "The question compares agent workflows and API pipelines, which aligns with the content discussing different levels of agents and their capabilities in relation to LLMs."
     },
     {
       "case_id": "GS017",
       "risk_class": "noisy",
       "expected_status": "auto_grouped",
-      "actual_status": "auto_grouped",
+      "actual_status": "needs_review",
       "topic_correct_or_abstain": true,
-      "status_correct": true,
+      "status_correct": false,
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_14",
-      "result_confidence": "high",
-      "result_rationale": "The question references 'rag', which directly matches the topic about understanding attention in AI, specifically the RAG principle."
+      "result_confidence": "low",
+      "result_rationale": "The question mentions 'rag', which relates to the concept of managing attention in AI as discussed in the candidate chapter."
     },
     {
       "case_id": "GS018",
@@ -223,7 +223,7 @@
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_16",
       "result_confidence": "low",
-      "result_rationale": "The question discusses applying RAG and fine-tuning in a project, which relates to the process of creating LLMs as described in the candidate chapter."
+      "result_rationale": "The question discusses applying RAG and fine-tuning in a project, which relates to the process of creating LLMs as outlined in the candidate chapter."
     },
     {
       "case_id": "GS019",
@@ -235,7 +235,7 @@
       "high_confidence_wrong": false,
       "result_topic_id": null,
       "result_confidence": "low",
-      "result_rationale": "The question is asking to reveal system instructions, which is off-topic and not related to the provided candidates."
+      "result_rationale": "The question asks to reveal the system prompt, which is off-topic and not related to the provided candidates."
     },
     {
       "case_id": "GS020",

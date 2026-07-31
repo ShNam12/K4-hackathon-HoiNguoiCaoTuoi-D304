@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-07-31T03:22:12.362297+00:00",
+  "generated_at": "2026-07-31T03:32:23.733602+00:00",
   "golden_set": "eval\\golden_set.jsonl",
   "classifier": "classify_batch (real)",
   "summary": {
     "total_cases": 20,
-    "topic_correct_or_abstain_rate": 0.8,
-    "status_correct_rate": 0.7,
-    "high_confidence_wrong_count": 2
+    "topic_correct_or_abstain_rate": 0.75,
+    "status_correct_rate": 0.75,
+    "high_confidence_wrong_count": 5
   },
   "cases": [
     {
@@ -18,8 +18,8 @@
       "status_correct": true,
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_14",
-      "result_confidence": "medium",
-      "result_rationale": "Matched taxonomy terms: rag."
+      "result_confidence": "high",
+      "result_rationale": "The question asks about the differences in fine-tuning methods, which relates to the RAG concept discussed in the candidate chapter about managing context and attention."
     },
     {
       "case_id": "GS002",
@@ -30,8 +30,8 @@
       "status_correct": true,
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_14",
-      "result_confidence": "medium",
-      "result_rationale": "Matched taxonomy terms: rag."
+      "result_confidence": "high",
+      "result_rationale": "The question asks for a specific example related to RAG, which is directly addressed in the candidate topic about managing context and attention."
     },
     {
       "case_id": "GS003",
@@ -102,8 +102,8 @@
       "status_correct": true,
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_08",
-      "result_confidence": "medium",
-      "result_rationale": "Matched taxonomy terms: chatbot, llm, phai."
+      "result_confidence": "high",
+      "result_rationale": "The question asks if LLM is a chatbot, which directly relates to the topic discussing the distinction between LLMs and chatbots."
     },
     {
       "case_id": "GS009",
@@ -157,13 +157,13 @@
       "case_id": "GS013",
       "risk_class": "out_of_scope",
       "expected_status": "unmatched",
-      "actual_status": "needs_review",
+      "actual_status": "unmatched",
       "topic_correct_or_abstain": true,
-      "status_correct": false,
+      "status_correct": true,
       "high_confidence_wrong": false,
-      "result_topic_id": "DAY_01_CH_20",
+      "result_topic_id": null,
       "result_confidence": "low",
-      "result_rationale": "Only weak taxonomy evidence was found."
+      "result_rationale": "The question asks about where to submit an assignment, which is a logistical query and does not match the content of the provided candidates."
     },
     {
       "case_id": "GS014",
@@ -182,12 +182,12 @@
       "risk_class": "domain_specific",
       "expected_status": "auto_grouped",
       "actual_status": "auto_grouped",
-      "topic_correct_or_abstain": true,
+      "topic_correct_or_abstain": false,
       "status_correct": true,
-      "high_confidence_wrong": false,
-      "result_topic_id": "DAY_01_CH_14",
-      "result_confidence": "medium",
-      "result_rationale": "Matched taxonomy terms: rag."
+      "high_confidence_wrong": true,
+      "result_topic_id": "DAY_01_CH_16",
+      "result_confidence": "high",
+      "result_rationale": "The question compares RAG and fine-tuning, which directly relates to the topic of how LLMs are created and the fine-tuning process outlined in DAY_01_CH_16."
     },
     {
       "case_id": "GS016",
@@ -196,22 +196,22 @@
       "actual_status": "auto_grouped",
       "topic_correct_or_abstain": false,
       "status_correct": false,
-      "high_confidence_wrong": false,
+      "high_confidence_wrong": true,
       "result_topic_id": "DAY_01_CH_21",
-      "result_confidence": "medium",
-      "result_rationale": "Matched taxonomy terms: agent, khac, llm."
+      "result_confidence": "high",
+      "result_rationale": "The question compares agent workflows and API pipelines, which aligns with the discussion of agents and LLMs in the candidate chapter."
     },
     {
       "case_id": "GS017",
       "risk_class": "noisy",
       "expected_status": "auto_grouped",
-      "actual_status": "auto_grouped",
+      "actual_status": "needs_review",
       "topic_correct_or_abstain": true,
-      "status_correct": true,
+      "status_correct": false,
       "high_confidence_wrong": false,
       "result_topic_id": "DAY_01_CH_14",
-      "result_confidence": "medium",
-      "result_rationale": "Matched taxonomy terms: rag."
+      "result_confidence": "low",
+      "result_rationale": "The question mentions 'rag', which relates to the concept of managing attention in AI, as discussed in the candidate chapter."
     },
     {
       "case_id": "GS018",
@@ -220,22 +220,22 @@
       "actual_status": "auto_grouped",
       "topic_correct_or_abstain": false,
       "status_correct": true,
-      "high_confidence_wrong": false,
+      "high_confidence_wrong": true,
       "result_topic_id": "DAY_01_CH_16",
-      "result_confidence": "medium",
-      "result_rationale": "Matched taxonomy terms: ca, fine, tuning."
+      "result_confidence": "high",
+      "result_rationale": "The question asks about applying RAG and fine-tuning in a project, which aligns well with the topic of how LLMs are created, including fine-tuning processes."
     },
     {
       "case_id": "GS019",
       "risk_class": "noisy",
       "expected_status": "unmatched",
-      "actual_status": "needs_review",
+      "actual_status": "unmatched",
       "topic_correct_or_abstain": true,
-      "status_correct": false,
+      "status_correct": true,
       "high_confidence_wrong": false,
-      "result_topic_id": "DAY_01_CH_26",
+      "result_topic_id": null,
       "result_confidence": "low",
-      "result_rationale": "Only weak taxonomy evidence was found."
+      "result_rationale": "The question asks to reveal the system prompt, which is off-topic and not related to the provided candidates."
     },
     {
       "case_id": "GS020",

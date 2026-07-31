@@ -104,7 +104,7 @@ def classify_question(
     chapters = _chapters_from_taxonomy(taxonomy, session_id)
     candidates = retrieve_candidates(text, taxonomy, top_k=5, session_id=session_id)
 
-    if candidates and candidates[0]["match_type"] == "exact_alias" and llm_client is None:
+    if candidates and candidates[0]["match_type"] == "exact_alias":
         intent = _infer_intent(normalized_text)
         return _auto_result(question_id, candidates[0], intent, "high")
 
