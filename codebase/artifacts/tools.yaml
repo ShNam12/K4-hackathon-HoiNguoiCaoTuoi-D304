@@ -42,3 +42,43 @@ tools:
       type: object
       properties: {}
       required: []
+
+  - name: compare_periods
+    description: >-
+      So sánh các chỉ số giữa hai giai đoạn thời gian, áp dụng cho toàn bộ các chủ đề hoặc lọc theo một chủ đề cụ thể.
+      Dùng khi: giảng viên muốn so sánh số liệu (như số lượng câu hỏi, tỷ lệ tutor không trả lời được) giữa hai khoảng thời gian (ví dụ tuần này so với tuần trước) hoặc so sánh một chủ đề cụ thể qua thời gian.
+    parameters:
+      type: object
+      properties:
+        period_a:
+          type: object
+          properties:
+            from: {type: string, description: "Ngày bắt đầu giai đoạn A, định dạng YYYY-MM-DD"}
+            to: {type: string, description: "Ngày kết thúc giai đoạn A, định dạng YYYY-MM-DD"}
+          required: ["from", "to"]
+        period_b:
+          type: object
+          properties:
+            from: {type: string, description: "Ngày bắt đầu giai đoạn B, định dạng YYYY-MM-DD"}
+            to: {type: string, description: "Ngày kết thúc giai đoạn B, định dạng YYYY-MM-DD"}
+          required: ["from", "to"]
+        metric: {type: string, description: "Chỉ số cần so sánh: 'count' (tổng câu hỏi), 'tutor_bo_tay_rate' (tỉ lệ tutor không trả lời được), 'down_ratings' (số lượt đánh giá thấp)"}
+        topic_id: {type: string, description: "Mã chủ đề (chapter_id) để lọc, ví dụ DAY_02_CH_07. Nếu bỏ trống, so sánh tổng hợp trên toàn bộ các chủ đề."}
+      required: ["period_a", "period_b", "metric"]
+
+  - name: search_by_keyword
+    description: >-
+      Tìm kiếm văn bản tự do trên tất cả câu hỏi của học viên và tên chủ đề bài giảng (chapter_title). 
+      Dùng khi: giảng viên muốn tìm kiếm các câu hỏi liên quan đến một từ khóa cụ thể hoặc kiểm tra xem một thuật ngữ nào đó có được sinh viên hỏi hay không.
+    parameters:
+      type: object
+      properties:
+        keyword: {type: string, description: "Từ khóa cần tìm kiếm (không phân biệt chữ hoa thường hay dấu câu)."}
+        time_range:
+          type: object
+          properties:
+            from: {type: string, description: "Từ ngày, định dạng YYYY-MM-DD"}
+            to: {type: string, description: "Đến ngày, định dạng YYYY-MM-DD"}
+          description: "Khoảng thời gian muốn tìm kiếm, nếu có."
+        limit: {type: integer, default: 20, description: "Số lượng kết quả trả về tối đa."}
+      required: ["keyword"]

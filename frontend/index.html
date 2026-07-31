@@ -368,7 +368,6 @@
       transition: .25s ease;
     }
     .stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
-    .stat-card::after { content: ""; position: absolute; width: 75px; height: 75px; right: -22px; top: -24px; background: var(--accent-soft); border-radius: 50%; }
     .stat-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
     .stat-icon { display: grid; place-items: center; width: 39px; height: 39px; color: var(--accent); background: var(--accent-soft); border-radius: 12px; }
     .trend { display: inline-flex; align-items: center; gap: 3px; color: var(--mint); font-size: 10px; font-weight: 750; }
@@ -507,14 +506,14 @@
     .float-btn .tooltip {
       position: absolute;
       right: calc(100% + 11px);
-      padding: 7px 10px;
+      padding: 8px 14px;
       color: var(--text);
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: 8px;
       box-shadow: var(--shadow-sm);
-      font-size: 9px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 600;
       white-space: nowrap;
       opacity: 0;
       pointer-events: none;
@@ -551,6 +550,8 @@
       bottom: 0;
       top: 0;
       width: 400px;
+      min-width: 300px;
+      max-width: 80vw;
       height: 100vh;
       max-height: 100vh;
       border-radius: 0;
@@ -560,7 +561,11 @@
       transform: translateX(100%);
       opacity: 1;
       transition: transform .35s cubic-bezier(.2,.8,.2,1);
+      resize: horizontal;
+      direction: rtl;
+      overflow: hidden;
     }
+    .chat-panel > * { direction: ltr; }
     .chat-panel.open { transform: translateX(0); }
     .panel.minimized { height: 70px; }
     .panel.minimized .chat-info,
@@ -602,7 +607,7 @@
     .ai-actions .btn { min-height: 32px; padding: 0 12px; font-size: 11px; }
     .composer { padding: 11px; background: var(--surface); border-top: 1px solid var(--line); }
     .composer-box { padding: 9px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; }
-    .composer textarea { display: block; width: 100%; height: 45px; padding: 0; resize: none; color: var(--text); background: transparent; border: 0; font-size: 10px; outline: 0; }
+    .composer textarea { display: block; width: 100%; height: 45px; padding: 0; resize: none; color: var(--text); background: transparent; border: 0; font-size: 14px; font-family: inherit; outline: 0; }
     .composer-tools { display: flex; align-items: center; gap: 5px; }
     .tool-btn { display: grid; place-items: center; width: 29px; height: 29px; color: var(--muted); background: transparent; border: 0; border-radius: 8px; }
     .tool-btn:hover { color: var(--primary); background: var(--primary-soft); }
@@ -940,7 +945,7 @@
 
   <div class="floating-actions">
     <button class="float-btn feedback-float" id="feedbackFloat" aria-label="Mở ý kiến từ học viên"><i data-lucide="lightbulb" class="icon-lg"></i><span class="count-badge">3</span><span class="tooltip">Ý kiến từ học viên</span></button>
-    <button class="float-btn chat-float" id="chatFloat" aria-label="Mở trao đổi với sinh viên"><i data-lucide="messages-square" class="icon-lg"></i><span class="count-badge">5</span><span class="tooltip">Trao đổi với sinh viên</span></button>
+    <button class="float-btn chat-float" id="chatFloat" aria-label="Hỏi Trợ lý AI"><i data-lucide="messages-square" class="icon-lg"></i><span class="tooltip">Hỏi Trợ lý AI</span></button>
   </div>
 
   <section class="panel chat-panel" id="chatPanel" aria-label="Trao đổi với sinh viên" aria-hidden="true">
@@ -949,10 +954,7 @@
       <div class="panel-head-copy"><strong style="color: var(--text);">VLearn Tutor</strong><span class="online">@ Trợ lý học theo ngữ cảnh</span></div>
       <button class="head-btn" id="closeChat" aria-label="Đóng cửa sổ chat"><i data-lucide="x" class="icon"></i></button>
     </header>
-    <div class="chat-info" id="chatInfo">
-      <div class="chat-info-top"><strong>Yêu cầu và phạm vi bài tập lớn</strong><button class="tool-btn collapse-info" id="collapseInfo" aria-label="Thu gọn thông tin chủ đề"><i data-lucide="chevron-up" class="icon-sm"></i></button></div>
-      <div class="chat-info-meta"><span><i data-lucide="users" class="icon-sm"></i> 32 sinh viên quan tâm</span><span class="priority urgent">Khẩn cấp</span></div>
-    </div>
+
     <div class="chat-history" id="chatHistory">
       <div class="day-divider">Hôm nay</div>
       <div class="ai-message">
@@ -1085,6 +1087,16 @@
            $$(".stat-card h3")[2].textContent = topics.length;
            $$(".stat-card h3")[3].textContent = (data.groups || []).reduce((sum, g) => sum + (g?.unique_student_count || 0), 0);
            $(".ai-float").innerHTML = `<span class="ai-dot"></span>Đã phân tích ${totalQuestions} câu hỏi`;
+           
+           const autoGroupedCount = (data.groups || []).reduce((sum, g) => sum + (g?.question_count || 0), 0);
+           if (charts[1]) {
+             charts[1].data.labels = ["Đã phân nhóm", "Cần duyệt", "Không hợp lệ"];
+             charts[1].data.datasets[0].data = [autoGroupedCount, reviewQueue.length, unmatched.length];
+             charts[1].data.datasets[0].backgroundColor = ["#30c89b", "#ffb44a", "#ff6868"];
+             charts[1].update();
+           }
+           const chartCenter = $(".chart-center strong");
+           if (chartCenter) chartCenter.textContent = totalQuestions;
         }
       });
 
@@ -1251,7 +1263,7 @@
         refreshIcons();
 
         try {
-          const topicTitle = $("#chatInfo strong").textContent;
+          const topicTitle = window.currentChatTopicTitle || "";
           const resp = await window.api.chatWithAI({ message: value, topic_title: topicTitle });
           
           const aiReply = document.createElement("div");
@@ -1292,7 +1304,7 @@
         }));
         charts.push(new Chart($("#statusChart"), {
           type:"doughnut",
-          data:{labels:["Đã trả lời","Đang xử lý","Chưa trả lời","Cần làm rõ"],datasets:[{data:[68,24,24,12],backgroundColor:["#30c89b","#1597e5","#ff6868","#ffb44a"],borderWidth:0,hoverOffset:7}]},
+          data:{labels:["Đã phân nhóm","Cần duyệt","Không hợp lệ"],datasets:[{data:[80,36,12],backgroundColor:["#30c89b","#ffb44a","#ff6868"],borderWidth:0,hoverOffset:7}]},
           options:{responsive:true,maintainAspectRatio:false,cutout:"72%",plugins:{legend:{position:"bottom",labels:{color:textColor,usePointStyle:true,pointStyle:"circle",boxWidth:7,boxHeight:7,padding:13,font:{size:8}}},tooltip:{backgroundColor:"#18344b",padding:10,cornerRadius:9,callbacks:{label:c=>`${c.label}: ${c.parsed} câu`}}}}
         }));
       }
@@ -1335,7 +1347,7 @@
         if (view) openDrawer(topics.find(t => String(t.id) === String(view.dataset.id)));
         if (generate) {
           const topic = topics.find(t => String(t.id) === String(generate.dataset.id));
-          $("#chatInfo strong").textContent = topic.title;
+          window.currentChatTopicTitle = topic.title;
           $("#messageInput").value = `Hãy viết một đoạn giải đáp chung cho sinh viên về chủ đề: “${topic.title}” với nội dung tóm tắt: ${topic.summary}`;
           openChat();
           sendMessage(); // Tự động gửi để nhờ AI viết
@@ -1352,27 +1364,27 @@
         if (event.key === "Escape") { closeDrawer(); closeChat(); closeFeedback(); document.body.classList.remove("mobile-nav-open"); $("#notificationPopover").classList.add("hidden"); }
       });
 
-      $("#chatFloat").addEventListener("click", () => $("#chatPanel").classList.contains("open") ? closeChat() : openChat());
-      $("#closeChat").addEventListener("click", closeChat);
+      if ($("#chatFloat")) $("#chatFloat").addEventListener("click", () => $("#chatPanel").classList.contains("open") ? closeChat() : openChat());
+      if ($("#closeChat")) $("#closeChat").addEventListener("click", closeChat);
       if ($("#minimizeChat")) $("#minimizeChat").addEventListener("click", () => $("#chatPanel").classList.toggle("minimized"));
-      $("#collapseInfo").addEventListener("click", () => $("#chatInfo").classList.toggle("collapsed"));
-      $("#sendMessage").addEventListener("click", sendMessage);
-      $("#messageInput").addEventListener("keydown", event => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); sendMessage(); } });
+      if ($("#collapseInfo")) $("#collapseInfo").addEventListener("click", () => $("#chatInfo").classList.toggle("collapsed"));
+      if ($("#sendMessage")) $("#sendMessage").addEventListener("click", sendMessage);
+      if ($("#messageInput")) $("#messageInput").addEventListener("keydown", event => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); sendMessage(); } });
       if ($("#useSuggestion")) $("#useSuggestion").addEventListener("click", () => { $("#messageInput").value = $(".ai-message p").textContent; $("#messageInput").focus(); toast("Đã áp dụng gợi ý AI", "Nội dung đã được đưa vào ô soạn thảo."); });
       if ($("#editSuggestion")) $("#editSuggestion").addEventListener("click", () => { $("#messageInput").value = $(".ai-message p").textContent; $("#messageInput").focus(); });
       if ($("#attachBtn")) $("#attachBtn").addEventListener("click", () => toast("Đính kèm tệp", "Trình chọn tệp sẽ khả dụng khi kết nối hệ thống lưu trữ."));
-      $("#emojiBtn").addEventListener("click", () => { $("#messageInput").value += " 😊"; $("#messageInput").focus(); });
-      $("#quickReply").addEventListener("click", () => { $("#messageInput").value = "Thầy đã nhận được câu hỏi. Thầy sẽ kiểm tra và phản hồi các em trong hôm nay nhé."; $("#messageInput").focus(); });
+      if ($("#emojiBtn")) $("#emojiBtn").addEventListener("click", () => { $("#messageInput").value += " 😊"; $("#messageInput").focus(); });
+      if ($("#quickReply")) $("#quickReply").addEventListener("click", () => { $("#messageInput").value = "Thầy đã nhận được câu hỏi. Thầy sẽ kiểm tra và phản hồi các em trong hôm nay nhé."; $("#messageInput").focus(); });
 
-      $("#feedbackFloat").addEventListener("click", () => $("#feedbackPanel").classList.contains("open") ? closeFeedback() : openFeedback());
-      $("#closeFeedback").addEventListener("click", closeFeedback);
-      $("#feedbackFilters").addEventListener("click", event => {
+      if ($("#feedbackFloat")) $("#feedbackFloat").addEventListener("click", () => $("#feedbackPanel").classList.contains("open") ? closeFeedback() : openFeedback());
+      if ($("#closeFeedback")) $("#closeFeedback").addEventListener("click", closeFeedback);
+      if ($("#feedbackFilters")) $("#feedbackFilters").addEventListener("click", event => {
         const button = event.target.closest("[data-feedback]");
         if (!button) return;
         $$("#feedbackFilters .filter-btn").forEach(b => b.classList.toggle("active", b === button));
         $$(".feedback-item").forEach(item => item.classList.toggle("hidden", button.dataset.feedback !== "all" && !item.dataset.type.includes(button.dataset.feedback)));
       });
-      $("#viewAllFeedback").addEventListener("click", () => toast("Tất cả ý kiến", "Đã tải 48 ý kiến trong tháng này."));
+      if ($("#viewAllFeedback")) $("#viewAllFeedback").addEventListener("click", () => toast("Tất cả ý kiến", "Đã tải 48 ý kiến trong tháng này."));
 
       $("#closeDrawerBtn").addEventListener("click", closeDrawer);
       $("#overlay").addEventListener("click", () => { closeDrawer(); document.body.classList.remove("mobile-nav-open"); $("#overlay").classList.remove("open"); });

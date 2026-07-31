@@ -9,11 +9,16 @@ from .get_topic_digest.tool import get_topic_digest
 from .get_topic_examples.tool import get_topic_examples
 from .list_available_dates.tool import list_available_dates
 
+from .compare_periods.tool import compare_periods
+from .search_by_keyword.tool import search_by_keyword
+
 # Đổi tên tool phải sync đồng bộ: artifacts/tools.yaml -> dict này -> thư mục tools/<tool_name>/.
 TOOL_FUNCTIONS = {
     "get_topic_digest": get_topic_digest,
     "get_topic_examples": get_topic_examples,
     "list_available_dates": list_available_dates,
+    "compare_periods": compare_periods,
+    "search_by_keyword": search_by_keyword,
 }
 
 

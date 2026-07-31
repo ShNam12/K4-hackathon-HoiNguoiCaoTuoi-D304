@@ -50,6 +50,19 @@ def truncate_quote(text: str | None) -> str | None:
     return text if len(text) <= MAX_QUOTE_CHARS else text[:MAX_QUOTE_CHARS].rstrip() + "…"
 
 
+def calculate_metrics(items: list[dict]) -> dict:
+    if not items:
+        return {"count": 0, "tutor_bo_tay_rate": 0.0, "down_ratings": 0}
+    bo_tay_flags = [i["tutor_bo_tay"] for i in items if i.get("tutor_bo_tay") is not None]
+    bo_tay_rate = sum(bo_tay_flags) / len(bo_tay_flags) if bo_tay_flags else 0.0
+    down_ratings = sum(1 for i in items if i.get("rating") == "down")
+    return {
+        "count": len(items),
+        "tutor_bo_tay_rate": round(bo_tay_rate, 2),
+        "down_ratings": down_ratings,
+    }
+
+
 def aggregate(records: list[dict], *, target_date: str | None, top_n: int) -> tuple[list[dict], dict]:
     def turn_date(rec: dict) -> str | None:
         ts = rec.get("message_created_at")
@@ -71,16 +84,14 @@ def aggregate(records: list[dict], *, target_date: str | None, top_n: int) -> tu
 
     rows = []
     for chapter_id, items in groups.items():
-        bo_tay_flags = [i["tutor_bo_tay"] for i in items if i.get("tutor_bo_tay") is not None]
-        bo_tay_rate = sum(bo_tay_flags) / len(bo_tay_flags) if bo_tay_flags else 0.0
-        down_ratings = sum(1 for i in items if i.get("rating") == "down")
+        metrics = calculate_metrics(items)
         rows.append({
             "chapter_id": chapter_id,
             "day_id": items[0]["day_id"],
             "chapter_title": items[0]["chapter_title"],
-            "count": len(items),
-            "tutor_bo_tay_rate": round(bo_tay_rate, 2),
-            "down_ratings": down_ratings,
+            "count": metrics["count"],
+            "tutor_bo_tay_rate": metrics["tutor_bo_tay_rate"],
+            "down_ratings": metrics["down_ratings"],
             "example_quotes": [truncate_quote(i["cau_hoi_goc"]) for i in items[:3] if i.get("cau_hoi_goc")],
         })
 
