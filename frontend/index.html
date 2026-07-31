@@ -854,25 +854,25 @@
           <span id="demoDataNotice" class="hidden" style="color: #ffb44a; font-size: 12px; margin-left: 10px;">(Demo data)</span>
         </div>
       </div>
-      <div class="ai-float"><span class="ai-dot"></span>AI đang phân tích 128 câu hỏi</div>
+      <div class="ai-float"><span class="ai-dot"></span>Đang tải dữ liệu...</div>
     </section>
 
     <section class="stats-grid" aria-label="Thống kê tổng quan">
       <article class="stat-card" style="--accent:var(--primary);--accent-soft:var(--primary-soft)">
-        <div class="stat-top"><span class="stat-icon"><i data-lucide="messages-square" class="icon-lg"></i></span><span class="trend"><i data-lucide="trending-up" class="icon-sm"></i>12,4%</span></div>
-        <h3>128</h3><p>Tổng số câu hỏi</p>
+        <div class="stat-top"><span class="stat-icon"><i data-lucide="messages-square" class="icon-lg"></i></span></div>
+        <h3>—</h3><p>Tổng số câu hỏi</p>
       </article>
       <article class="stat-card" style="--accent:var(--red);--accent-soft:var(--red-soft)">
-        <div class="stat-top"><span class="stat-icon"><i data-lucide="message-square-warning" class="icon-lg"></i></span><span class="trend down"><i data-lucide="trending-down" class="icon-sm"></i>8,2%</span></div>
-        <h3>24</h3><p>Chưa được trả lời</p>
+        <div class="stat-top"><span class="stat-icon"><i data-lucide="message-square-warning" class="icon-lg"></i></span></div>
+        <h3>—</h3><p>Chưa được trả lời</p>
       </article>
       <article class="stat-card" style="--accent:var(--purple);--accent-soft:var(--purple-soft)">
-        <div class="stat-top"><span class="stat-icon"><i data-lucide="brain-circuit" class="icon-lg"></i></span><span class="trend"><i data-lucide="trending-up" class="icon-sm"></i>2 chủ đề</span></div>
-        <h3>8</h3><p>Chủ đề do AI phân nhóm</p>
+        <div class="stat-top"><span class="stat-icon"><i data-lucide="brain-circuit" class="icon-lg"></i></span></div>
+        <h3>—</h3><p>Chủ đề do AI phân nhóm</p>
       </article>
       <article class="stat-card" style="--accent:var(--mint);--accent-soft:var(--mint-soft)">
-        <div class="stat-top"><span class="stat-icon"><i data-lucide="users-round" class="icon-lg"></i></span><span class="trend"><i data-lucide="trending-up" class="icon-sm"></i>16,7%</span></div>
-        <h3>76</h3><p>Sinh viên đang hoạt động</p>
+        <div class="stat-top"><span class="stat-icon"><i data-lucide="users-round" class="icon-lg"></i></span></div>
+        <h3>—</h3><p>Sinh viên đang hoạt động</p>
       </article>
     </section>
 
@@ -907,12 +907,8 @@
 
     <section class="section analytics-grid" aria-label="Phân tích câu hỏi">
       <article class="chart-card">
-        <div class="chart-head"><div><h3>Số lượng câu hỏi trong 7 ngày gần đây</h3><p>Xu hướng tương tác của sinh viên theo ngày</p></div><span class="chart-total"><i data-lucide="arrow-up-right" class="icon-sm"></i> 18,2%</span></div>
-        <div class="chart-wrap"><canvas id="questionsChart" aria-label="Biểu đồ số lượng câu hỏi từ thứ Hai đến Chủ nhật"></canvas></div>
-      </article>
-      <article class="chart-card">
-        <div class="chart-head"><div><h3>Phân bố câu hỏi theo trạng thái</h3><p>Tổng hợp 128 câu hỏi hiện tại</p></div><button class="icon-btn" id="chartMenu" aria-label="Tùy chọn biểu đồ"><i data-lucide="ellipsis" class="icon"></i></button></div>
-        <div class="chart-wrap doughnut-wrap"><canvas id="statusChart" aria-label="Biểu đồ phân bố câu hỏi theo trạng thái"></canvas><div class="chart-center"><strong>128</strong><span>Câu hỏi</span></div></div>
+        <div class="chart-head"><div><h3>Phân bố câu hỏi theo trạng thái</h3><p>Tổng hợp <span id="statusChartTotal">0</span> câu hỏi hiện tại</p></div></div>
+        <div class="chart-wrap doughnut-wrap"><canvas id="statusChart" aria-label="Biểu đồ phân bố câu hỏi theo trạng thái"></canvas><div class="chart-center"><strong id="statusChartCenter">0</strong><span>Câu hỏi</span></div></div>
       </article>
     </section>
 
@@ -997,18 +993,16 @@
   <aside class="drawer" id="topicDrawer" aria-label="Chi tiết chủ đề" aria-hidden="true">
     <header class="drawer-head"><div><h2 id="drawerTitle">Yêu cầu và phạm vi bài tập lớn</h2><p id="drawerMeta">32 câu hỏi · Cập nhật 5 phút trước</p></div><button class="icon-btn" id="closeDrawer" aria-label="Đóng chi tiết chủ đề"><i data-lucide="x" class="icon"></i></button></header>
     <div class="drawer-body">
-      <div class="detail-block"><div class="detail-label"><i data-lucide="sparkles" class="icon-sm"></i>Tóm tắt bởi AI</div><div class="summary-box" id="drawerSummary">Sinh viên đang nhầm lẫn về phạm vi dự án, định dạng nộp bài và tiêu chí chấm điểm. Phần lớn câu hỏi tập trung vào yêu cầu xác thực, số lượng màn hình và quy định triển khai.</div></div>
-      <div class="detail-block"><div class="detail-label"><i data-lucide="messages-square" class="icon-sm"></i>Câu hỏi tương tự</div><div class="similar-list"><div class="similar-item"><div class="avatar sm">TL</div><span>Nhóm em cần hoàn thành tối thiểu bao nhiêu màn hình cho bài tập lớn ạ?</span></div><div class="similar-item"><div class="avatar sm" style="background:linear-gradient(145deg,#f6a54e,#e76947)">HK</div><span>JWT có phải là yêu cầu bắt buộc trong phần đăng nhập không Thầy?</span></div><div class="similar-item"><div class="avatar sm" style="background:linear-gradient(145deg,#30c89b,#148b72)">AN</div><span>Điểm triển khai cloud chiếm bao nhiêu phần trăm tổng điểm ạ?</span></div></div></div>
-      <div class="detail-block"><div class="detail-label"><i data-lucide="tags" class="icon-sm"></i>Từ khóa nổi bật</div><div class="keywords" id="drawerKeywords"><span class="keyword">phạm vi dự án</span><span class="keyword">JWT</span><span class="keyword">REST API</span><span class="keyword">rubric</span><span class="keyword">cloud</span></div></div>
-      <div class="detail-block"><div class="detail-label"><i data-lucide="users" class="icon-sm"></i>Sinh viên quan tâm</div><div style="display:flex;align-items:center;justify-content:space-between"><div class="avatar-stack"><div class="avatar sm">TL</div><div class="avatar sm" style="background:linear-gradient(145deg,#f6a54e,#e76947)">HK</div><div class="avatar sm" style="background:linear-gradient(145deg,#30c89b,#148b72)">AN</div><div class="avatar sm" style="background:linear-gradient(145deg,#8f73e8,#5f50bd)">VN</div><span class="avatar-more">+28</span></div><span style="color:var(--muted);font-size:9px">32 sinh viên</span></div></div>
+      <div class="detail-block"><div class="detail-label"><i data-lucide="wand-sparkles" class="icon-sm"></i>Tóm tắt bởi AI</div><div class="suggestion-box" id="drawerSummaryContent"></div></div>
+      <div class="detail-block"><div class="detail-label"><i data-lucide="messages-square" class="icon-sm"></i>Câu hỏi trong chủ đề</div><div class="similar-list" id="drawerQuestions"></div></div>
+      <div class="detail-block"><div class="detail-label"><i data-lucide="users" class="icon-sm"></i>Sinh viên quan tâm</div><div id="drawerStudentCount" style="color:var(--muted);font-size:9px"></div></div>
       <div class="detail-block"><div class="detail-label"><i data-lucide="brain-circuit" class="icon-sm"></i>Độ tin cậy của AI</div><div class="confidence"><strong id="drawerConfidence" style="color:var(--mint)">high</strong> <span id="drawerRationale" style="margin-left: 10px; font-size: 12px; color: var(--muted)"></span></div></div>
-      <div class="detail-block"><div class="detail-label"><i data-lucide="wand-sparkles" class="icon-sm"></i>Tóm tắt Nhóm</div><div class="suggestion-box" id="drawerSummaryContent"></div></div>
       <div class="detail-block">
         <div class="detail-label"><i data-lucide="file-text" class="icon-sm"></i>Evidence (Nguồn tham khảo)</div>
         <div class="similar-list" id="drawerEvidence"></div>
       </div>
     </div>
-    <footer class="drawer-footer"><button class="btn" id="editResponse"><i data-lucide="pencil" class="icon-sm"></i>Chỉnh sửa phản hồi</button><button class="btn primary" id="sendAll"><i data-lucide="send" class="icon-sm"></i>Gửi tới tất cả</button><button class="btn" id="publishAnnouncement"><i data-lucide="megaphone" class="icon-sm"></i>Đăng thông báo</button><button class="btn success" id="resolveTopic"><i data-lucide="circle-check" class="icon-sm"></i>Đánh dấu đã xử lý</button></footer>
+    <footer class="drawer-footer"><button class="btn primary" id="drawerGenerateReply"><i data-lucide="sparkles" class="icon-sm"></i>Tạo phản hồi</button><button class="btn success" id="resolveTopic"><i data-lucide="circle-check" class="icon-sm"></i>Đánh dấu đã xử lý</button></footer>
   </aside>
 
   <div class="notification-popover hidden" id="notificationPopover" role="dialog" aria-label="Thông báo mới">
@@ -1035,6 +1029,7 @@
       const priorityRank = { urgent: 4, high: 3, medium: 2, low: 1 };
       let currentFilter = "all";
       let selectedTopic = null;
+      let currentChatTopicId = null;
       let charts = [];
       
       const sessionSelector = $("#sessionSelector");
@@ -1042,18 +1037,19 @@
       const loadingState = $("#loadingState");
       const demoDataNotice = $("#demoDataNotice");
 
-      analyzeBtn.addEventListener("click", async () => {
+      async function runAnalysis() {
         analyzeBtn.disabled = true;
         loadingState.classList.remove("hidden");
         demoDataNotice.classList.add("hidden");
         $("#topicsGrid").innerHTML = '<div class="empty-state"><i data-lucide="loader" class="icon" style="animation: spin 1s linear infinite;"></i><strong>Đang phân tích...</strong></div>';
-        
+        $(".ai-float").innerHTML = `<span class="ai-dot"></span>Đang tải dữ liệu...`;
+
         const demoQuestions = await window.api.loadDemoQuestions();
         let data = await window.api.analyzeQuestions({ session_id: sessionSelector.value, questions: demoQuestions });
-        
+
         analyzeBtn.disabled = false;
         loadingState.classList.add("hidden");
-        
+
         if (data && data.groups) {
            if (data._isDemo) {
              demoDataNotice.classList.remove("hidden");
@@ -1079,18 +1075,22 @@
            });
            reviewQueue = data.review_queue || [];
            unmatched = data.unmatched || [];
-           
+
            renderTopics();
            renderReviewQueue();
-           
-           const totalQuestions = (data.groups || []).reduce((sum, g) => sum + (g?.question_count || 0), 0) + reviewQueue.length + unmatched.length;
+
+           const autoGroupedCount = (data.groups || []).reduce((sum, g) => sum + (g?.question_count || 0), 0);
+           const totalQuestions = autoGroupedCount + reviewQueue.length + unmatched.length;
            $$(".stat-card h3")[0].textContent = totalQuestions;
            $$(".stat-card h3")[1].textContent = reviewQueue.length + unmatched.length;
            $$(".stat-card h3")[2].textContent = topics.length;
            $$(".stat-card h3")[3].textContent = (data.groups || []).reduce((sum, g) => sum + (g?.unique_student_count || 0), 0);
            $(".ai-float").innerHTML = `<span class="ai-dot"></span>Đã phân tích ${totalQuestions} câu hỏi`;
+           updateStatusChart(autoGroupedCount, reviewQueue.length, unmatched.length);
         }
-      });
+      }
+
+      analyzeBtn.addEventListener("click", runAnalysis);
 
       function renderReviewQueue() {
          const allReview = [...reviewQueue, ...unmatched];
@@ -1189,7 +1189,12 @@
         $("#drawerTitle").textContent = topic.title;
         $("#drawerMeta").textContent = `${topic.questions} câu hỏi · Sinh viên: ${topic.unique_students || 0}`;
         $("#drawerSummaryContent").textContent = topic.summary;
-        
+
+        const initials = (name) => (name || "?").slice(-2).toUpperCase();
+        const questionsHtml = (topic.questionsList || []).map(q => `<div class="similar-item"><div class="avatar sm">${escapeHTML(initials(q.student_id))}</div><span>${escapeHTML(q.text)}</span></div>`).join("");
+        $("#drawerQuestions").innerHTML = questionsHtml || `<span class="text-muted">Không có câu hỏi</span>`;
+        $("#drawerStudentCount").textContent = `${topic.unique_students || 0} sinh viên quan tâm`;
+
         let confidenceStr = "high";
         if (topic.confidence_breakdown) {
            if (topic.confidence_breakdown.low > 0) confidenceStr = "low";
@@ -1230,28 +1235,28 @@
         toast("Đã gửi tin nhắn", "Phản hồi đã được gửi tới nhóm sinh viên.");
       }
 
+      let statusCounts = { auto_grouped: 0, needs_review: 0, unmatched: 0 };
+
       function initCharts() {
         if (!window.Chart) return;
         const styles = getComputedStyle(document.body);
         const textColor = styles.getPropertyValue("--muted").trim();
-        const gridColor = styles.getPropertyValue("--line").trim();
         Chart.defaults.font.family = "Manrope";
         charts.forEach(chart => chart.destroy());
         charts = [];
-        const lineCtx = $("#questionsChart").getContext("2d");
-        const gradient = lineCtx.createLinearGradient(0,0,0,220);
-        gradient.addColorStop(0,"rgba(21,151,229,.28)");
-        gradient.addColorStop(1,"rgba(21,151,229,0)");
-        charts.push(new Chart(lineCtx, {
-          type: "line",
-          data: { labels: ["Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy","Chủ nhật"], datasets: [{ label:"Câu hỏi", data:[12,19,15,24,18,27,13], borderColor:"#1597e5", backgroundColor:gradient, fill:true, tension:.42, borderWidth:3, pointRadius:3, pointHoverRadius:6, pointBackgroundColor:"#fff", pointBorderColor:"#1597e5", pointBorderWidth:2 }] },
-          options: { responsive:true, maintainAspectRatio:false, interaction:{intersect:false,mode:"index"}, plugins:{legend:{display:false},tooltip:{backgroundColor:"#18344b",padding:11,cornerRadius:10,displayColors:false,callbacks:{label:c=>`${c.parsed.y} câu hỏi`}}}, scales:{x:{grid:{display:false},ticks:{color:textColor,font:{size:9}}},y:{beginAtZero:true,grid:{color:gridColor},ticks:{color:textColor,font:{size:9},stepSize:10}}} }
-        }));
         charts.push(new Chart($("#statusChart"), {
           type:"doughnut",
-          data:{labels:["Đã trả lời","Đang xử lý","Chưa trả lời","Cần làm rõ"],datasets:[{data:[68,24,24,12],backgroundColor:["#30c89b","#1597e5","#ff6868","#ffb44a"],borderWidth:0,hoverOffset:7}]},
+          data:{labels:["Đã phân loại","Cần xem xét","Không xác định"],datasets:[{data:[statusCounts.auto_grouped, statusCounts.needs_review, statusCounts.unmatched],backgroundColor:["#30c89b","#ffb44a","#ff6868"],borderWidth:0,hoverOffset:7}]},
           options:{responsive:true,maintainAspectRatio:false,cutout:"72%",plugins:{legend:{position:"bottom",labels:{color:textColor,usePointStyle:true,pointStyle:"circle",boxWidth:7,boxHeight:7,padding:13,font:{size:8}}},tooltip:{backgroundColor:"#18344b",padding:10,cornerRadius:9,callbacks:{label:c=>`${c.label}: ${c.parsed} câu`}}}}
         }));
+      }
+
+      function updateStatusChart(autoGrouped, needsReview, unmatchedCount) {
+        statusCounts = { auto_grouped: autoGrouped, needs_review: needsReview, unmatched: unmatchedCount };
+        const total = autoGrouped + needsReview + unmatchedCount;
+        $("#statusChartTotal").textContent = total;
+        $("#statusChartCenter").textContent = total;
+        initCharts();
       }
 
       function applyTheme(dark) {
@@ -1286,24 +1291,32 @@
       });
       $("#topicSearch").addEventListener("input", renderTopics);
       $("#topicSort").addEventListener("change", renderTopics);
+      function generateReplyFor(topic) {
+        if (!topic) return;
+        if (currentChatTopicId !== topic.id) {
+          $("#chatHistory").innerHTML = "";
+          currentChatTopicId = topic.id;
+        }
+        $("#chatInfo strong").textContent = topic.title;
+        $("#chatInfo .chat-info-meta span:first-child").innerHTML = `<i data-lucide="users" class="icon-sm"></i> ${topic.unique_students || 0} sinh viên quan tâm`;
+        refreshIcons();
+        openChat();
+        $$("#chatHistory .ai-message").forEach(el => el.remove());
+        renderAiSuggestion("Đang tạo gợi ý từ AI...");
+        const pendingBlock = $("#chatHistory .ai-message:last-child");
+        window.api.suggestReply(topic.title, topic.questionsList || []).then(reply => {
+          const finalReply = reply || `Chào các em, Thầy đã ghi nhận các câu hỏi về “${topic.title}” và sẽ phản hồi chi tiết ngay sau đây.`;
+          if (pendingBlock) pendingBlock.remove();
+          renderAiSuggestion(finalReply);
+          toast(reply ? "AI đã tạo bản nháp" : "Không tạo được gợi ý AI", reply ? "Thầy có thể chỉnh sửa trước khi gửi." : "Đã dùng nội dung mặc định, Thầy vui lòng chỉnh sửa.", reply ? "success" : "error");
+        });
+      }
+
       $("#topicsGrid").addEventListener("click", event => {
         const view = event.target.closest(".view-topic");
         const generate = event.target.closest(".generate-topic");
         if (view) openDrawer(topics.find(t => String(t.id) === view.dataset.id));
-        if (generate) {
-          const topic = topics.find(t => String(t.id) === generate.dataset.id);
-          if (!topic) return;
-          $("#chatInfo strong").textContent = topic.title;
-          openChat();
-          renderAiSuggestion("Đang tạo gợi ý từ AI...");
-          const pendingBlock = $("#chatHistory .ai-message:last-child");
-          window.api.suggestReply(topic.title, topic.questionsList || []).then(reply => {
-            const finalReply = reply || `Chào các em, Thầy đã ghi nhận các câu hỏi về “${topic.title}” và sẽ phản hồi chi tiết ngay sau đây.`;
-            if (pendingBlock) pendingBlock.remove();
-            renderAiSuggestion(finalReply);
-            toast(reply ? "AI đã tạo bản nháp" : "Không tạo được gợi ý AI", reply ? "Thầy có thể chỉnh sửa trước khi gửi." : "Đã dùng nội dung mặc định, Thầy vui lòng chỉnh sửa.", reply ? "success" : "error");
-          });
-        }
+        if (generate) generateReplyFor(topics.find(t => String(t.id) === generate.dataset.id));
       });
 
       $("#globalSearch").addEventListener("input", event => {
@@ -1348,14 +1361,11 @@
 
       $("#closeDrawer").addEventListener("click", closeDrawer);
       $("#overlay").addEventListener("click", () => { closeDrawer(); document.body.classList.remove("mobile-nav-open"); $("#overlay").classList.remove("open"); });
-      $("#editResponse").addEventListener("click", () => { const box = $("#drawerSuggestion"); box.contentEditable = "true"; box.focus(); toast("Chế độ chỉnh sửa", "Thầy có thể chỉnh sửa phản hồi đề xuất."); });
-      $("#sendAll").addEventListener("click", () => { closeDrawer(); toast("Đã gửi phản hồi", `Phản hồi đã gửi tới ${selectedTopic.questions} sinh viên quan tâm.`); });
-      $("#publishAnnouncement").addEventListener("click", () => { closeDrawer(); toast("Đã đăng thông báo", "Thông báo đã xuất hiện trên bảng tin môn học."); });
+      $("#drawerGenerateReply").addEventListener("click", () => { closeDrawer(); generateReplyFor(selectedTopic); });
       $("#resolveTopic").addEventListener("click", () => { selectedTopic.answered = 100; closeDrawer(); renderTopics(); toast("Chủ đề đã hoàn tất", "Tất cả câu hỏi trong chủ đề đã được xử lý."); });
 
       // Removed viewUrgent and createAnnouncement
-      $("#viewAllQuestions").addEventListener("click", () => toast("Danh sách câu hỏi", "Đang hiển thị 24 câu hỏi cần ưu tiên."));
-      $("#chartMenu").addEventListener("click", () => toast("Biểu đồ trạng thái", "Dữ liệu được cập nhật lúc 10:24 hôm nay."));
+      $("#viewAllQuestions").addEventListener("click", () => toast("Danh sách câu hỏi", `Đang hiển thị ${reviewQueue.length + unmatched.length} câu hỏi cần ưu tiên.`));
 
       $("#priorityTable").addEventListener("click", event => {
         const row = event.target.closest("tr");
@@ -1368,7 +1378,7 @@
       if (savedTheme === "dark" || (!savedTheme && matchMedia("(prefers-color-scheme: dark)").matches)) document.body.classList.add("dark");
       refreshIcons();
       initCharts();
-      setTimeout(renderTopics, 700);
+      runAnalysis();
     })();
   </script>
 </body>
