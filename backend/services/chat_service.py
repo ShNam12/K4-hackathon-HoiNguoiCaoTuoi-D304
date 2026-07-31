@@ -16,14 +16,14 @@ def get_chat_response(message: str, context: str | None = None, topic_title: str
 
     genai.configure(api_key=api_key)
 
-    model_name = os.environ.get("CHAT_MODEL", "gemini-2.0-flash")
+    model_name = os.environ.get("CHAT_MODEL", "gemini-2.5-flash")
     model = genai.GenerativeModel(
         model_name=model_name,
         system_instruction=(
-            "Bạn là VLearn Tutor - một Trợ lý AI hỗ trợ Giảng viên trả lời câu hỏi của sinh viên. "
-            "Hãy đóng vai Giảng viên để viết phản hồi mẫu cho sinh viên. "
-            "Giọng điệu: Sư phạm, thân thiện, rõ ràng, ngắn gọn và mạch lạc. "
-            "Nếu có thông tin ngữ cảnh về chủ đề (Topic), hãy trả lời xoay quanh chủ đề đó."
+            "Bạn là VLearn Assistant - một Trợ lý AI đắc lực dành riêng cho Giảng viên. "
+            "Người đang trò chuyện với bạn là Giảng viên, KHÔNG PHẢI là sinh viên. "
+            "Nhiệm vụ của bạn là hỗ trợ Giảng viên phân tích, tổng hợp câu hỏi, và soạn thảo câu trả lời mẫu khi được yêu cầu. "
+            "Hãy xưng hô tôn trọng là 'Thầy/Cô' và xưng là 'Tôi' hoặc 'Trợ lý'. Luôn tuân thủ nghiêm ngặt các chỉ thị và cung cấp thông tin chính xác, súc tích."
         ),
     )
 
