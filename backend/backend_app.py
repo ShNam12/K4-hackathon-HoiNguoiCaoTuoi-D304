@@ -55,21 +55,27 @@ def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
     questions = [q.model_dump(mode="json") for q in request.questions]
 
     if not questions:
-        return AnalyzeResponse(
-            schema_version=SCHEMA_VERSION,
-            analysis_id=f"ANL_{request.session_id}",
-            session_id=request.session_id,
-            generated_at=datetime.now(timezone.utc),
-            groups=[],
-            review_queue=[],
-            unmatched=[],
-            trace={
-                "matcher_type": "hybrid_llm",
-                "matcher_prompt_version": "matcher-v1",
-                "summary_prompt_version": "summary-v1",
-                "model": "configured-by-env",
-            },
-        )
+        demo_req_path = FIXTURES_DIR / "demo_request.json"
+        if demo_req_path.exists():
+            demo_req_data = json.loads(demo_req_path.read_text(encoding="utf-8"))
+            questions = demo_req_data.get("questions", [])
+        
+        if not questions:
+            return AnalyzeResponse(
+                schema_version=SCHEMA_VERSION,
+                analysis_id=f"ANL_{request.session_id}",
+                session_id=request.session_id,
+                generated_at=datetime.now(timezone.utc),
+                groups=[],
+                review_queue=[],
+                unmatched=[],
+                trace={
+                    "matcher_type": "hybrid_llm",
+                    "matcher_prompt_version": "matcher-v1",
+                    "summary_prompt_version": "summary-v1",
+                    "model": "configured-by-env",
+                },
+            )
 
     try:
         taxonomy = load_session_taxonomy(request.session_id)
