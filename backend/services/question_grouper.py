@@ -26,7 +26,7 @@ def group_classifications(
     for c in auto_grouped:
         tid = c.get("topic_id")
         if not tid:
-            review_queue.append(c)
+            review_queue.append(_enrich_item(c, questions_by_id))
             continue
         if tid not in topic_groups:
             topic_groups[tid] = []

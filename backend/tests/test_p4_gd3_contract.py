@@ -72,6 +72,21 @@ class TestGrouperOutputContracts:
         assert ri.student_id == "U001"
         assert ri.text == "What is AI?"
 
+    def test_auto_grouped_without_topic_id_goes_to_review_enriched(self):
+        """auto_grouped missing topic_id must land in review_queue WITH student_id+text."""
+        qs = [_make_question("Q1", "U001", "What is AI?")]
+        cs = [_make_classification("Q1", topic_id=None, status="auto_grouped", confidence="medium")]
+        groups, review, unmatched = group_classifications(qs, cs)
+        assert groups == []
+        assert len(review) == 1
+        item = review[0]
+        assert item.get("student_id") == "U001"
+        assert item.get("text") == "What is AI?"
+
+        ri = ReviewItem.model_validate(item)
+        assert ri.student_id == "U001"
+        assert ri.text == "What is AI?"
+
     def test_unmatched_items_have_student_id_and_text(self):
         """unmatched items now include student_id and text for ReviewItem."""
         qs = [_make_question("Q1", "U001", "Where to submit?")]
