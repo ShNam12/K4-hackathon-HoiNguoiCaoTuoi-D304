@@ -15,7 +15,7 @@ from typing import Any
 from dotenv import load_dotenv
 
 from backend.services.taxonomy_loader import load_session_taxonomy
-from backend.services.taxonomy_matcher import classify_batch
+from backend.services.taxonomy_matcher import classify_batch, make_openai_llm_client
 
 load_dotenv()
 
@@ -58,8 +58,12 @@ def main() -> None:
         taxonomy = load_session_taxonomy(session_id)
         questions = [c["question"] for c in session_cases]
 
-        # Use the real classify_batch
-        results = classify_batch(questions, session_id, taxonomy)
+        # Use the real classify_batch with LLM
+        try:
+            llm_client = make_openai_llm_client()
+        except Exception:
+            llm_client = None
+        results = classify_batch(questions, session_id, taxonomy, llm_client=llm_client)
         results_by_qid = {r["question_id"]: r for r in results}
 
         for case in session_cases:

@@ -1,0 +1,165 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "ANL_DAY_01",
+  "session_id": "DAY_01",
+  "generated_at": "2026-07-31T03:22:36.079282Z",
+  "groups": [
+    {
+      "topic_id": "DAY_01_CH_14",
+      "topic_title": "Hiểu attention để dùng AI hiệu quả: quản context = quản sự chú ý",
+      "question_count": 3,
+      "unique_student_count": 3,
+      "dominant_intent": "apply_practice",
+      "summary": "3 câu hỏi về \"Hiểu attention để dùng AI hiệu quả: quản context = quản sự chú ý\", chủ yếu áp dụng thực tế.",
+      "supported_question_ids": [
+        "Q001",
+        "Q002",
+        "Q006"
+      ],
+      "confidence_breakdown": {
+        "high": 0,
+        "medium": 3,
+        "low": 0
+      },
+      "questions": [
+        {
+          "question_id": "Q001",
+          "student_id": "U001",
+          "text": "RAG khac fine-tuning nhu the nao?",
+          "intent": "compare",
+          "confidence": "medium",
+          "evidence_refs": [
+            {
+              "file_id": "D1",
+              "line": 248
+            }
+          ]
+        },
+        {
+          "question_id": "Q002",
+          "student_id": "U002",
+          "text": "Cho vi du cu the ve RAG duoc khong a?",
+          "intent": "need_example",
+          "confidence": "medium",
+          "evidence_refs": [
+            {
+              "file_id": "D1",
+              "line": 248
+            }
+          ]
+        },
+        {
+          "question_id": "Q006",
+          "student_id": "U005",
+          "text": "RAG va fine-tuning cai nao re hon khi trien khai?",
+          "intent": "apply_practice",
+          "confidence": "medium",
+          "evidence_refs": [
+            {
+              "file_id": "D1",
+              "line": 248
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "topic_id": "DAY_01_CH_06",
+      "topic_title": "2017: Transformer",
+      "question_count": 1,
+      "unique_student_count": 1,
+      "dominant_intent": "compare",
+      "summary": "1 câu hỏi về \"2017: Transformer\", chủ yếu so sánh.",
+      "supported_question_ids": [
+        "Q003"
+      ],
+      "confidence_breakdown": {
+        "high": 1,
+        "medium": 0,
+        "low": 0
+      },
+      "questions": [
+        {
+          "question_id": "Q003",
+          "student_id": "U001",
+          "text": "The nao la Transformer, no khac gi cac model truoc do?",
+          "intent": "compare",
+          "confidence": "high",
+          "evidence_refs": [
+            {
+              "file_id": "D1",
+              "line": 115
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "topic_id": "DAY_01_CH_19",
+      "topic_title": "Vì sao model vẫn sai: nó rất giỏi học vẹt đường tắt",
+      "question_count": 1,
+      "unique_student_count": 1,
+      "dominant_intent": "clarify_concept",
+      "summary": "1 câu hỏi về \"Vì sao model vẫn sai: nó rất giỏi học vẹt đường tắt\", chủ yếu làm rõ khái niệm.",
+      "supported_question_ids": [
+        "Q004"
+      ],
+      "confidence_breakdown": {
+        "high": 0,
+        "medium": 1,
+        "low": 0
+      },
+      "questions": [
+        {
+          "question_id": "Q004",
+          "student_id": "U003",
+          "text": "Khi nao nen dung RAG thay vi fine-tuning cho du an thuc te?",
+          "intent": "clarify_concept",
+          "confidence": "medium",
+          "evidence_refs": [
+            {
+              "file_id": "D1",
+              "line": 348
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "review_queue": [
+    {
+      "question_id": "Q005",
+      "student_id": "U004",
+      "text": "Bai tap hom nay nop o dau vay thay?",
+      "status": "needs_review",
+      "confidence": "low",
+      "alternatives": [],
+      "rationale": "Only weak taxonomy evidence was found."
+    },
+    {
+      "question_id": "Q007",
+      "student_id": "U006",
+      "text": "Phan nay la sao a, em chua hieu lam?",
+      "status": "needs_review",
+      "confidence": "low",
+      "alternatives": [],
+      "rationale": "Only weak taxonomy evidence was found."
+    },
+    {
+      "question_id": "Q008",
+      "student_id": "U007",
+      "text": "May tinh cua em bi treo khi chay code vi du, co ai bi giong em khong?",
+      "status": "needs_review",
+      "confidence": "low",
+      "alternatives": [],
+      "rationale": "Only weak taxonomy evidence was found."
+    }
+  ],
+  "unmatched": [],
+  "trace": {
+    "matcher_type": "hybrid_llm",
+    "matcher_prompt_version": "matcher-v1",
+    "summary_prompt_version": "summary-v1",
+    "model": "configured-by-env"
+  }
+}

@@ -1216,19 +1216,44 @@
         document.body.style.overflow = "";
       }
 
-      function sendMessage() {
+      async function sendMessage() {
         const input = $("#messageInput");
         const value = input.value.trim();
         if (!value) { toast("Chưa có nội dung", "Thầy vui lòng nhập nội dung phản hồi.", "error"); return; }
+        
         const time = new Intl.DateTimeFormat("vi-VN", { hour: "2-digit", minute: "2-digit", hour12: false }).format(new Date());
-        const message = document.createElement("div");
-        message.className = "message me";
-        message.innerHTML = `<div class="avatar sm">MA</div><div class="bubble">${escapeHTML(value).replace(/\n/g,"<br>")}<div class="message-time">${time} <i data-lucide="check-check" class="icon-sm"></i></div></div>`;
-        $("#chatHistory").appendChild(message);
+        const messageMe = document.createElement("div");
+        messageMe.className = "message me";
+        messageMe.innerHTML = `<div class="avatar sm">MA</div><div class="bubble">${escapeHTML(value).replace(/\n/g,"<br>")}<div class="message-time">${time} <i data-lucide="check-check" class="icon-sm"></i></div></div>`;
+        $("#chatHistory").appendChild(messageMe);
         input.value = "";
         $("#chatHistory").scrollTop = $("#chatHistory").scrollHeight;
         refreshIcons();
-        toast("Đã gửi tin nhắn", "Phản hồi đã được gửi tới nhóm sinh viên.");
+
+        const loadingId = "loading-" + Date.now();
+        const loadingMsg = document.createElement("div");
+        loadingMsg.className = "ai-message";
+        loadingMsg.id = loadingId;
+        loadingMsg.innerHTML = `<div class="ai-message-title"><i data-lucide="sparkles" class="icon-sm"></i>AI đang phản hồi...</div><p><i data-lucide="loader" class="icon-sm" style="animation: spin 1s linear infinite;"></i></p>`;
+        $("#chatHistory").appendChild(loadingMsg);
+        $("#chatHistory").scrollTop = $("#chatHistory").scrollHeight;
+        refreshIcons();
+
+        try {
+          const topicTitle = $("#chatInfo strong").textContent;
+          const resp = await window.api.chatWithAI({ message: value, topic_title: topicTitle });
+          
+          const aiReply = document.createElement("div");
+          aiReply.className = "ai-message";
+          aiReply.innerHTML = `<div class="ai-message-title"><i data-lucide="sparkles" class="icon-sm"></i>VLearn Tutor</div><p>${escapeHTML(resp.reply || "").replace(/\n/g,"<br>")}</p>`;
+          
+          $("#chatHistory").replaceChild(aiReply, document.getElementById(loadingId));
+          $("#chatHistory").scrollTop = $("#chatHistory").scrollHeight;
+          refreshIcons();
+        } catch (e) {
+          document.getElementById(loadingId).innerHTML = `<div class="ai-message-title" style="color:var(--red)"><i data-lucide="triangle-alert" class="icon-sm"></i>Lỗi kết nối</div><p>Không thể kết nối đến AI.</p>`;
+          refreshIcons();
+        }
       }
 
       function initCharts() {
@@ -1294,9 +1319,9 @@
         if (generate) {
           const topic = topics.find(t => t.id === Number(generate.dataset.id));
           $("#chatInfo strong").textContent = topic.title;
-          $("#messageInput").value = `Chào các em, Thầy đã ghi nhận các câu hỏi về “${topic.title}” và sẽ phản hồi chi tiết ngay sau đây.`;
+          $("#messageInput").value = `Hãy viết một đoạn giải đáp chung cho sinh viên về chủ đề: “${topic.title}” với nội dung tóm tắt: ${topic.summary}`;
           openChat();
-          toast("AI đã tạo bản nháp", "Thầy có thể chỉnh sửa trước khi gửi.");
+          sendMessage(); // Tự động gửi để nhờ AI viết
         }
       });
 
@@ -1312,10 +1337,10 @@
 
       $("#chatFloat").addEventListener("click", () => $("#chatPanel").classList.contains("open") ? closeChat() : openChat());
       $("#closeChat").addEventListener("click", closeChat);
-      $("#minimizeChat").addEventListener("click", () => $("#chatPanel").classList.toggle("minimized"));
+      if ($("#minimizeChat")) $("#minimizeChat").addEventListener("click", () => $("#chatPanel").classList.toggle("minimized"));
       $("#collapseInfo").addEventListener("click", () => $("#chatInfo").classList.toggle("collapsed"));
       $("#sendMessage").addEventListener("click", sendMessage);
-      $("#messageInput").addEventListener("keydown", event => { if (event.ctrlKey && event.key === "Enter") { event.preventDefault(); sendMessage(); } });
+      $("#messageInput").addEventListener("keydown", event => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); sendMessage(); } });
       $("#useSuggestion").addEventListener("click", () => { $("#messageInput").value = $(".ai-message p").textContent; $("#messageInput").focus(); toast("Đã áp dụng gợi ý AI", "Nội dung đã được đưa vào ô soạn thảo."); });
       $("#editSuggestion").addEventListener("click", () => { $("#messageInput").value = $(".ai-message p").textContent; $("#messageInput").focus(); });
       $("#attachBtn").addEventListener("click", () => toast("Đính kèm tệp", "Trình chọn tệp sẽ khả dụng khi kết nối hệ thống lưu trữ."));

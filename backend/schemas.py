@@ -122,3 +122,14 @@ class AnalyzeResponse(BaseModel):
     review_queue: list[ReviewItem] = Field(default_factory=list)
     unmatched: list[ReviewItem] = Field(default_factory=list)
     trace: Trace
+
+
+class ChatRequest(BaseModel):
+    message: str
+    context: str | None = None
+    topic_title: str | None = None
+
+
+class ChatResponse(BaseModel):
+    reply: str
+    generated_at: datetime = Field(default_factory=datetime.utcnow)

@@ -280,7 +280,16 @@ Quality bar được khóa ngày 2026-07-30, trước khi có kết quả Run-00
 Quality bar này không được thay đổi sau lần chạy toàn bộ golden set đầu
 tiên.
 
-Kết quả các lượt chạy sẽ được P5 lưu tại `eval/results/`.
+### Kết quả các lượt chạy
+
+Kết quả các lượt chạy được lưu chi tiết tại `eval/results/`. Dưới đây là bảng tổng hợp kết quả:
+
+| Lượt chạy | Thời điểm | Định nghĩa đạt (Topic correct or abstain) | Status correct rate | Số lượng High-confidence wrong | Đánh giá so với Quality Bar |
+|---|---|---|---|---|---|
+| **Run-001** (Lượt đầu) | 2026-07-30 | **65%** (13/20) | 70% (14/20) | 5 | **Chưa đạt** (Do lỗi xử lý stop-words dẫn đến phân loại sai nhiều câu hỏi thông dụng) |
+| **Run-002** (Tối ưu) | 2026-07-30 | **80%** (16/20) | 70% (14/20) | 2 | **Đạt** (Đạt mức 80% cam kết nhờ lọc stop-words tiếng Việt trong taxonomy matcher) |
+
+Nhóm sẽ tiếp tục theo dõi chất lượng này trong các lượt chạy tiếp theo của giai đoạn validation.
 
 ## §8. Phân công & kế hoạch
 
