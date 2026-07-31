@@ -12,9 +12,9 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --primary: #C62828;
-      --primary-strong: #B71C1C;
-      --primary-soft: #FFEBEE;
+      --primary: #1799e8;
+      --primary-strong: #1483c6;
+      --primary-soft: #e8f4fd;
       --mint: #10B981;
       --mint-soft: #D1FAE5;
       --amber: #F59E0B;
@@ -545,18 +545,38 @@
       transition: .24s cubic-bezier(.2,.8,.2,1);
     }
     .panel.open { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
-    .chat-panel { height: 560px; }
+    
+    .chat-panel { 
+      right: 0;
+      bottom: 0;
+      top: 0;
+      width: 400px;
+      height: 100vh;
+      max-height: 100vh;
+      border-radius: 0;
+      border: none;
+      border-left: 1px solid var(--line);
+      box-shadow: -10px 0 40px rgba(0,0,0,0.06);
+      transform: translateX(100%);
+      opacity: 1;
+      transition: transform .35s cubic-bezier(.2,.8,.2,1);
+    }
+    .chat-panel.open { transform: translateX(0); }
     .panel.minimized { height: 70px; }
     .panel.minimized .chat-info,
     .panel.minimized .chat-history,
     .panel.minimized .composer { display: none; }
     .panel-head { display: flex; align-items: center; gap: 11px; min-height: 70px; padding: 12px 15px; background: var(--primary); color: #fff; }
+    .chat-panel .panel-head { background: var(--surface); color: var(--text); border-bottom: 1px solid var(--line); }
     .panel-head-copy { min-width: 0; flex: 1; }
-    .panel-head-copy strong { display: block; font-size: 12px; }
+    .panel-head-copy strong { display: block; font-size: 14px; }
     .online { display: flex; align-items: center; gap: 5px; margin-top: 4px; color: rgba(255,255,255,.82); font-size: 9px; }
+    .chat-panel .online { color: var(--mint); }
     .online::before { content: ""; width: 6px; height: 6px; background: #7ef3bd; border-radius: 50%; }
     .head-btn { display: grid; place-items: center; width: 31px; height: 31px; color: #fff; background: rgba(255,255,255,.13); border: 0; border-radius: 10px; }
     .head-btn:hover { background: rgba(255,255,255,.23); }
+    .chat-panel .head-btn { color: var(--muted); background: var(--surface-2); border: 1px solid var(--line); }
+    .chat-panel .head-btn:hover { color: var(--text); background: var(--line); }
     .chat-info { padding: 10px 13px; background: var(--primary-soft); border-bottom: 1px solid var(--line); }
     .chat-info-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .chat-info-top strong { font-size: 10px; }
@@ -776,10 +796,12 @@
 <body>
   <aside class="sidebar" id="sidebar" aria-label="Điều hướng chính">
     <div class="brand">
-      <div class="logo" aria-label="Biểu trưng trường đại học"><i data-lucide="graduation-cap" class="icon-lg"></i></div>
+      <div class="logo" aria-label="Biểu trưng VLearn">
+        <img src="logo/logo.svg" alt="VLearn" style="width: 32px; height: 32px; object-fit: contain;" />
+      </div>
       <div class="brand-copy">
-        <strong>Trợ lý Giảng viên AI</strong>
-        <span>Giảng dạy thông minh</span>
+        <div style="font-size: 21px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;"><span style="color: #c72127;">V</span><span style="color: #134d8b;">Learn</span></div>
+        <span style="font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 2px; display: block;">Trợ lý Giảng viên AI</span>
       </div>
     </div>
     <button class="sidebar-toggle" id="sidebarToggle" aria-label="Thu gọn thanh điều hướng"><i data-lucide="chevron-left" class="icon"></i></button>
@@ -915,15 +937,15 @@
     </section>
   </main>
 
-  <div class="floating-actions hidden">
+  <div class="floating-actions">
     <button class="float-btn feedback-float" id="feedbackFloat" aria-label="Mở ý kiến từ học viên"><i data-lucide="lightbulb" class="icon-lg"></i><span class="count-badge">3</span><span class="tooltip">Ý kiến từ học viên</span></button>
     <button class="float-btn chat-float" id="chatFloat" aria-label="Mở trao đổi với sinh viên"><i data-lucide="messages-square" class="icon-lg"></i><span class="count-badge">5</span><span class="tooltip">Trao đổi với sinh viên</span></button>
   </div>
 
   <section class="panel chat-panel" id="chatPanel" aria-label="Trao đổi với sinh viên" aria-hidden="true">
     <header class="panel-head">
-      <div class="avatar">MA</div><div class="panel-head-copy"><strong>PGS. TS. Nguyễn Minh Anh</strong><span class="online">Đang trực tuyến</span></div>
-      <button class="head-btn" id="minimizeChat" aria-label="Thu nhỏ cửa sổ chat"><i data-lucide="minus" class="icon"></i></button>
+      <div class="avatar" style="background: var(--primary-soft); color: var(--primary);"><i data-lucide="bot" class="icon"></i></div>
+      <div class="panel-head-copy"><strong style="color: var(--text);">VLearn Tutor</strong><span class="online">@ Trợ lý học theo ngữ cảnh</span></div>
       <button class="head-btn" id="closeChat" aria-label="Đóng cửa sổ chat"><i data-lucide="x" class="icon"></i></button>
     </header>
     <div class="chat-info" id="chatInfo">
@@ -952,7 +974,7 @@
     </div>
     <div class="composer">
       <div class="composer-box">
-        <textarea id="messageInput" placeholder="Nhập phản hồi cho sinh viên..." aria-label="Nội dung phản hồi"></textarea>
+        <textarea id="messageInput" placeholder="Nhập câu hỏi hoặc bôi đen tài liệu..." aria-label="Nội dung phản hồi"></textarea>
         <div class="composer-tools">
           <button class="tool-btn" id="attachBtn" aria-label="Đính kèm tệp"><i data-lucide="paperclip" class="icon-sm"></i></button>
           <button class="tool-btn" id="emojiBtn" aria-label="Thêm biểu tượng cảm xúc"><i data-lucide="smile" class="icon-sm"></i></button>
@@ -1147,9 +1169,14 @@
         $("#chatPanel").classList.add("open");
         $("#chatPanel").classList.remove("minimized");
         $("#chatPanel").setAttribute("aria-hidden", "false");
+        document.body.classList.add("chat-open");
         setTimeout(() => $("#messageInput").focus(), 200);
       }
-      function closeChat() { $("#chatPanel").classList.remove("open"); $("#chatPanel").setAttribute("aria-hidden", "true"); }
+      function closeChat() { 
+        $("#chatPanel").classList.remove("open"); 
+        $("#chatPanel").setAttribute("aria-hidden", "true"); 
+        document.body.classList.remove("chat-open");
+      }
       function openFeedback() {
         closeChat();
         $("#feedbackPanel").classList.add("open");
