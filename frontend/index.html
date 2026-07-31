@@ -606,8 +606,7 @@
     .composer-tools { display: flex; align-items: center; gap: 5px; }
     .tool-btn { display: grid; place-items: center; width: 29px; height: 29px; color: var(--muted); background: transparent; border: 0; border-radius: 8px; }
     .tool-btn:hover { color: var(--primary); background: var(--primary-soft); }
-    .quick-btn { width: auto; padding: 0 8px; font-size: 8px; font-weight: 700; }
-    .send-btn { width: auto; margin-left: auto; padding: 0 12px; color: #fff; background: var(--primary); }
+    .send-btn { display: flex; align-items: center; gap: 6px; width: auto; margin-left: auto; padding: 0 14px; color: #fff; background: var(--primary); font-size: 11px; font-weight: 600; border-radius: 8px; min-height: 29px; border: 0; }
 
     .feedback-panel { bottom: 160px; width: 355px; max-height: 500px; }
     .feedback-panel .panel-head { background: var(--amber); color: #fff; }
@@ -971,10 +970,7 @@
       <div class="composer-box">
         <textarea id="messageInput" placeholder="Nhập câu hỏi hoặc bôi đen tài liệu..." aria-label="Nội dung phản hồi"></textarea>
         <div class="composer-tools">
-          <button class="tool-btn" id="attachBtn" aria-label="Đính kèm tệp"><i data-lucide="paperclip" class="icon-sm"></i></button>
-          <button class="tool-btn" id="emojiBtn" aria-label="Thêm biểu tượng cảm xúc"><i data-lucide="smile" class="icon-sm"></i></button>
-          <button class="tool-btn quick-btn" id="quickReply" aria-label="Phản hồi nhanh"><i data-lucide="zap" class="icon-sm"></i> Phản hồi nhanh</button>
-          <button class="tool-btn send-btn" id="sendMessage" aria-label="Gửi tin nhắn"><i data-lucide="send" class="icon-sm"></i> Gửi</button>
+          <button class="tool-btn send-btn" id="sendMessage" aria-label="Gửi tin nhắn">Gửi <i data-lucide="send" class="icon-sm"></i></button>
         </div>
       </div>
     </div>
