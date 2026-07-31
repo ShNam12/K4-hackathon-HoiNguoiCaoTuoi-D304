@@ -587,17 +587,19 @@
     .chat-history { flex: 1; padding: 15px; overflow-y: auto; background: var(--surface-2); }
     .day-divider { display: flex; align-items: center; gap: 9px; margin: 3px 0 14px; color: var(--muted); font-size: 8px; }
     .day-divider::before, .day-divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
-    .message { display: flex; align-items: flex-end; gap: 7px; margin-bottom: 12px; }
+    .message { display: flex; align-items: flex-end; gap: 10px; margin-bottom: 16px; }
     .message.me { flex-direction: row-reverse; }
-    .bubble { max-width: 76%; padding: 9px 11px; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 13px 13px 13px 4px; box-shadow: 0 4px 12px rgba(30,82,112,.06); font-size: 9.5px; line-height: 1.55; }
-    .message.me .bubble { color: #fff; background: var(--primary); border: 0; border-radius: 13px 13px 4px 13px; }
-    .message-time { display: flex; justify-content: flex-end; gap: 4px; margin-top: 4px; color: var(--muted); font-size: 7.5px; }
+    .bubble { max-width: 85%; padding: 12px 16px; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 16px 16px 16px 4px; box-shadow: 0 4px 12px rgba(30,82,112,.06); font-size: 13px; line-height: 1.6; }
+    .message.me .bubble { color: #fff; background: var(--primary); border: 0; border-radius: 16px 16px 4px 16px; }
+    .message-time { display: flex; justify-content: flex-end; gap: 4px; margin-top: 6px; color: var(--muted); font-size: 10px; }
     .message.me .message-time { color: rgba(255,255,255,.7); }
-    .ai-message { margin: 13px 0; padding: 11px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; }
-    .ai-message-title { display: flex; align-items: center; gap: 6px; color: var(--purple); font-size: 9px; font-weight: 800; }
-    .ai-message p { margin: 7px 0 9px; font-size: 9px; line-height: 1.55; }
-    .ai-actions { display: flex; gap: 6px; }
-    .ai-actions .btn { min-height: 29px; padding: 0 9px; font-size: 8px; }
+    .ai-message { margin: 16px 0; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 4px 12px rgba(30,82,112,.06); }
+    .ai-message-title { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+    .ai-message-title .icon-sm { color: var(--primary); }
+    .ai-message p { margin: 0 0 10px; font-size: 13px; line-height: 1.6; }
+    .ai-message p:last-child { margin-bottom: 0; }
+    .ai-actions { display: flex; gap: 8px; }
+    .ai-actions .btn { min-height: 32px; padding: 0 12px; font-size: 11px; }
     .composer { padding: 11px; background: var(--surface); border-top: 1px solid var(--line); }
     .composer-box { padding: 9px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; }
     .composer textarea { display: block; width: 100%; height: 45px; padding: 0; resize: none; color: var(--text); background: transparent; border: 0; font-size: 10px; outline: 0; }
@@ -954,22 +956,15 @@
     </div>
     <div class="chat-history" id="chatHistory">
       <div class="day-divider">Hôm nay</div>
-      <div class="message">
-        <div class="avatar sm" style="background:linear-gradient(145deg,#8f73e8,#5f50bd)">TL</div>
-        <div class="bubble">Thưa Thầy, nhóm em chưa rõ phạm vi chức năng bắt buộc của bài tập lớn React ạ.<div class="message-time">09:12</div></div>
-      </div>
-      <div class="message">
-        <div class="avatar sm" style="background:linear-gradient(145deg,#f6a54e,#e76947)">HK</div>
-        <div class="bubble">Phần đăng nhập có bắt buộc dùng JWT và triển khai lên cloud không Thầy?<div class="message-time">09:15</div></div>
-      </div>
       <div class="ai-message">
-        <div class="ai-message-title"><i data-lucide="sparkles" class="icon-sm"></i>Gợi ý phản hồi từ AI</div>
-        <p>Chào các em, bài tập lớn cần tối thiểu 4 màn hình chính, xác thực người dùng bằng JWT và sử dụng REST API. Triển khai cloud được khuyến khích nhưng không bắt buộc.</p>
-        <div class="ai-actions"><button class="btn primary" id="useSuggestion">Sử dụng gợi ý</button><button class="btn" id="editSuggestion">Chỉnh sửa</button></div>
-      </div>
-      <div class="message me">
-        <div class="avatar sm">MA</div>
-        <div class="bubble">Thầy đang tổng hợp yêu cầu chi tiết và sẽ gửi thông báo chung trong hôm nay nhé.<div class="message-time">09:24 <i data-lucide="check-check" class="icon-sm"></i></div></div>
+        <div class="ai-message-title">
+          <div class="avatar sm" style="background: var(--primary-soft); color: var(--primary);"><i data-lucide="bot" class="icon-sm"></i></div>
+          <span>VLearn Tutor</span>
+          <span style="color: var(--mint); font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; margin-left: 4px;">
+            <i data-lucide="sparkles" class="icon-sm"></i> @ Trợ lý học theo ngữ cảnh
+          </span>
+        </div>
+        <p>Xin chào Thầy! Thầy cần hỗ trợ gì về các câu hỏi và chủ đề của sinh viên hôm nay ạ?</p>
       </div>
     </div>
     <div class="composer">
@@ -1001,12 +996,12 @@
 
   <div class="overlay" id="overlay"></div>
   <aside class="drawer" id="topicDrawer" aria-label="Chi tiết chủ đề" aria-hidden="true">
-    <header class="drawer-head"><div><h2 id="drawerTitle">Yêu cầu và phạm vi bài tập lớn</h2><p id="drawerMeta">32 câu hỏi · Cập nhật 5 phút trước</p></div><button class="icon-btn" id="closeDrawer" aria-label="Đóng chi tiết chủ đề"><i data-lucide="x" class="icon"></i></button></header>
+    <header class="drawer-head"><div><h2 id="drawerTitle">Yêu cầu và phạm vi bài tập lớn</h2><p id="drawerMeta">32 câu hỏi · Cập nhật 5 phút trước</p></div><button class="icon-btn" id="closeDrawerBtn" aria-label="Đóng chi tiết chủ đề"><i data-lucide="x" class="icon"></i></button></header>
     <div class="drawer-body">
-      <div class="detail-block"><div class="detail-label"><i data-lucide="sparkles" class="icon-sm"></i>Tóm tắt bởi AI</div><div class="summary-box" id="drawerSummary">Sinh viên đang nhầm lẫn về phạm vi dự án, định dạng nộp bài và tiêu chí chấm điểm. Phần lớn câu hỏi tập trung vào yêu cầu xác thực, số lượng màn hình và quy định triển khai.</div></div>
-      <div class="detail-block"><div class="detail-label"><i data-lucide="messages-square" class="icon-sm"></i>Câu hỏi tương tự</div><div class="similar-list"><div class="similar-item"><div class="avatar sm">TL</div><span>Nhóm em cần hoàn thành tối thiểu bao nhiêu màn hình cho bài tập lớn ạ?</span></div><div class="similar-item"><div class="avatar sm" style="background:linear-gradient(145deg,#f6a54e,#e76947)">HK</div><span>JWT có phải là yêu cầu bắt buộc trong phần đăng nhập không Thầy?</span></div><div class="similar-item"><div class="avatar sm" style="background:linear-gradient(145deg,#30c89b,#148b72)">AN</div><span>Điểm triển khai cloud chiếm bao nhiêu phần trăm tổng điểm ạ?</span></div></div></div>
-      <div class="detail-block"><div class="detail-label"><i data-lucide="tags" class="icon-sm"></i>Từ khóa nổi bật</div><div class="keywords" id="drawerKeywords"><span class="keyword">phạm vi dự án</span><span class="keyword">JWT</span><span class="keyword">REST API</span><span class="keyword">rubric</span><span class="keyword">cloud</span></div></div>
-      <div class="detail-block"><div class="detail-label"><i data-lucide="users" class="icon-sm"></i>Sinh viên quan tâm</div><div style="display:flex;align-items:center;justify-content:space-between"><div class="avatar-stack"><div class="avatar sm">TL</div><div class="avatar sm" style="background:linear-gradient(145deg,#f6a54e,#e76947)">HK</div><div class="avatar sm" style="background:linear-gradient(145deg,#30c89b,#148b72)">AN</div><div class="avatar sm" style="background:linear-gradient(145deg,#8f73e8,#5f50bd)">VN</div><span class="avatar-more">+28</span></div><span style="color:var(--muted);font-size:9px">32 sinh viên</span></div></div>
+      <div class="detail-block"><div class="detail-label"><i data-lucide="sparkles" class="icon-sm"></i>Tóm tắt bởi AI</div><div class="summary-box" id="drawerSummary"></div></div>
+      <div class="detail-block"><div class="detail-label"><i data-lucide="messages-square" class="icon-sm"></i>Câu hỏi tương tự</div><div class="similar-list" id="drawerSimilarQuestions"></div></div>
+      <div class="detail-block"><div class="detail-label"><i data-lucide="tags" class="icon-sm"></i>Từ khóa nổi bật</div><div class="keywords" id="drawerKeywords"></div></div>
+      <div class="detail-block"><div class="detail-label"><i data-lucide="users" class="icon-sm"></i>Sinh viên quan tâm</div><div style="display:flex;align-items:center;justify-content:space-between"><div class="avatar-stack" id="drawerStudentAvatars"></div><span id="drawerStudentCount" style="color:var(--muted);font-size:9px"></span></div></div>
       <div class="detail-block"><div class="detail-label"><i data-lucide="brain-circuit" class="icon-sm"></i>Độ tin cậy của AI</div><div class="confidence"><strong id="drawerConfidence" style="color:var(--mint)">high</strong> <span id="drawerRationale" style="margin-left: 10px; font-size: 12px; color: var(--muted)"></span></div></div>
       <div class="detail-block"><div class="detail-label"><i data-lucide="wand-sparkles" class="icon-sm"></i>Tóm tắt Nhóm</div><div class="suggestion-box" id="drawerSummaryContent"></div></div>
       <div class="detail-block">
@@ -1190,6 +1185,7 @@
         $("#drawerTitle").textContent = topic.title;
         $("#drawerMeta").textContent = `${topic.questions} câu hỏi · Sinh viên: ${topic.unique_students || 0}`;
         $("#drawerSummaryContent").textContent = topic.summary;
+        $("#drawerSummary").textContent = topic.summary;
         
         let confidenceStr = "high";
         if (topic.confidence_breakdown) {
@@ -1202,6 +1198,19 @@
         
         const evidenceHtml = (topic.evidence_refs || []).map(ref => `<div class="similar-item"><i data-lucide="file-text" class="icon-sm"></i><span>File: ${escapeHTML(ref.file_id)} - Dòng: ${ref.line}</span></div>`).join("");
         $("#drawerEvidence").innerHTML = evidenceHtml || `<span class="text-muted">Không có nguồn</span>`;
+
+        const similarHtml = (topic.questionsList || []).map(q => `<div class="similar-item"><div class="avatar sm" style="background:var(--primary)">${String(q.student_id || "SV").substring(0,2).toUpperCase()}</div><span>${escapeHTML(q.text)}</span></div>`).join("");
+        $("#drawerSimilarQuestions").innerHTML = similarHtml || `<span style="color:var(--muted)">Không có câu hỏi chi tiết</span>`;
+
+        const keywordsHtml = (topic.keywords || []).map(k => `<span class="keyword">${escapeHTML(k)}</span>`).join("");
+        $("#drawerKeywords").innerHTML = keywordsHtml || `<span style="color:var(--muted)">Không có từ khóa</span>`;
+
+        const students = [...new Set((topic.questionsList || []).map(q => q.student_id))].filter(Boolean).slice(0, 4);
+        const avatarHtml = students.map(id => `<div class="avatar sm" style="background:var(--primary)">${String(id).substring(0,2).toUpperCase()}</div>`).join("");
+        const moreCount = Math.max(0, (topic.unique_students || 0) - students.length);
+        const moreHtml = moreCount > 0 ? `<span class="avatar-more">+${moreCount}</span>` : "";
+        $("#drawerStudentAvatars").innerHTML = avatarHtml + moreHtml;
+        $("#drawerStudentCount").textContent = `${topic.unique_students || 0} sinh viên`;
         
         $("#topicDrawer").classList.add("open");
         $("#overlay").classList.add("open");
@@ -1234,7 +1243,13 @@
         const loadingMsg = document.createElement("div");
         loadingMsg.className = "ai-message";
         loadingMsg.id = loadingId;
-        loadingMsg.innerHTML = `<div class="ai-message-title"><i data-lucide="sparkles" class="icon-sm"></i>AI đang phản hồi...</div><p><i data-lucide="loader" class="icon-sm" style="animation: spin 1s linear infinite;"></i></p>`;
+        loadingMsg.innerHTML = `<div class="ai-message-title">
+          <div class="avatar sm" style="background: var(--primary-soft); color: var(--primary);"><i data-lucide="bot" class="icon-sm"></i></div>
+          <span>AI đang phản hồi...</span>
+          <span style="color: var(--mint); font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; margin-left: 4px;">
+            <i data-lucide="loader" class="icon-sm" style="animation: spin 1s linear infinite;"></i>
+          </span>
+        </div><p></p>`;
         $("#chatHistory").appendChild(loadingMsg);
         $("#chatHistory").scrollTop = $("#chatHistory").scrollHeight;
         refreshIcons();
@@ -1245,7 +1260,13 @@
           
           const aiReply = document.createElement("div");
           aiReply.className = "ai-message";
-          aiReply.innerHTML = `<div class="ai-message-title"><i data-lucide="sparkles" class="icon-sm"></i>VLearn Tutor</div><p>${escapeHTML(resp.reply || "").replace(/\n/g,"<br>")}</p>`;
+          aiReply.innerHTML = `<div class="ai-message-title">
+          <div class="avatar sm" style="background: var(--primary-soft); color: var(--primary);"><i data-lucide="bot" class="icon-sm"></i></div>
+          <span>VLearn Tutor</span>
+          <span style="color: var(--mint); font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; margin-left: 4px;">
+            <i data-lucide="sparkles" class="icon-sm"></i> @ Trợ lý học theo ngữ cảnh
+          </span>
+        </div><p>${escapeHTML(resp.reply || "").replace(/\n/g,"<br>")}</p>`;
           
           $("#chatHistory").replaceChild(aiReply, document.getElementById(loadingId));
           $("#chatHistory").scrollTop = $("#chatHistory").scrollHeight;
@@ -1315,9 +1336,9 @@
       $("#topicsGrid").addEventListener("click", event => {
         const view = event.target.closest(".view-topic");
         const generate = event.target.closest(".generate-topic");
-        if (view) openDrawer(topics.find(t => t.id === Number(view.dataset.id)));
+        if (view) openDrawer(topics.find(t => String(t.id) === String(view.dataset.id)));
         if (generate) {
-          const topic = topics.find(t => t.id === Number(generate.dataset.id));
+          const topic = topics.find(t => String(t.id) === String(generate.dataset.id));
           $("#chatInfo strong").textContent = topic.title;
           $("#messageInput").value = `Hãy viết một đoạn giải đáp chung cho sinh viên về chủ đề: “${topic.title}” với nội dung tóm tắt: ${topic.summary}`;
           openChat();
@@ -1341,9 +1362,9 @@
       $("#collapseInfo").addEventListener("click", () => $("#chatInfo").classList.toggle("collapsed"));
       $("#sendMessage").addEventListener("click", sendMessage);
       $("#messageInput").addEventListener("keydown", event => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); sendMessage(); } });
-      $("#useSuggestion").addEventListener("click", () => { $("#messageInput").value = $(".ai-message p").textContent; $("#messageInput").focus(); toast("Đã áp dụng gợi ý AI", "Nội dung đã được đưa vào ô soạn thảo."); });
-      $("#editSuggestion").addEventListener("click", () => { $("#messageInput").value = $(".ai-message p").textContent; $("#messageInput").focus(); });
-      $("#attachBtn").addEventListener("click", () => toast("Đính kèm tệp", "Trình chọn tệp sẽ khả dụng khi kết nối hệ thống lưu trữ."));
+      if ($("#useSuggestion")) $("#useSuggestion").addEventListener("click", () => { $("#messageInput").value = $(".ai-message p").textContent; $("#messageInput").focus(); toast("Đã áp dụng gợi ý AI", "Nội dung đã được đưa vào ô soạn thảo."); });
+      if ($("#editSuggestion")) $("#editSuggestion").addEventListener("click", () => { $("#messageInput").value = $(".ai-message p").textContent; $("#messageInput").focus(); });
+      if ($("#attachBtn")) $("#attachBtn").addEventListener("click", () => toast("Đính kèm tệp", "Trình chọn tệp sẽ khả dụng khi kết nối hệ thống lưu trữ."));
       $("#emojiBtn").addEventListener("click", () => { $("#messageInput").value += " 😊"; $("#messageInput").focus(); });
       $("#quickReply").addEventListener("click", () => { $("#messageInput").value = "Thầy đã nhận được câu hỏi. Thầy sẽ kiểm tra và phản hồi các em trong hôm nay nhé."; $("#messageInput").focus(); });
 
@@ -1357,9 +1378,9 @@
       });
       $("#viewAllFeedback").addEventListener("click", () => toast("Tất cả ý kiến", "Đã tải 48 ý kiến trong tháng này."));
 
-      $("#closeDrawer").addEventListener("click", closeDrawer);
+      $("#closeDrawerBtn").addEventListener("click", closeDrawer);
       $("#overlay").addEventListener("click", () => { closeDrawer(); document.body.classList.remove("mobile-nav-open"); $("#overlay").classList.remove("open"); });
-      $("#editResponse").addEventListener("click", () => { const box = $("#drawerSuggestion"); box.contentEditable = "true"; box.focus(); toast("Chế độ chỉnh sửa", "Thầy có thể chỉnh sửa phản hồi đề xuất."); });
+      $("#editResponse").addEventListener("click", () => { const box = $("#drawerSummaryContent"); box.contentEditable = "true"; box.focus(); toast("Chế độ chỉnh sửa", "Thầy có thể chỉnh sửa phản hồi đề xuất."); });
       $("#sendAll").addEventListener("click", () => { closeDrawer(); toast("Đã gửi phản hồi", `Phản hồi đã gửi tới ${selectedTopic.questions} sinh viên quan tâm.`); });
       $("#publishAnnouncement").addEventListener("click", () => { closeDrawer(); toast("Đã đăng thông báo", "Thông báo đã xuất hiện trên bảng tin môn học."); });
       $("#resolveTopic").addEventListener("click", () => { selectedTopic.answered = 100; closeDrawer(); renderTopics(); toast("Chủ đề đã hoàn tất", "Tất cả câu hỏi trong chủ đề đã được xử lý."); });
@@ -1379,7 +1400,9 @@
       if (savedTheme === "dark" || (!savedTheme && matchMedia("(prefers-color-scheme: dark)").matches)) document.body.classList.add("dark");
       refreshIcons();
       initCharts();
-      setTimeout(renderTopics, 700);
+      setTimeout(() => {
+        analyzeBtn.click();
+      }, 300);
     })();
   </script>
 </body>
